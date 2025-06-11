@@ -11,6 +11,7 @@
 #include "Systems/PlayerInputSystem.h"
 #include "Systems/RenderSystem.h"
 #include "SystemManager.h"
+#include "Systems/AnimationSystem.h"
 
 class  Engine {
 public:
@@ -33,6 +34,7 @@ private:
     std::shared_ptr<PlayerInputSystem> inputSystem;
     std::shared_ptr<MovementSystem> movementSystem;
     std::shared_ptr<RenderSystem> renderSystem;
+    std::shared_ptr<AnimationSystem> animationSystem;
 
 
 };

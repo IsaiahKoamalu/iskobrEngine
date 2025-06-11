@@ -60,7 +60,9 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/RenderSystem.h
         include/Engine/Systems/PlayerInputSystem.h
         include/Engine/Components/Position.h
-        include/Engine/Components/Velocity.h)
+        include/Engine/Components/Velocity.h
+        include/Engine/Components/AnimationComponent.h
+        include/Engine/Systems/AnimationSystem.h)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)
 

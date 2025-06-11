@@ -23,6 +23,7 @@ void Engine::run() {
      renderSystem = systemManager->registerSystem<RenderSystem>();
      movementSystem = systemManager->registerSystem<MovementSystem>();
      inputSystem = systemManager->registerSystem<PlayerInputSystem>();
+     animationSystem = systemManager->registerSystem<AnimationSystem>();
 
     //Load texture and set up sprite
     playerTexture = std::make_unique<sf::Texture>();
@@ -34,17 +35,25 @@ void Engine::run() {
     sf::Sprite playerSprite;
     playerSprite.setTexture(*playerTexture);
     playerSprite.setScale(3, 3);
+    playerSprite.setTextureRect(sf::IntRect(0,0,96,96));
 
     // Create player entity.
     Entity player = entityManager->createEntity();
     componentManager->addComponent<Position>(player, {100.f, 100.f});
     componentManager->addComponent<Velocity>(player, {0.f, 0.f});
     componentManager->addComponent<SpriteComponent>(player, {playerSprite});
+    componentManager->addComponent<AnimationComponent>(player, {
+        .frameCount = 10,
+        .frameTime = 0.15f,
+        .frameWidth = 96,
+        .frameHeight = 96
+    });
 
     // Register player entity with desired systems.
     movementSystem->entities.insert(player);
     renderSystem->entities.insert(player);
     inputSystem->entities.insert(player);
+    animationSystem->entities.insert(player);
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
@@ -57,6 +66,7 @@ void Engine::run() {
 void Engine::update(float dt) {
     inputSystem->update(*componentManager, dt);
     movementSystem->update(*componentManager, dt);
+    animationSystem->update(*componentManager, dt);
 }
 
 void Engine::processEvents() {
