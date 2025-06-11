@@ -27,9 +27,11 @@ add_library(engine
         include/Engine/ComponentManager.h
         include/Engine/System.h
         include/Engine/SystemManager.h
-        include/Engine/MovementSystem.h
-        include/Engine/SpriteComponent.h
-        include/Engine/RenderSystem.h
+        include/Engine/Systems/MovementSystem.h
+        include/Engine/Components/SpriteComponent.h
+        include/Engine/Systems/RenderSystem.h
+        include/Engine/Components/Position.h
+        include/Engine/Components/Velocity.h
 )
 
 target_include_directories(engine
@@ -53,9 +55,12 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/ComponentManager.h
         include/Engine/System.h
         include/Engine/SystemManager.h
-        include/Engine/MovementSystem.h
-        include/Engine/SpriteComponent.h
-        include/Engine/RenderSystem.h)
+        include/Engine/Systems/MovementSystem.h
+        include/Engine/Components/SpriteComponent.h
+        include/Engine/Systems/RenderSystem.h
+        include/Engine/Systems/PlayerInputSystem.h
+        include/Engine/Components/Position.h
+        include/Engine/Components/Velocity.h)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)
 

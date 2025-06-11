@@ -1,17 +1,17 @@
 #ifndef MOVEMENTSYSTEM_H
 #define MOVEMENTSYSTEM_H
 
-#include "System.h"
-#include "ComponentManager.h"
+#include "Engine/System.h"
+#include "Engine/ComponentManager.h"
+#include "Engine/Components/Position.h"
+#include "Engine/Components/Velocity.h"
+
+
 
 /**
- * A system that moves entities based on their velocity.
- * Requires: Position, Velocity
+ * System which moves entities by applying velocity to position at each frame.
+ * Requires: Position, Velocity.
  */
-
-struct Position {float x, y;};
-struct Velocity {float dx, dy;};
-
 class MovementSystem : public System {
 public:
  void update(ComponentManager& components, float dt) {

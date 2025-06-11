@@ -7,6 +7,9 @@
 #include "Engine/InputManager.h"
 #include "EntityManager.h"
 #include "ComponentManager.h"
+#include "Systems/MovementSystem.h"
+#include "Systems/PlayerInputSystem.h"
+#include "Systems/RenderSystem.h"
 #include "SystemManager.h"
 
 class  Engine {
@@ -24,8 +27,13 @@ private:
 
     std::unique_ptr<EntityManager> entityManager;
     std::unique_ptr<ComponentManager> componentManager;
-    std::unique_ptr<SystemManager> syatemManager;
+    std::unique_ptr<SystemManager> systemManager;
     std::unique_ptr<sf::Texture> playerTexture;
+
+    std::shared_ptr<PlayerInputSystem> inputSystem;
+    std::shared_ptr<MovementSystem> movementSystem;
+    std::shared_ptr<RenderSystem> renderSystem;
+
 
 };
 

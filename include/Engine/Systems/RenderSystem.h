@@ -1,16 +1,17 @@
 #ifndef RENDERSYSTEM_H
 #define RENDERSYSTEM_H
 
-#include "System.h"
-#include "ComponentManager.h"
-#include "SpriteComponent.h"
+#include "Engine/System.h"
+#include "Engine/Components/Position.h"
+#include "Engine/ComponentManager.h"
+#include "Engine/Components/SpriteComponent.h"
 #include <SFML/Graphics.hpp>
 
 /**
  * System that draws entities with a given Position and SpriteComponent
  **/
 
-struct Position; // Forward declaration (globally defined?)
+// Forward declaration (globally defined?)
 
 class RenderSystem : public System {
 public:
