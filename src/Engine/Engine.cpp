@@ -6,14 +6,10 @@
 #include "Engine/ComponentManager.h"
 #include "Engine/SystemManager.h"
 #include "Engine/MovementSystem.h"
+#include "Engine/RenderSystem.h"
 
 void Engine::run() {
     window.create(sf::VideoMode(800, 600), "iskobr-Engine");
-
-    if (!playerTexture.loadFromFile("assets/player.png")) {
-        std::cerr << "Failed to load player.png\n";
-        return;
-    }
 
     sf::Clock clock;
 
@@ -22,14 +18,30 @@ void Engine::run() {
     componentManager = std::make_unique<ComponentManager>();
     syatemManager = std::make_unique<SystemManager>();
 
+    // Register render system
+    auto renderSystem = syatemManager->registerSystem<RenderSystem>();
+
     // Register and get a movement system.
     auto movementSystem = syatemManager->registerSystem<MovementSystem>();
 
-    // Test entity with position and velocity.
+    //Load texture and set up sprite
+    playerTexture = std::make_unique<sf::Texture>();
+    if (!playerTexture->loadFromFile("assets/player.png")) {
+        std::cerr << "Failed to load texture\n";
+        return;
+    }
+
+    sf::Sprite playerSprite;
+    playerSprite.setTexture(*playerTexture);
+    playerSprite.setScale(3, 3);
+
+    // Create renderable entity
     Entity player = entityManager->createEntity();
-    componentManager->addComponent<Position>(player, {100.f, 200.f});
-    componentManager->addComponent<Velocity>(player, {50.f, 30.f});
+    componentManager->addComponent<Position>(player, {100.f, 100.f});
+    componentManager->addComponent<Velocity>(player, {30.f, 30.f});
+    componentManager->addComponent<SpriteComponent>(player, {playerSprite});
     movementSystem->entities.insert(player);
+    renderSystem->entities.insert(player);
 
     // Visual for player
     sf::CircleShape playerShape(20);
@@ -41,12 +53,13 @@ void Engine::run() {
         processEvents();
         movementSystem->update(*componentManager, dt);
         window.clear(sf::Color::Black);
+        renderSystem->update(window, *componentManager);
 
         // utilizing position from ECS to place player sprite.
         if (componentManager->hasComponent<Position>(player)) {
             auto& pos = componentManager->getComponent<Position>(player);
             playerShape.setPosition(pos.x, pos.y);
-            window.draw(playerShape);
+            //window.draw(playerShape);
         }
 
         window.display();
@@ -61,25 +74,4 @@ void Engine::processEvents() {
             window.close();
         }
     }
-}
-
-void Engine::update(float dt) {
-    if (input.isKeyPressed(sf::Keyboard::A)) {
-        playerSprite.move(-200 * dt, 0);
-    }
-    if (input.isKeyPressed(sf::Keyboard::D)) {
-        playerSprite.move(200 * dt, 0);
-    }
-    if (input.isKeyPressed(sf::Keyboard::W)) {
-        playerSprite.move(0, -200 * dt);
-    }
-    if (input.isKeyPressed(sf::Keyboard::S)) {
-        playerSprite.move(0, 200 * dt);
-    }
-}
-
-void Engine::render() {
-    window.clear(sf::Color::Black);
-    window.draw(playerSprite);
-    window.display();
 }

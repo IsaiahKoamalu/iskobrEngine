@@ -15,8 +15,6 @@ public:
 
 private:
     sf::RenderWindow window;
-    sf::Texture playerTexture;
-    sf::Sprite playerSprite;
 
     void processEvents();
     void update(float dt);
@@ -27,6 +25,8 @@ private:
     std::unique_ptr<EntityManager> entityManager;
     std::unique_ptr<ComponentManager> componentManager;
     std::unique_ptr<SystemManager> syatemManager;
+    std::unique_ptr<sf::Texture> playerTexture;
+
 };
 
 #endif
