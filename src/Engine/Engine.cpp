@@ -2,6 +2,11 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "Engine/EntityManager.h"
+#include "Engine/ComponentManager.h"
+#include "Engine/SystemManager.h"
+#include "Engine/MovementSystem.h"
+
 void Engine::run() {
     window.create(sf::VideoMode(800, 600), "iskobr-Engine");
 
@@ -10,17 +15,41 @@ void Engine::run() {
         return;
     }
 
-    playerSprite.setTexture(playerTexture);
-    playerSprite.setScale(3, 3);
-    playerSprite.setPosition(400, 300);
-
     sf::Clock clock;
+
+    //======== ECS SETUP ============
+    entityManager = std::make_unique<EntityManager>();
+    componentManager = std::make_unique<ComponentManager>();
+    syatemManager = std::make_unique<SystemManager>();
+
+    // Register and get a movement system.
+    auto movementSystem = syatemManager->registerSystem<MovementSystem>();
+
+    // Test entity with position and velocity.
+    Entity player = entityManager->createEntity();
+    componentManager->addComponent<Position>(player, {100.f, 200.f});
+    componentManager->addComponent<Velocity>(player, {50.f, 30.f});
+    movementSystem->entities.insert(player);
+
+    // Visual for player
+    sf::CircleShape playerShape(20);
+    playerShape.setFillColor(sf::Color::Red);
+
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
-        render();
         processEvents();
-        update(dt);
+        movementSystem->update(*componentManager, dt);
+        window.clear(sf::Color::Black);
+
+        // utilizing position from ECS to place player sprite.
+        if (componentManager->hasComponent<Position>(player)) {
+            auto& pos = componentManager->getComponent<Position>(player);
+            playerShape.setPosition(pos.x, pos.y);
+            window.draw(playerShape);
+        }
+
+        window.display();
     }
 }
 

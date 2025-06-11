@@ -1,5 +1,5 @@
 # ninja log v6
-4	2132	7713116827674745	build.ninja	b8c87f0371b39317
+4	2132	7713118435303205	build.ninja	b8c87f0371b39317
 2026	2558	7713034000594602	_deps/sfml-build/src/SFML/Graphics/CMakeFiles/sfml-graphics.dir/View.cpp.obj	e415728698233e4f
 13	120	7713033980463320	_deps/sfml-build/src/SFML/System/CMakeFiles/sfml-system.dir/Lock.cpp.obj	5bcb065498549085
 2720	3480	7713034007539843	_deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/SoundFileReaderFlac.cpp.obj	bb16bc9289ae3e4e
@@ -131,3 +131,14 @@
 18	421	7713037770164619	CMakeFiles/engine.dir/src/Engine/InputManager.cpp.obj	f1eca827c9c39c6
 23	297	7713056930484236	CMakeFiles/engine.dir/src/Engine/EntityManager.cpp.obj	f47ae9ec46088a0c
 25	302	7713056930504243	CMakeFiles/iskobrEngine.dir/src/Engine/EntityManager.cpp.obj	54421029b66aeb48
+11	639	7713135236414487	CMakeFiles/iskobrEngine.dir/main.cpp.obj	3a60b2d164b7b5e2
+11	645	7713135811230234	CMakeFiles/iskobrEngine.dir/main.cpp.obj	3a60b2d164b7b5e2
+11	630	7713136359574053	CMakeFiles/iskobrEngine.dir/main.cpp.obj	3a60b2d164b7b5e2
+8	959	7713136359544053	CMakeFiles/engine.dir/src/Engine/Engine.cpp.obj	8ee4509d93630cec
+959	1331	7713136372705567	libengine.dll	cad510d06e9c8a54
+959	1331	7713136372705567	libengine.dll.a	cad510d06e9c8a54
+1331	1532	7713136372765656	iskobrEngine.exe	c225bc3dea5cecc1
+8	1007	7713136964765460	CMakeFiles/engine.dir/src/Engine/Engine.cpp.obj	8ee4509d93630cec
+1007	1304	7713136977653973	libengine.dll	cad510d06e9c8a54
+1007	1304	7713136977653973	libengine.dll.a	cad510d06e9c8a54
+1304	1435	7713136977724608	iskobrEngine.exe	c225bc3dea5cecc1

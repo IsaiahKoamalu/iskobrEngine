@@ -27,6 +27,7 @@ add_library(engine
         include/Engine/ComponentManager.h
         include/Engine/System.h
         include/Engine/SystemManager.h
+        include/Engine/MovementSystem.h
 )
 
 target_include_directories(engine
@@ -49,7 +50,8 @@ add_executable(${PROJECT_NAME} main.cpp
         src/Engine/EntityManager.cpp
         include/Engine/ComponentManager.h
         include/Engine/System.h
-        include/Engine/SystemManager.h)
+        include/Engine/SystemManager.h
+        include/Engine/MovementSystem.h)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)
 

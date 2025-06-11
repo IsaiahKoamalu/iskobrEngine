@@ -77,7 +77,7 @@ public:
     }
 
     template<typename T>
-    bool hasComponent(Entity entity) const {
+    bool hasComponent(Entity entity) {
         return getComponentArray<T>()->has(entity);
     }
 
@@ -93,7 +93,7 @@ private:
 
     // Internal helper for retrieving a typed component array.
     template<typename T>
-    std::shared_ptr<ComponentArray<T>> getComponentArray() const {
+    std::shared_ptr<ComponentArray<T>> getComponentArray(){
         std::type_index typeIndex = typeid(T);
 
         auto it = componentArrays.find(typeIndex);
