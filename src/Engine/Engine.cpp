@@ -20,34 +20,95 @@ void Engine::run() {
     systemManager = std::make_unique<SystemManager>();
 
     // Register systems
-     renderSystem = systemManager->registerSystem<RenderSystem>();
-     movementSystem = systemManager->registerSystem<MovementSystem>();
-     inputSystem = systemManager->registerSystem<PlayerInputSystem>();
-     animationSystem = systemManager->registerSystem<AnimationSystem>();
+    renderSystem = systemManager->registerSystem<RenderSystem>();
+    movementSystem = systemManager->registerSystem<MovementSystem>();
+    inputSystem = systemManager->registerSystem<PlayerInputSystem>();
+    animationSystem = systemManager->registerSystem<AnimationSystem>();
 
     //Load texture and set up sprite
-    playerTexture = std::make_unique<sf::Texture>();
-    if (!playerTexture->loadFromFile("assets/player.png")) {
-        std::cerr << "Failed to load texture\n";
-        return;
-    }
+    auto idleTex = std::make_shared<sf::Texture>();
+    idleTex->loadFromFile("assets/player.png");
+
+    auto idleDownTex = std::make_shared<sf::Texture>();
+    idleDownTex->loadFromFile("assets/idle_down.png");
+
+    auto idleUpTex = std::make_shared<sf::Texture>();
+    idleUpTex->loadFromFile("assets/idle_up.png");
+
+    auto walkTex = std::make_shared<sf::Texture>();
+    walkTex->loadFromFile("assets/walk.png");
+
+    auto walkUpTex = std::make_shared<sf::Texture>();
+    walkUpTex->loadFromFile("assets/walk_up.png");
+
+    auto walkDownTex = std::make_shared<sf::Texture>();
+    walkDownTex->loadFromFile("assets/walk_down.png");
+
+    AnimationComponent anim;
+    anim.currentState = "idle";
+
+    anim.animations["idle"] = {
+        .texture = idleTex,
+        .frameCount = 8,
+        .frameWidth = 96,
+        .frameHeight = 80,
+        .frameTime = 0.2f
+    };
+
+    anim.animations["idleUp"] = {
+        .texture = idleDownTex,
+        .frameCount = 8,
+        .frameWidth = 96,
+        .frameHeight = 80,
+        .frameTime = 0.2f
+    };
+
+    anim.animations["idleDown"] = {
+        .texture = idleUpTex,
+        .frameCount = 8,
+        .frameWidth = 96,
+        .frameHeight = 80,
+        .frameTime = 0.2f
+    };
+
+    anim.animations["walk"] = {
+        .texture = walkTex,
+        .frameCount = 8,
+        .frameWidth = 96,
+        .frameHeight = 80,
+        .frameTime = 0.1f
+    };
+
+    anim.animations["up"] = {
+        .texture = walkUpTex,
+        .frameCount = 8,
+        .frameWidth = 96,
+        .frameHeight = 80,
+        .frameTime = 0.1f
+    };
+
+    anim.animations["down"] = {
+        .texture = walkDownTex,
+        .frameCount = 8,
+        .frameWidth = 96,
+        .frameHeight = 80,
+        .frameTime = 0.1f
+    };
+
+
 
     sf::Sprite playerSprite;
-    playerSprite.setTexture(*playerTexture);
+    playerSprite.setTexture(*idleTex);
     playerSprite.setScale(3, 3);
-    playerSprite.setTextureRect(sf::IntRect(0,0,96,96));
+    playerSprite.setTextureRect(sf::IntRect(0,0,96,80));
+
 
     // Create player entity.
     Entity player = entityManager->createEntity();
     componentManager->addComponent<Position>(player, {100.f, 100.f});
     componentManager->addComponent<Velocity>(player, {0.f, 0.f});
     componentManager->addComponent<SpriteComponent>(player, {playerSprite});
-    componentManager->addComponent<AnimationComponent>(player, {
-        .frameCount = 10,
-        .frameTime = 0.15f,
-        .frameWidth = 96,
-        .frameHeight = 96
-    });
+    componentManager->addComponent<AnimationComponent>(player,anim);
 
     // Register player entity with desired systems.
     movementSystem->entities.insert(player);

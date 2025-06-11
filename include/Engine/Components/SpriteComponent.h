@@ -10,6 +10,7 @@
 
 struct SpriteComponent {
  sf::Sprite sprite;
+ bool flipX = false;
 };
 
 #endif
