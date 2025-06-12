@@ -5,6 +5,8 @@
 #include "Engine/EntityManager.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/SystemManager.h"
+#include "Engine/Components/ColliderComponent.h"
+#include "Engine/Systems/CollisionSystem.h"
 #include "Engine/Systems/MovementSystem.h"
 #include "Engine/Systems/PlayerInputSystem.h"
 #include "Engine/Systems/RenderSystem.h"
@@ -24,6 +26,7 @@ void Engine::run() {
     movementSystem = systemManager->registerSystem<MovementSystem>();
     inputSystem = systemManager->registerSystem<PlayerInputSystem>();
     animationSystem = systemManager->registerSystem<AnimationSystem>();
+    collisionSystem = systemManager->registerSystem<CollisionSystem>();
 
     //Load texture and set up sprite
     auto idleTex = std::make_shared<sf::Texture>();
@@ -55,7 +58,7 @@ void Engine::run() {
         .frameTime = 0.2f
     };
 
-    anim.animations["idleUp"] = {
+    anim.animations["idleDown"] = {
         .texture = idleDownTex,
         .frameCount = 8,
         .frameWidth = 96,
@@ -63,7 +66,7 @@ void Engine::run() {
         .frameTime = 0.2f
     };
 
-    anim.animations["idleDown"] = {
+    anim.animations["idleUp"] = {
         .texture = idleUpTex,
         .frameCount = 8,
         .frameWidth = 96,
@@ -109,12 +112,32 @@ void Engine::run() {
     componentManager->addComponent<Velocity>(player, {0.f, 0.f});
     componentManager->addComponent<SpriteComponent>(player, {playerSprite});
     componentManager->addComponent<AnimationComponent>(player,anim);
+    componentManager->addComponent<DirectionComponent>(player, {});
+
+    //Player collider
+    ColliderComponent playerCollider;
+    playerCollider.bounds = sf::FloatRect(0,0,96,80);
+    playerCollider.isStatic = false;
+    componentManager->addComponent<ColliderComponent>(player, playerCollider);
+
+    // Test Wall
+    Entity wall = entityManager->createEntity();
+    componentManager->addComponent<Position>(wall, {200.f, 200.f});
+    componentManager->addComponent<ColliderComponent>(wall, {
+        .bounds = sf::FloatRect(0.f, 0.f, 300.f, 300.f),
+        .isStatic = true
+    });
+
 
     // Register player entity with desired systems.
     movementSystem->entities.insert(player);
     renderSystem->entities.insert(player);
     inputSystem->entities.insert(player);
     animationSystem->entities.insert(player);
+    collisionSystem->entities.insert(player);
+
+    // Register test wall with systems
+    collisionSystem->entities.insert(wall);
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
@@ -128,6 +151,7 @@ void Engine::update(float dt) {
     inputSystem->update(*componentManager, dt);
     movementSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
+    collisionSystem->update(*componentManager, dt);
 }
 
 void Engine::processEvents() {

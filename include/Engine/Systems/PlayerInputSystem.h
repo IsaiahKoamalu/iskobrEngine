@@ -8,6 +8,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include "Engine/Components/AnimationComponent.h"
+#include "Engine/Components/DirectionComponent.h"
 #include "Engine/Components/SpriteComponent.h"
 
 /**
@@ -34,11 +35,31 @@ public:
   // Apply velocity to all controlled entities.
   for (Entity entity : entities) {
    if (components.hasComponent<AnimationComponent>(entity)) {
+    auto& dir = components.getComponent<DirectionComponent>(entity);
     auto& anim = components.getComponent<AnimationComponent>(entity);
-    if (moveY < 0){anim.currentState = "up";}
-    else if (moveY > 0){anim.currentState = "down";}
-    else if(moveX != 0){anim.currentState = "walk";}
-    else {anim.currentState = "idle";}
+    if (moveY < 0) {
+     dir.current = Direction::Up;
+     anim.currentState = "up";
+    }else if (moveY > 0) {
+     dir.current = Direction::Down;
+     anim.currentState = "down";
+    }else if(moveX != 0) {
+     dir.current = Direction::Right;
+     anim.currentState = "walk";
+    }else {
+     switch (dir.current) {
+      case Direction::Up:
+       anim.currentState = "idleUp";
+       break;
+      case Direction::Down:
+       anim.currentState = "idleDown";
+       break;
+      case Direction::Left:
+      case Direction::Right:
+       anim.currentState = "idle";
+       break;
+     }
+    }
 
    }
    auto& velocity = components.getComponent<Velocity>(entity);
