@@ -27,6 +27,7 @@ void Engine::run() {
     inputSystem = systemManager->registerSystem<PlayerInputSystem>();
     animationSystem = systemManager->registerSystem<AnimationSystem>();
     collisionSystem = systemManager->registerSystem<CollisionSystem>();
+    triggerSystem = systemManager->registerSystem<TriggerSystem>();
 
     //Load texture and set up sprite
     auto idleTex = std::make_shared<sf::Texture>();
@@ -122,10 +123,12 @@ void Engine::run() {
 
     // Test Wall
     Entity wall = entityManager->createEntity();
-    componentManager->addComponent<Position>(wall, {200.f, 200.f});
+    componentManager->addComponent<Position>(wall, {300.f, 300.f});
     componentManager->addComponent<ColliderComponent>(wall, {
         .bounds = sf::FloatRect(0.f, 0.f, 300.f, 300.f),
-        .isStatic = true
+        .isStatic = true,
+        .isTrigger = true,
+        .tag = "Test Event Wall"
     });
 
 
@@ -135,9 +138,12 @@ void Engine::run() {
     inputSystem->entities.insert(player);
     animationSystem->entities.insert(player);
     collisionSystem->entities.insert(player);
+    triggerSystem->entities.insert(player);
 
     // Register test wall with systems
     collisionSystem->entities.insert(wall);
+    triggerSystem->entities.insert(wall);
+
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
@@ -152,6 +158,7 @@ void Engine::update(float dt) {
     movementSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
     collisionSystem->update(*componentManager, dt);
+    triggerSystem->update(*componentManager, dt);
 }
 
 void Engine::processEvents() {

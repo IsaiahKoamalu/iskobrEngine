@@ -34,6 +34,7 @@ add_library(engine
         include/Engine/Components/Velocity.h
         include/Engine/Components/DirectionComponent.h
         include/Engine/Components/ColliderComponent.h
+        include/Engine/Systems/TriggerSystem.h
 )
 
 target_include_directories(engine
@@ -67,6 +68,7 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/AnimationSystem.h
         include/Engine/Components/DirectionComponent.h
         include/Engine/Components/ColliderComponent.h
+        include/Engine/Systems/TriggerSystem.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)

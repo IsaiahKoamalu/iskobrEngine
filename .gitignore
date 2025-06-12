@@ -1,0 +1,22 @@
+# CMake build folders
+cmake-build-*/
+cMakeCache.txt
+CMakeFiles/
+Makefile
+build/
+_deps/
+
+# SFML debug artifacts
+*.dll
+*.lib
+*.a
+*.exp
+*.pdb
+
+# CLion specific
+.idea/
+*.iml
+
+# MacOS and Windows metadata
+.DS_Store
+Thumbs.db
