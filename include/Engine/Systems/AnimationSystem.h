@@ -51,10 +51,10 @@ public:
             // Flip horizontally when needed.
             if (spriteComp.flipX) {
                 sprite.setScale(-3.f, 3.f);
-                sprite.setOrigin(animData.frameWidth, 0);
+                sprite.setOrigin(animData.frameWidth / 2.f, animData.frameHeight / 2.f);
             }else {
                 sprite.setScale(3.f, 3.f);
-                sprite.setOrigin(0,0);
+                sprite.setOrigin(animData.frameWidth / 2.f,animData.frameHeight / 2.f);
             }
         }
     }

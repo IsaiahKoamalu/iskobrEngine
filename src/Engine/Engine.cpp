@@ -12,7 +12,9 @@
 #include "Engine/Systems/RenderSystem.h"
 
 void Engine::run() {
-    window.create(sf::VideoMode(800, 600), "iskobr-Engine");
+    int WINDOW_WIDTH = 800;
+    int WINDOW_HEIGHT = 600;
+    window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "iskobr-Engine");
 
     sf::Clock clock;
 
@@ -28,6 +30,8 @@ void Engine::run() {
     animationSystem = systemManager->registerSystem<AnimationSystem>();
     collisionSystem = systemManager->registerSystem<CollisionSystem>();
     triggerSystem = systemManager->registerSystem<TriggerSystem>();
+    cameraSystem = systemManager->registerSystem<CameraSystem>(WINDOW_WIDTH, WINDOW_HEIGHT);
+    tileMapSystem = systemManager->registerSystem<TileMapSystem>();
 
     //Load texture and set up sprite
     auto idleTex = std::make_shared<sf::Texture>();
@@ -99,17 +103,15 @@ void Engine::run() {
         .frameTime = 0.1f
     };
 
-
-
     sf::Sprite playerSprite;
     playerSprite.setTexture(*idleTex);
     playerSprite.setScale(3, 3);
     playerSprite.setTextureRect(sf::IntRect(0,0,96,80));
-
+    playerSprite.setOrigin(96 / 2.f, 80 / 2.f);
 
     // Create player entity.
     Entity player = entityManager->createEntity();
-    componentManager->addComponent<Position>(player, {100.f, 100.f});
+    componentManager->addComponent<Position>(player, {400.f, 300.f});
     componentManager->addComponent<Velocity>(player, {0.f, 0.f});
     componentManager->addComponent<SpriteComponent>(player, {playerSprite});
     componentManager->addComponent<AnimationComponent>(player,anim);
@@ -131,6 +133,19 @@ void Engine::run() {
         .tag = "Test Event Wall"
     });
 
+    sf::Texture tileTexture;
+    tileTexture.loadFromFile("assets/grassSheet.png");
+
+    tileMapSystem->loadMap(
+        "assets/maps/level1.txt",
+        *componentManager,
+        *entityManager,
+        tileTexture,
+        32,
+        3,
+        *renderSystem
+
+    );
 
     // Register player entity with desired systems.
     movementSystem->entities.insert(player);
@@ -139,6 +154,7 @@ void Engine::run() {
     animationSystem->entities.insert(player);
     collisionSystem->entities.insert(player);
     triggerSystem->entities.insert(player);
+    cameraSystem->entities.insert(player);
 
     // Register test wall with systems
     collisionSystem->entities.insert(wall);
@@ -159,6 +175,8 @@ void Engine::update(float dt) {
     animationSystem->update(*componentManager, dt);
     collisionSystem->update(*componentManager, dt);
     triggerSystem->update(*componentManager, dt);
+    cameraSystem->update(*componentManager, dt);
+    window.setView(cameraSystem->view);
 }
 
 void Engine::processEvents() {
@@ -173,6 +191,11 @@ void Engine::processEvents() {
 void Engine::render() {
     window.clear(sf::Color::Black);
     renderSystem->update(window, *componentManager);
+    sf::CircleShape dot(4);
+    dot.setFillColor(sf::Color::Red);
+    dot.setOrigin(4, 4);
+    dot.setPosition(400, 300);
+    window.draw(dot);
     window.display();
 }
 

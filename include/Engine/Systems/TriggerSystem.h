@@ -13,7 +13,7 @@
  */
 class TriggerSystem : public System {
 public:
-    void update(ComponentManager& components, float dt) {
+    void update(ComponentManager& components, float dt){
         for (Entity a : entities) {
             if (!components.hasComponent<ColliderComponent>(a)) continue;
             if (!components.hasComponent<Position>(a)) continue;
@@ -41,7 +41,6 @@ public:
                 bBounds.top += bPos.y;
 
                if (aBounds.intersects(bBounds)) {
-                   std::cout << "Trigger Activated: [" << aCol.tag << "] with entity " << b << "\n";
 
                    aCol.active = false; // Mark trigger as used (if applicable)
                }

@@ -5,6 +5,7 @@
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/Position.h"
 #include "Engine/Components/Velocity.h"
+#include <iostream>
 
 
 
@@ -21,6 +22,23 @@ public:
 
    pos.x += vel.dx * dt;
    pos.y += vel.dy * dt;
+
+   // Level bounds (update to match your world size)
+   float levelWidth = 2000.f;
+   float levelHeight = 2000.f;
+
+   // Player size (if needed to offset half the sprite)
+   float halfW = 96.f / 2.f;
+   float halfH = 80.f / 2.f;
+
+   // Clamp X
+   if (pos.x < halfW) pos.x = halfW;
+   if (pos.x > levelWidth - halfW) pos.x = levelWidth - halfW;
+
+   // Clamp Y
+   if (pos.y < halfH) pos.y = halfH;
+   if (pos.y > levelHeight - halfH) pos.y = levelHeight - halfH;
+
   }
  }
 };
