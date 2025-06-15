@@ -11,7 +11,7 @@
 #include "Engine/Systems/PlayerInputSystem.h"
 #include "Engine/Systems/RenderSystem.h"
 
-void Engine::run() {
+void Engine::run(bool debugMode) {
     int WINDOW_WIDTH = 800;
     int WINDOW_HEIGHT = 600;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "iskobr-Engine");
@@ -22,6 +22,7 @@ void Engine::run() {
     entityManager = std::make_unique<EntityManager>();
     componentManager = std::make_unique<ComponentManager>();
     systemManager = std::make_unique<SystemManager>();
+    tilesetManager = std::make_unique<TilesetManager>();
 
     // Register systems
     renderSystem = systemManager->registerSystem<RenderSystem>();
@@ -119,33 +120,9 @@ void Engine::run() {
 
     //Player collider
     ColliderComponent playerCollider;
-    playerCollider.bounds = sf::FloatRect(0,0,96,80);
+    playerCollider.bounds = sf::FloatRect(-80 / 2.f,-70 / 2.f,80,96);
     playerCollider.isStatic = false;
     componentManager->addComponent<ColliderComponent>(player, playerCollider);
-
-    // Test Wall
-    Entity wall = entityManager->createEntity();
-    componentManager->addComponent<Position>(wall, {300.f, 300.f});
-    componentManager->addComponent<ColliderComponent>(wall, {
-        .bounds = sf::FloatRect(0.f, 0.f, 300.f, 300.f),
-        .isStatic = true,
-        .isTrigger = true,
-        .tag = "Test Event Wall"
-    });
-
-    sf::Texture tileTexture;
-    tileTexture.loadFromFile("assets/grassSheet.png");
-
-    tileMapSystem->loadMap(
-        "assets/maps/level1.txt",
-        *componentManager,
-        *entityManager,
-        tileTexture,
-        32,
-        3,
-        *renderSystem
-
-    );
 
     // Register player entity with desired systems.
     movementSystem->entities.insert(player);
@@ -156,16 +133,18 @@ void Engine::run() {
     triggerSystem->entities.insert(player);
     cameraSystem->entities.insert(player);
 
-    // Register test wall with systems
-    collisionSystem->entities.insert(wall);
-    triggerSystem->entities.insert(wall);
+    tilesetManager->addTileset("grass", "assets/grassSheet.png", 16, 16);
+    tilesetManager->addTileset("water", "assets/Water.png", 16, 16);
+    tilesetManager->addTileset("dirt", "assets/dirtSheet.png", 16, 16);
+    tilesetManager->addTileset("ncWater", "assets/NCWater.png", 16, 16);
+    tileMapSystem->loadMap("assets/maps/level1.txt", *componentManager, *entityManager, *tilesetManager, *renderSystem, *collisionSystem);
 
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
         processEvents();
         update(dt);
-        render();
+        render(debugMode);
     }
 }
 
@@ -188,14 +167,9 @@ void Engine::processEvents() {
     }
 }
 
-void Engine::render() {
-    window.clear(sf::Color::Black);
-    renderSystem->update(window, *componentManager);
-    sf::CircleShape dot(4);
-    dot.setFillColor(sf::Color::Red);
-    dot.setOrigin(4, 4);
-    dot.setPosition(400, 300);
-    window.draw(dot);
+void Engine::render(bool debugMode) {
+    window.clear(sf::Color(155,212,195));
+    renderSystem->update(window, *componentManager, debugMode);
     window.display();
 }
 

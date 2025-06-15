@@ -5,21 +5,36 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <unordered_map>
 #include "Engine/System.h"
 #include "Engine/Components/TileComponent.h"
 #include "Engine/Components/Position.h"
 #include "Engine/EntityManager.h"
 #include "Engine/ComponentManager.h"
+#include "Engine/TilesetManager.h"
 
 class TileMapSystem : public System {
 public:
+    int maxTileCount = 1000;
+
+    static TileType getTileTypeFromID(int id) {
+        switch (id) {
+            case 0: return TileType::Grass;
+            case 1: return TileType::Water;
+            case 2: return TileType::Wall;
+
+            default: return TileType::Empty;
+        }
+    }
+
      bool loadMap(const std::string& filename,
                  ComponentManager& components,
                  EntityManager& entityManager,
-                 sf::Texture& tilesheet,
-                 int tileSize,
-                 int tilesPerRow,
-                 RenderSystem& renderSystem) // Pass render system by reference
+                 TilesetManager& tilesetManager,
+                 RenderSystem& renderSystem, // Pass render system by reference
+                 CollisionSystem& collisionSystem,
+                 float tileScale = 3.0f
+    )
     {
         std::ifstream file(filename);
         if (!file.is_open()) {
@@ -27,55 +42,90 @@ public:
             return false;
         }
 
-        std::string line;
-        int y = 0;
+         std::string line;
+int y = 0;
 
-        while (std::getline(file, line)) {
-            for (int x = 0; x < static_cast<int>(line.size()); ++x) {
-                char tileChar = line[x];
+while (std::getline(file, line)) {
+    std::istringstream rowStream(line);
+    std::string token;
+    int x = 0;
 
-                if (tileChar < '0' || tileChar > '9')
-                    continue;
-
-                int tileID = tileChar - '0';
-
-                Entity tile = entityManager.createEntity();
-
-                // Create and set up the tile sprite
-                sf::Sprite sprite;
-                sprite.setTexture(tilesheet);
-
-                int tx = tileID % tilesPerRow;
-                int ty = tileID / tilesPerRow;
-
-                sprite.setTextureRect(sf::IntRect(tx * tileSize, ty * tileSize, tileSize, tileSize));
-                sprite.setScale(3,3);
-                sprite.setOrigin(tileSize / 2.f, tileSize / 2.f);
-                sprite.setPosition(x * tileSize + tileSize / 2.f, y * tileSize + tileSize / 2.f);
-
-                // Create and assign tile component
-                TileComponent tileComp;
-                tileComp.tileID = tileID;
-                tileComp.sprite = sprite;
-                tileComp.isSolid = (tileID == 1); // 1 = wall
-
-                components.addComponent<TileComponent>(tile, tileComp);
-
-                // Position is center-aligned (to match sprite)
-                components.addComponent<Position>(tile, {
-                    sprite.getPosition().x,
-                    sprite.getPosition().y
-                });
-
-                std::cout << "Spawning tile ID: " << tileID << " at (" << x << ", " << y << ")\n";
-
-
-                // Register tile entity with render system
-                renderSystem.entities.insert(tile);
-            }
-            y++;
+    while (std::getline(rowStream, token, ' ')) {
+        if (token.empty() || token == "-" || token == "-1") {
+            x++;
+            continue;
         }
 
+        try {
+            size_t delim = token.find(':');
+            if (delim == std::string::npos) {
+                std::cerr << "Invalid token format: " << token << std::endl;
+                x++;
+                continue;
+            }
+
+            std::string tilesetName = token.substr(0, delim);
+            int tileID = std::stoi(token.substr(delim + 1));
+
+            if (!tilesetManager.hasTileset(tilesetName)) {
+                std::cerr << "Tileset not found: " << tilesetName << std::endl;
+                x++;
+                continue;
+            }
+
+            const Tileset& ts = tilesetManager.getTileset(tilesetName);
+
+            Entity tile = entityManager.createEntity();
+            sf::Sprite sprite;
+            sprite.setTexture(ts.texture);
+
+            int tx = tileID % ts.tilesPerRow;
+            int ty = tileID / ts.tilesPerRow;
+
+            sprite.setTextureRect(sf::IntRect(
+                tx * ts.tileWidth,
+                ty * ts.tileHeight,
+                ts.tileWidth,
+                ts.tileHeight
+            ));
+            sprite.setOrigin(ts.tileWidth / 2.f, ts.tileHeight / 2.f);
+            sprite.setScale(tileScale, tileScale);
+            sprite.setPosition(x * ts.tileWidth * tileScale + ts.tileWidth / 2.f,
+                               y * ts.tileHeight * tileScale + ts.tileHeight / 2.f);
+
+            TileComponent tileComp;
+            tileComp.type = getTileTypeFromID(tileID);
+            tileComp.tileID = tileID;
+            tileComp.sprite = sprite;
+            tileComp.isSolid = (tileComp.type == TileType::Water);
+
+            if (tileComp.isSolid) {
+                ColliderComponent collider;
+                collider.bounds = {
+                    -ts.tileWidth * tileScale / 2.f,
+                    -ts.tileHeight - 50.f,
+                    ts.tileWidth * tileScale,
+                    ts.tileHeight * tileScale
+                };
+                collider.isStatic = true;
+                collider.tag = "Tile";
+
+                components.addComponent<ColliderComponent>(tile, collider);
+                collisionSystem.entities.insert(tile);
+            }
+
+            components.addComponent<TileComponent>(tile, tileComp);
+            components.addComponent<Position>(tile, { sprite.getPosition().x, sprite.getPosition().y });
+            renderSystem.entities.insert(tile);
+        } catch (const std::exception& e) {
+            std::cerr << "Invalid token: " << token << " (" << e.what() << ")\n";
+        }
+
+        x++;
+    }
+
+    y++;
+}
         std::cout << "Map loaded: " << filename << std::endl;
         return true;
     }

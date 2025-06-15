@@ -2,11 +2,14 @@
 #define TILECOMPONENT_H
 
 #include <SFML/Graphics.hpp>
+#include "Engine/Core/TileType.h"
 
 struct TileComponent {
-    int tileID = 0; // Tile identifier
-    sf::Sprite sprite;
-    bool isSolid = false; // Will block player movement if true
+   sf::Sprite sprite;
+   TileType type = TileType::Empty;
+   bool isSolid = false;
+   bool isAnimated = false;
+   int tileID = -1; // For raw ID tracking.
 };
 
 #endif

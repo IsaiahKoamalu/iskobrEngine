@@ -38,6 +38,8 @@ add_library(engine
         include/Engine/Systems/CameraSystem.h
         include/Engine/Components/TileComponent.h
         include/Engine/Systems/TileMapSystem.h
+        include/Engine/Core/TileType.h
+        include/Engine/TilesetManager.h
 )
 
 target_include_directories(engine
@@ -75,6 +77,8 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/CameraSystem.h
         include/Engine/Components/TileComponent.h
         include/Engine/Systems/TileMapSystem.h
+        include/Engine/Core/TileType.h
+        include/Engine/TilesetManager.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)

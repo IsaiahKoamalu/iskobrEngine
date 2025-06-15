@@ -17,9 +17,14 @@ public:
 
             auto& aCollider = components.getComponent<ColliderComponent>(a);
             auto& aPos = components.getComponent<Position>(a);
-            sf::FloatRect aBounds = aCollider.bounds;
-            aBounds.left += aPos.x;
-            aBounds.top += aPos.y;
+
+            // World bounds of a
+            sf::FloatRect aBounds = {
+                aPos.x + aCollider.bounds.left,
+                aPos.y + aCollider.bounds.top,
+                aCollider.bounds.width,
+                aCollider.bounds.height
+            };
 
             for (Entity b : entities) {
                 if (a == b) continue;
@@ -27,9 +32,14 @@ public:
 
                 auto& bCollider = components.getComponent<ColliderComponent>(b);
                 auto& bPos = components.getComponent<Position>(b);
-                sf::FloatRect bBounds = bCollider.bounds;
-                bBounds.left += bPos.x;
-                bBounds.top += bPos.y;
+
+                // World bounds off b
+                sf::FloatRect bBounds = {
+                    bPos.x + bCollider.bounds.left,
+                    bPos.y + bCollider.bounds.top,
+                    bCollider.bounds.width,
+                    bCollider.bounds.height
+                };
 
                 sf::FloatRect intersection;
                 if (aBounds.intersects(bBounds, intersection)) {
