@@ -5,8 +5,8 @@
 #include <string>
 
 const int TILE_SIZE = 16;
-const int MAP_WIDTH = 20;
-const int MAP_HEIGHT = 15;
+const int MAP_WIDTH = 40;
+const int MAP_HEIGHT = 40;
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE), "Tilemap Editor");
@@ -29,8 +29,8 @@ int main() {
             }
 
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                int col = event.mouseButton.x / TILE_SIZE;
-                int row = event.mouseButton.y / TILE_SIZE;
+                int col = event.mouseButton.x / (TILE_SIZE* 3);
+                int row = event.mouseButton.y / (TILE_SIZE * 3);
                 if (row < MAP_HEIGHT && col < MAP_WIDTH) {
                     map[row][col] = selectedTileID;
                 }
@@ -70,11 +70,17 @@ int main() {
                 if (id >= 0) {
                     sf::Sprite tile(tileset);
                     tile.setTextureRect(sf::IntRect(id * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
-                    tile.setPosition(x * TILE_SIZE, y * TILE_SIZE);
+                    tile.setPosition(x * TILE_SIZE * 3, y * TILE_SIZE * 3);
+                    tile.setScale(3.0f, 3.0f);
                     window.draw(tile);
                 }
             }
         }
+        sf::Sprite previewTile(tileset);
+        previewTile.setTextureRect(sf::IntRect(selectedTileID * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+        previewTile.setPosition(10, 10);
+        previewTile.setScale(2.0f, 2.0f);
+        window.draw(previewTile);
         window.display();
     }
 
