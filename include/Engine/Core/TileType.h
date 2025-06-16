@@ -5,7 +5,7 @@ enum class TileType {
     Empty,
     Grass,
     Water,
-    ncWater,
+    NCWater,
     Wall
 };
 

@@ -27,6 +27,15 @@ public:
         }
     }
 
+    bool issSolidTile(TileType type) {
+        switch (type) {
+            case TileType::Water:
+                return true;
+            default:
+                return false;
+        }
+    }
+
      bool loadMap(const std::string& filename,
                  ComponentManager& components,
                  EntityManager& entityManager,
@@ -97,13 +106,13 @@ while (std::getline(file, line)) {
             tileComp.type = getTileTypeFromID(tileID);
             tileComp.tileID = tileID;
             tileComp.sprite = sprite;
-            tileComp.isSolid = (tileComp.type == TileType::Water);
+            tileComp.isSolid = (tilesetName == "water");
 
             if (tileComp.isSolid) {
                 ColliderComponent collider;
                 collider.bounds = {
                     -ts.tileWidth * tileScale / 2.f,
-                    -ts.tileHeight - 50.f,
+                    -ts.tileHeight * tileScale / 2.f,
                     ts.tileWidth * tileScale,
                     ts.tileHeight * tileScale
                 };

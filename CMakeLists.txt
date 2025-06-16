@@ -55,6 +55,9 @@ target_link_libraries(engine
         sfml-audio
 )
 
+add_executable(tilemap_editor src/Editor/main_editor.cpp)
+target_link_libraries(tilemap_editor PRIVATE sfml-graphics sfml-window sfml-system)
+
 add_executable(${PROJECT_NAME} main.cpp
         include/Engine/InputManager.h
         src/Engine/InputManager.cpp
