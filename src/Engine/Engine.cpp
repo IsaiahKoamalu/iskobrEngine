@@ -137,7 +137,7 @@ void Engine::run(bool debugMode) {
     tilesetManager->addTileset("water", "assets/Water.png", 16, 16);
     tilesetManager->addTileset("dirt", "assets/dirtSheet.png", 16, 16);
     tilesetManager->addTileset("*water", "assets/NCWater.png", 16, 16);
-    tileMapSystem->loadMap("assets/maps/level1.txt", *componentManager, *entityManager, *tilesetManager, *renderSystem, *collisionSystem);
+    tileMapSystem->loadMap("assets/maps/level.json", *componentManager, *entityManager, *tilesetManager, *renderSystem, *collisionSystem);
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();

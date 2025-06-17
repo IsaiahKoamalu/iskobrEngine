@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <stack>
 #include <filesystem>
 #include "external/json/json.hpp"
 
@@ -42,19 +43,35 @@ struct Tile {
 };
 
 void saveMapToFile(const std::vector<std::vector<Tile>>& map, const std::string& filename, std::string tileType) {
-    std::ofstream outFile(filename);
+   json j;
+
+    j["width"] = MAP_WIDTH;
+    j["height"] = MAP_HEIGHT;
+
+    json tiles = json::array();
+
     for (const auto& row : map) {
-        for (size_t i = 0; i < row.size(); ++i) {
-            if (row[i].tileID >= 0)
-                outFile << idToName[row[i].sheetID] << ":" << row[i].tileID;
-            else
-                outFile << " ";
-            if (i < row.size() - 1) {outFile << ' ';}
+        json tileRow = json::array();
+        for (const auto& tile : row) {
+            if (tile.sheetID >= 0 && tile.tileID >= 0) {
+                tileRow.push_back({
+                    {"sheet", idToName[tile.sheetID]},
+                    {"id", tile.tileID}
+                });
+            }else {
+                tileRow.push_back(nullptr); // Empty tile
+            }
         }
-        outFile << "\n";
+        tiles.push_back(tileRow);
     }
+
+    j["tiles"] = tiles;
+
+    std::ofstream outFile(filename);
+    outFile << j.dump(4);
     outFile.close();
-    std::cout << "Map saved to: " << filename << std::endl;
+
+    std::cout << "Map saved to JSON: " << filename << std::endl;
 }
 
 int main() {
@@ -64,6 +81,7 @@ int main() {
     std::unordered_map<int, sf::Texture> tileSheets;
     sf::Texture grassSheet;
     sf::Texture waterSheet;
+
     if (!grassSheet.loadFromFile("assets/Grass.png")) {
         std::cerr << "Failed to load tileset.\n";
         return -1;
@@ -83,6 +101,11 @@ int main() {
     std::string selectedType = "grass";
     std::vector<std::vector<Tile>> tilemap(MAP_HEIGHT, std::vector<Tile>(MAP_WIDTH));
 
+    // Stacks for redo and undo functionality
+    std::stack<std::vector<std::vector<Tile>>> undoStack;
+    std::stack<std::vector<std::vector<Tile>>> redoStack;
+
+
     while (window.isOpen()) {
         sf::Event event{};
         while (window.pollEvent(event)) {
@@ -98,6 +121,20 @@ int main() {
                 std::cout << selectedTileID << std::endl;
             }
 
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.control && event.key.code == sf::Keyboard::Z && !undoStack.empty()) {
+                    redoStack.push(tilemap);
+                    tilemap = undoStack.top();
+                    undoStack.pop();
+                }
+
+                if (event.key.control && event.key.code == sf::Keyboard::Y && !redoStack.empty()) {
+                    undoStack.push(tilemap);
+                    tilemap = redoStack.top();
+                    redoStack.pop();
+                }
+            }
+
             // Handle tile selection (click on the side panel)
             if (event.type == sf::Event::MouseButtonPressed) {
                 int mouseX = event.mouseButton.x;
@@ -109,6 +146,8 @@ int main() {
                     int gridY = mouseY / SCALED_TILE_SIZE;
 
                     if (gridX >= 0 && gridX < MAP_WIDTH && gridY >= 0 && gridY < MAP_HEIGHT) {
+                        undoStack.push(tilemap);
+                        redoStack = {}; // Clear redo action upon new action
                         tilemap[gridY][gridX] = { selectedTileSheetID, selectedTileID };
                     }
                 } else {
@@ -124,7 +163,7 @@ int main() {
 
             // Press S to save map
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S) {
-                saveMapToFile(tilemap, "assets/maps/level1.txt", selectedType);
+                saveMapToFile(tilemap, "assets/maps/level.json", selectedType);
             }
         }
 

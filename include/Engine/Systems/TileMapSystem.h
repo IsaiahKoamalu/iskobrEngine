@@ -12,6 +12,7 @@
 #include "Engine/EntityManager.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/TilesetManager.h"
+#include "external/json/json.hpp"
 
 class TileMapSystem : public System {
 public:
@@ -40,102 +41,85 @@ public:
                  RenderSystem& renderSystem, // Pass render system by reference
                  CollisionSystem& collisionSystem,
                  float tileScale = 3.0f
-    )
-    {
+    ) {
         std::ifstream file(filename);
         if (!file.is_open()) {
             std::cerr << "Failed to open map file: " << filename << std::endl;
             return false;
         }
 
-        std::string line;
-        int y = 0;
+        nlohmann::json j;
+        file >> j;
 
-        while (std::getline(file, line)) {
-            std::istringstream rowStream(line);
-            std::string token;
-            int x = 0;
+        int width = j["width"];
+        int height = j["height"];
+        const auto& tileRows = j["tiles"];
 
-            while (std::getline(rowStream, token, ' ')) {
-                if (token.empty() || token == "-" || token == "-1") {
-                    x++;
+        for (int y = 0; y < height; ++y) {
+            const auto& row = tileRows[y];
+            for (int x = 0; x < width; ++x) {
+                const auto& cell = row[x];
+
+                if (cell.is_null()) continue;
+
+                std::string tilesetName = cell["sheet"];
+                int tileID = cell["id"];
+
+                if (!tilesetManager.hasTileset(tilesetName)) {
+                    std::cerr << "Tileset not found: " << tilesetName << std::endl;
                     continue;
                 }
 
-                try {
-                    size_t delim = token.find(':');
-                    if (delim == std::string::npos) {
-                        std::cerr << "Invalid token format: " << token << std::endl;
-                        x++;
-                        continue;
-                    }
+                const Tileset& ts = tilesetManager.getTileset(tilesetName);
 
+                Entity tile = entityManager.createEntity();
+                sf::Sprite sprite;
+                sprite.setTexture(ts.texture);
 
-                    std::string tilesetName = token.substr(0, delim);
-                    int tileID = std::stoi(token.substr(delim + 1));
+                int tx = tileID % ts.tilesPerRow;
+                int ty = tileID / ts.tilesPerRow;
 
-                    if (!tilesetManager.hasTileset(tilesetName)) {
-                        std::cerr << "Tileset not found: " << tilesetName << std::endl;
-                        x++;
-                        continue;
-                    }
+                sprite.setTextureRect(sf::IntRect(
+                    tx * ts.tileWidth,
+                    ty * ts.tileHeight,
+                    ts.tileWidth,
+                    ts.tileHeight
+                ));
+                sprite.setOrigin(ts.tileWidth / 2.f, ts.tileHeight / 2.f);
+                sprite.setScale(tileScale, tileScale);
+                sprite.setPosition(x * ts.tileWidth * tileScale + ts.tileWidth / 2.f,
+                                   y * ts.tileHeight * tileScale + ts.tileHeight / 2.f);
 
-                    const Tileset& ts = tilesetManager.getTileset(tilesetName);
+                TileComponent tileComp;
+                tileComp.type = getTileTypeFromID(tileID, tilesetName);
+                tileComp.tileID = tileID;
+                tileComp.sprite = sprite;
+                tileComp.isSolid = (tilesetName == "water"); // or pull from JSON if available later
 
-                    Entity tile = entityManager.createEntity();
-                    sf::Sprite sprite;
-                    sprite.setTexture(ts.texture);
+                if (tileComp.isSolid) {
+                    ColliderComponent collider;
+                    collider.bounds = {
+                        -ts.tileWidth * tileScale / 2.f,
+                        -ts.tileHeight * tileScale / 2.f,
+                        ts.tileWidth * tileScale,
+                        ts.tileHeight * tileScale
+                    };
+                    collider.isStatic = true;
+                    collider.tag = "Tile";
 
-                    int tx = tileID % ts.tilesPerRow;
-                    int ty = tileID / ts.tilesPerRow;
-
-                    sprite.setTextureRect(sf::IntRect(
-                        tx * ts.tileWidth,
-                        ty * ts.tileHeight,
-                        ts.tileWidth,
-                        ts.tileHeight
-                    ));
-                    sprite.setOrigin(ts.tileWidth / 2.f, ts.tileHeight / 2.f);
-                    sprite.setScale(tileScale, tileScale);
-                    sprite.setPosition(x * ts.tileWidth * tileScale + ts.tileWidth / 2.f,
-                                       y * ts.tileHeight * tileScale + ts.tileHeight / 2.f);
-
-                    TileComponent tileComp;
-                    tileComp.type = getTileTypeFromID(tileID, tilesetName);
-                    tileComp.tileID = tileID;
-                    tileComp.sprite = sprite;
-                    tileComp.isSolid = (tilesetName == "water");
-
-                    if (tileComp.isSolid) {
-                        ColliderComponent collider;
-                        collider.bounds = {
-                            -ts.tileWidth * tileScale / 2.f,
-                            -ts.tileHeight * tileScale / 2.f,
-                            ts.tileWidth * tileScale,
-                            ts.tileHeight * tileScale
-                        };
-                        collider.isStatic = true;
-                        collider.tag = "Tile";
-
-                        components.addComponent<ColliderComponent>(tile, collider);
-                        collisionSystem.entities.insert(tile);
-                    }
-
-                    components.addComponent<TileComponent>(tile, tileComp);
-                    components.addComponent<Position>(tile, { sprite.getPosition().x, sprite.getPosition().y });
-                    renderSystem.entities.insert(tile);
-                } catch (const std::exception& e) {
-                    std::cerr << "Invalid token: " << token << " (" << e.what() << ")\n";
+                    components.addComponent<ColliderComponent>(tile, collider);
+                    collisionSystem.entities.insert(tile);
                 }
 
-                x++;
+                components.addComponent<TileComponent>(tile, tileComp);
+                components.addComponent<Position>(tile, { sprite.getPosition().x, sprite.getPosition().y });
+                renderSystem.entities.insert(tile);
             }
+        }
 
-            y++;
-        }
-                std::cout << "Map loaded: " << filename << std::endl;
-                return true;
-        }
+        std::cout << "Map loaded from JSON: " << filename << std::endl;
+        return true;
+    }
 };
 
 #endif
