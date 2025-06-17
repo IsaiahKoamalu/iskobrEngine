@@ -1,0 +1,10 @@
+{
+  "grass": {
+    "path": "assets/Grass.png",
+    "id": 0
+  },
+  "water": {
+    "path": "assets/Water.png",
+    "id": 1
+  }
+}

@@ -120,7 +120,7 @@ void Engine::run(bool debugMode) {
 
     //Player collider
     ColliderComponent playerCollider;
-    playerCollider.bounds = sf::FloatRect(-80 / 2.f,-70 / 2.f,80,96);
+    playerCollider.bounds = sf::FloatRect(-15,38.5,34,20);
     playerCollider.isStatic = false;
     componentManager->addComponent<ColliderComponent>(player, playerCollider);
 
@@ -138,8 +138,6 @@ void Engine::run(bool debugMode) {
     tilesetManager->addTileset("dirt", "assets/dirtSheet.png", 16, 16);
     tilesetManager->addTileset("*water", "assets/NCWater.png", 16, 16);
     tileMapSystem->loadMap("assets/maps/level1.txt", *componentManager, *entityManager, *tilesetManager, *renderSystem, *collisionSystem);
-    tileMapSystem->loadMap("assets/maps/layer2.txt", *componentManager, *entityManager, *tilesetManager, *renderSystem, *collisionSystem);
-
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();

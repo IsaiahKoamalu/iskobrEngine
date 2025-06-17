@@ -19,6 +19,7 @@ add_library(engine
         src/Engine/Engine.cpp
         src/Engine/InputManager.cpp
         src/Engine/EntityManager.cpp
+        src/Editor/main_editor.cpp
 
         # include dir
         include/Engine/Engine.h
@@ -57,6 +58,7 @@ target_link_libraries(engine
 
 add_executable(tilemap_editor src/Editor/main_editor.cpp)
 target_link_libraries(tilemap_editor PRIVATE sfml-graphics sfml-window sfml-system)
+target_include_directories(tilemap_editor PRIVATE include)
 
 add_executable(${PROJECT_NAME} main.cpp
         include/Engine/InputManager.h

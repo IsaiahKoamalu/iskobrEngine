@@ -1,0 +1,15 @@
+                water:0 water:1 water:1 water:2 water:2              
+      water:0 water:0 water:0 water:0 water:0 grass:0 grass:1 grass:1 grass:2 water:2              
+      grass:0 grass:1 grass:2 water:0 water:0 grass:11 grass:66 grass:12 grass:13 water:2              
+      grass:11 grass:57 grass:49 grass:34 grass:34 grass:50 grass:58 grass:68 grass:13 water:2              
+      grass:22 grass:23 grass:24 water:1 water:1 grass:22 grass:23 grass:23 grass:24 water:2              
+      water:1 water:1 water:1 water:1 water:1 water:1 water:1 water:1 water:1 water:1              
+                                       
+                                       
+                                       
+                                       
+                                       
+                                       
+                                       
+                                       
+                                       
