@@ -41,6 +41,8 @@ add_library(engine
         include/Engine/Systems/TileMapSystem.h
         include/Engine/Core/TileType.h
         include/Engine/TilesetManager.h
+        include/Engine/Components/ActorComponent.h
+        include/Engine/Systems/ActorSystem.h
 )
 
 target_include_directories(engine

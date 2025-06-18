@@ -6,6 +6,7 @@
 #include "Engine/ComponentManager.h"
 #include "Engine/SystemManager.h"
 #include "Engine/Components/ColliderComponent.h"
+#include "Engine/Systems/ActorSystem.h"
 #include "Engine/Systems/CollisionSystem.h"
 #include "Engine/Systems/MovementSystem.h"
 #include "Engine/Systems/PlayerInputSystem.h"
@@ -33,6 +34,8 @@ void Engine::run(bool debugMode) {
     triggerSystem = systemManager->registerSystem<TriggerSystem>();
     cameraSystem = systemManager->registerSystem<CameraSystem>(WINDOW_WIDTH, WINDOW_HEIGHT);
     tileMapSystem = systemManager->registerSystem<TileMapSystem>();
+    actorSystem = systemManager->registerSystem<ActorSystem>();
+
 
     //Load texture and set up sprite
     auto idleTex = std::make_shared<sf::Texture>();
@@ -110,6 +113,19 @@ void Engine::run(bool debugMode) {
     playerSprite.setTextureRect(sf::IntRect(0,0,96,80));
     playerSprite.setOrigin(96 / 2.f, 80 / 2.f);
 
+    Entity npcActor = entityManager->createEntity();
+    componentManager->addComponent<ActorComponent>(npcActor, {"npcActor"});
+    componentManager->addComponent<Position>(npcActor, {500.f, 30.f});
+    componentManager->addComponent<Velocity>(npcActor, {0.f, 100.f});
+    componentManager->addComponent<DirectionComponent>(npcActor, {});
+    componentManager->addComponent<SpriteComponent>(npcActor, {playerSprite});
+    componentManager->addComponent<AnimationComponent>(npcActor, anim);
+
+    actorSystem->entities.insert(npcActor);
+    renderSystem->entities.insert(npcActor);
+    animationSystem->entities.insert(npcActor);
+    movementSystem->entities.insert(npcActor);
+
     // Create player entity.
     Entity player = entityManager->createEntity();
     componentManager->addComponent<Position>(player, {400.f, 300.f});
@@ -151,6 +167,7 @@ void Engine::update(float dt) {
     inputSystem->update(*componentManager, dt);
     movementSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
+    actorSystem->update(*componentManager, dt);
     collisionSystem->update(*componentManager, dt);
     triggerSystem->update(*componentManager, dt);
     cameraSystem->update(*componentManager, dt);

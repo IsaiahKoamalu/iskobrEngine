@@ -49,34 +49,13 @@
             null,
             null,
             null,
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
             null,
             null,
             null,
@@ -91,10 +70,8 @@
         [
             null,
             null,
-            {
-                "id": 0,
-                "sheet": "water"
-            },
+            null,
+            null,
             {
                 "id": 0,
                 "sheet": "grass"
@@ -104,180 +81,14 @@
                 "sheet": "grass"
             },
             {
-                "id": 5,
-                "sheet": "grass"
-            },
-            {
-                "id": 6,
-                "sheet": "grass"
-            },
-            {
-                "id": 5,
-                "sheet": "grass"
-            },
-            {
-                "id": 34,
-                "sheet": "grass"
-            },
-            {
-                "id": 7,
-                "sheet": "grass"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 57,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            {
-                "id": 15,
-                "sheet": "grass"
-            },
-            {
-                "id": 38,
-                "sheet": "grass"
-            },
-            {
-                "id": 35,
-                "sheet": "grass"
-            },
-            {
-                "id": 44,
-                "sheet": "grass"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 22,
-                "sheet": "grass"
-            },
-            {
-                "id": 19,
-                "sheet": "grass"
-            },
-            {
-                "id": 24,
-                "sheet": "grass"
-            },
-            {
-                "id": 25,
-                "sheet": "grass"
-            },
-            {
-                "id": 4,
-                "sheet": "grass"
-            },
-            {
-                "id": 6,
-                "sheet": "grass"
-            },
-            {
-                "id": 30,
-                "sheet": "grass"
-            },
-            {
                 "id": 2,
                 "sheet": "grass"
             },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
             null,
             null,
             null,
             null,
             null,
-            null,
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 14,
-                "sheet": "grass"
-            },
-            {
-                "id": 61,
-                "sheet": "grass"
-            },
-            {
-                "id": 72,
-                "sheet": "grass"
-            },
-            {
-                "id": 26,
-                "sheet": "grass"
-            },
-            {
-                "id": 28,
-                "sheet": "grass"
-            },
-            {
-                "id": 57,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
             null,
             null,
             null,
@@ -291,77 +102,9 @@
             null,
             null,
             null,
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 48,
-                "sheet": "grass"
-            },
-            {
-                "id": 34,
-                "sheet": "grass"
-            },
-            {
-                "id": 34,
-                "sheet": "grass"
-            },
-            {
-                "id": 42,
-                "sheet": "grass"
-            },
-            {
-                "id": 17,
-                "sheet": "grass"
-            },
-            {
-                "id": 67,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        ],
-        [
-            null,
-            null,
             null,
             {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 14,
-                "sheet": "grass"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 48,
-                "sheet": "grass"
-            },
-            {
-                "id": 39,
+                "id": 22,
                 "sheet": "grass"
             },
             {
@@ -372,55 +115,10 @@
                 "id": 24,
                 "sheet": "grass"
             },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
             null,
             null,
             null,
             null,
-            null,
-            null,
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 37,
-                "sheet": "grass"
-            },
-            {
-                "id": 34,
-                "sheet": "grass"
-            },
-            {
-                "id": 34,
-                "sheet": "grass"
-            },
-            {
-                "id": 40,
-                "sheet": "grass"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
             null,
             null,
             null,
@@ -436,22 +134,120 @@
             null,
             null,
             null,
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
-            {
-                "id": 0,
-                "sheet": "water"
-            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
             null,
             null,
             null,

@@ -17,6 +17,7 @@
 #include "Systems/TileMapSystem.h"
 #include "Systems/TriggerSystem.h"
 #include "Engine/TilesetManager.h"
+#include "Systems/ActorSystem.h"
 
 class  Engine {
 public:
@@ -45,6 +46,7 @@ private:
     std::shared_ptr<TriggerSystem> triggerSystem;
     std::shared_ptr<CameraSystem> cameraSystem;
     std::shared_ptr<TileMapSystem> tileMapSystem;
+    std::shared_ptr<ActorSystem> actorSystem;
 
 
 };
