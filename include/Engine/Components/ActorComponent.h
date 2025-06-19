@@ -5,7 +5,9 @@
 
 struct ActorComponent {
     std::string name;
-    enum class Behavior {Idle, Follow};
+
+    enum class Behavior { Idle, Follow };
+
     Behavior behavior = Behavior::Idle;
 
     float moveSpeed = 1.0f;

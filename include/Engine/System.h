@@ -13,9 +13,9 @@ using Entity = std::uint32_t;
 
 class System {
 public:
- std::set<Entity> entities;
+    std::set<Entity> entities;
 
- virtual ~System() = default;
+    virtual ~System() = default;
 };
 
 #endif

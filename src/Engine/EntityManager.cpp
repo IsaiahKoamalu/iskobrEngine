@@ -24,4 +24,3 @@ void EntityManager::destroyEntity(Entity entity) {
     // Recycle ID (push back into queue)
     availableEntities.push(entity);
 }
-

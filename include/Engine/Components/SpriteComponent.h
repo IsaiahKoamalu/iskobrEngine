@@ -9,8 +9,8 @@
  */
 
 struct SpriteComponent {
- sf::Sprite sprite;
- bool flipX = false;
+    sf::Sprite sprite;
+    bool flipX = false;
 };
 
 #endif

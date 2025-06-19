@@ -22,7 +22,7 @@
 
 using json = nlohmann::json;
 
-class  Engine {
+class Engine {
 public:
     void run(bool debugMode);
 
@@ -30,9 +30,12 @@ private:
     sf::RenderWindow window;
 
     void processEvents();
+
     void update(float dt);
+
     void render(bool debugMode);
-    bool loadEntities(std::string& filepath);
+
+    bool loadEntities(std::string &filepath);
 
     InputManager input;
 
@@ -51,8 +54,6 @@ private:
     std::shared_ptr<CameraSystem> cameraSystem;
     std::shared_ptr<TileMapSystem> tileMapSystem;
     std::shared_ptr<ActorSystem> actorSystem;
-
-
 };
 
 #endif

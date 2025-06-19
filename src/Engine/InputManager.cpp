@@ -12,4 +12,3 @@ bool InputManager::isKeyPressed(sf::Keyboard::Key key) const {
     auto it = keyStates.find(key);
     return it != keyStates.end() && it->second;
 }
-

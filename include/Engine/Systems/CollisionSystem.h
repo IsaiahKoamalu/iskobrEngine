@@ -11,12 +11,12 @@
  */
 class CollisionSystem : public System {
 public:
-    void update(ComponentManager& components, float dt) {
-        for (Entity a : entities) {
+    void update(ComponentManager &components, float dt) {
+        for (Entity a: entities) {
             if (!components.hasComponent<ColliderComponent>(a) || !components.hasComponent<Position>(a)) continue;
 
-            auto& aCollider = components.getComponent<ColliderComponent>(a);
-            auto& aPos = components.getComponent<Position>(a);
+            auto &aCollider = components.getComponent<ColliderComponent>(a);
+            auto &aPos = components.getComponent<Position>(a);
 
             // World bounds of a
             sf::FloatRect aBounds = {
@@ -26,12 +26,12 @@ public:
                 aCollider.bounds.height
             };
 
-            for (Entity b : entities) {
+            for (Entity b: entities) {
                 if (a == b) continue;
                 if (!components.hasComponent<ColliderComponent>(b) || !components.hasComponent<Position>(b)) continue;
 
-                auto& bCollider = components.getComponent<ColliderComponent>(b);
-                auto& bPos = components.getComponent<Position>(b);
+                auto &bCollider = components.getComponent<ColliderComponent>(b);
+                auto &bPos = components.getComponent<Position>(b);
 
                 // World bounds off b
                 sf::FloatRect bBounds = {
@@ -62,11 +62,9 @@ public:
                         }
                     }
                 }
-
             }
         }
     }
-
 };
 
 #endif

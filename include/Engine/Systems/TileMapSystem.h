@@ -18,11 +18,10 @@ class TileMapSystem : public System {
 public:
     int maxTileCount = 1000;
 
-    static TileType getTileTypeFromID(int id, const std::string& tileset) {
+    static TileType getTileTypeFromID(int id, const std::string &tileset) {
         if (tileset == "grass") return TileType::Grass;
         if (tileset == "water") return TileType::Water;
         return TileType::Empty;
-
     }
 
     bool issSolidTile(TileType type) {
@@ -34,12 +33,12 @@ public:
         }
     }
 
-     bool loadMap(const std::string& filename,
-                 ComponentManager& components,
-                 EntityManager& entityManager,
-                 TilesetManager& tilesetManager,
-                 RenderSystem& renderSystem, // Pass render system by reference
-                 CollisionSystem& collisionSystem,
+    bool loadMap(const std::string &filename,
+                 ComponentManager &components,
+                 EntityManager &entityManager,
+                 TilesetManager &tilesetManager,
+                 RenderSystem &renderSystem, // Pass render system by reference
+                 CollisionSystem &collisionSystem,
                  float tileScale = 3.0f
     ) {
         std::ifstream file(filename);
@@ -53,12 +52,12 @@ public:
 
         int width = j["width"];
         int height = j["height"];
-        const auto& tileRows = j["tiles"];
+        const auto &tileRows = j["tiles"];
 
         for (int y = 0; y < height; ++y) {
-            const auto& row = tileRows[y];
+            const auto &row = tileRows[y];
             for (int x = 0; x < width; ++x) {
-                const auto& cell = row[x];
+                const auto &cell = row[x];
 
                 if (cell.is_null()) continue;
 
@@ -70,7 +69,7 @@ public:
                     continue;
                 }
 
-                const Tileset& ts = tilesetManager.getTileset(tilesetName);
+                const Tileset &ts = tilesetManager.getTileset(tilesetName);
 
                 Entity tile = entityManager.createEntity();
                 sf::Sprite sprite;
@@ -112,7 +111,7 @@ public:
                 }
 
                 components.addComponent<TileComponent>(tile, tileComp);
-                components.addComponent<Position>(tile, { sprite.getPosition().x, sprite.getPosition().y });
+                components.addComponent<Position>(tile, {sprite.getPosition().x, sprite.getPosition().y});
                 renderSystem.entities.insert(tile);
             }
         }

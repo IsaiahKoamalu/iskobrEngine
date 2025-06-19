@@ -18,47 +18,46 @@
 
 class RenderSystem : public System {
 public:
- void update(sf::RenderWindow& window, ComponentManager& components, bool debugMode) {
-  // First draw all tile components
-  for (auto entity : entities) {
-   if (components.hasComponent<TileComponent>(entity)) {
-    auto& pos = components.getComponent<Position>(entity);
-    auto& tile = components.getComponent<TileComponent>(entity);
-    tile.sprite.setPosition(pos.x, pos.y);
-    window.draw(tile.sprite);
-   }
-  }
+    void update(sf::RenderWindow &window, ComponentManager &components, bool debugMode) {
+        // First draw all tile components
+        for (auto entity: entities) {
+            if (components.hasComponent<TileComponent>(entity)) {
+                auto &pos = components.getComponent<Position>(entity);
+                auto &tile = components.getComponent<TileComponent>(entity);
+                tile.sprite.setPosition(pos.x, pos.y);
+                window.draw(tile.sprite);
+            }
+        }
 
-  if (debugMode) {
-   for (auto entity : entities) {
-    if (components.hasComponent<ColliderComponent>(entity)) {
-     const auto& collider = components.getComponent<ColliderComponent>(entity);
-     const auto& pos = components.getComponent<Position>(entity);
+        if (debugMode) {
+            for (auto entity: entities) {
+                if (components.hasComponent<ColliderComponent>(entity)) {
+                    const auto &collider = components.getComponent<ColliderComponent>(entity);
+                    const auto &pos = components.getComponent<Position>(entity);
 
-     sf::RectangleShape debugRect;
-     debugRect.setSize({collider.bounds.width, collider.bounds.height});
-     debugRect.setPosition(pos.x + collider.bounds.left, pos.y + collider.bounds.top);
-     debugRect.setFillColor(sf::Color::Transparent);
-     debugRect.setOutlineColor(sf::Color::Red);
-     debugRect.setOutlineThickness(1.0f);
-     window.draw(debugRect);
+                    sf::RectangleShape debugRect;
+                    debugRect.setSize({collider.bounds.width, collider.bounds.height});
+                    debugRect.setPosition(pos.x + collider.bounds.left, pos.y + collider.bounds.top);
+                    debugRect.setFillColor(sf::Color::Transparent);
+                    debugRect.setOutlineColor(sf::Color::Red);
+                    debugRect.setOutlineThickness(1.0f);
+                    window.draw(debugRect);
+                }
+            }
+        }
+
+        // Then draw all sprite components (like player)
+        for (auto entity: entities) {
+            if (components.hasComponent<SpriteComponent>(entity) &&
+                !components.hasComponent<TileComponent>(entity)) // Don't draw tiles twice
+            {
+                auto &spriteComp = components.getComponent<SpriteComponent>(entity);
+                auto &pos = components.getComponent<Position>(entity);
+                spriteComp.sprite.setPosition(pos.x, pos.y);
+                window.draw(spriteComp.sprite);
+            }
+        }
     }
-   }
-  }
-
-  // Then draw all sprite components (like player)
-  for (auto entity : entities) {
-   if (components.hasComponent<SpriteComponent>(entity) &&
-       !components.hasComponent<TileComponent>(entity))  // Don't draw tiles twice
-   {
-    auto& spriteComp = components.getComponent<SpriteComponent>(entity);
-    auto& pos = components.getComponent<Position>(entity);
-    spriteComp.sprite.setPosition(pos.x, pos.y);
-    window.draw(spriteComp.sprite);
-   }
-  }
-
- }
 };
 
 #endif

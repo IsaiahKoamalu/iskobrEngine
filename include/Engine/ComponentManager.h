@@ -19,6 +19,7 @@ using Entity = std::uint32_t;
 class IComponentArray {
 public:
     virtual ~IComponentArray() = default;
+
     virtual void entityDestroyed(Entity entity) = 0;
 };
 
@@ -38,7 +39,7 @@ public:
         components.erase(entity);
     }
 
-    T& get(Entity entity) {
+    T &get(Entity entity) {
         assert(components.find(entity) != components.end() && "Component not found.");
         return components[entity];
     }
@@ -72,7 +73,7 @@ public:
     }
 
     template<typename T>
-    T& getComponent(Entity entity) {
+    T &getComponent(Entity entity) {
         return getComponentArray<T>()->get(entity);
     }
 
@@ -82,28 +83,28 @@ public:
     }
 
     void entityDestroyed(Entity entity) {
-        for (auto const& pair : componentArrays) {
+        for (auto const &pair: componentArrays) {
             pair.second->entityDestroyed(entity);
         }
     }
 
 private:
     // Maps type_index (component type) -> ComponentArray base ptr.
-    std::unordered_map<std::type_index, std::shared_ptr<IComponentArray>> componentArrays;
+    std::unordered_map<std::type_index, std::shared_ptr<IComponentArray> > componentArrays;
 
     // Internal helper for retrieving a typed component array.
     template<typename T>
-    std::shared_ptr<ComponentArray<T>> getComponentArray(){
+    std::shared_ptr<ComponentArray<T> > getComponentArray() {
         std::type_index typeIndex = typeid(T);
 
         auto it = componentArrays.find(typeIndex);
         if (it == componentArrays.end()) {
             // if not found, create and store a new component array for this type.
-            auto newArray = std::make_shared<ComponentArray<T>>();
+            auto newArray = std::make_shared<ComponentArray<T> >();
             componentArrays[typeIndex] = newArray;
             return newArray;
         }
-        return std::static_pointer_cast<ComponentArray<T>>(it->second);
+        return std::static_pointer_cast<ComponentArray<T> >(it->second);
     }
 };
 

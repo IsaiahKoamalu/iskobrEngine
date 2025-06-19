@@ -15,7 +15,7 @@ struct Tileset {
 
     Tileset() = default;
 
-    Tileset(std::string  name, const std::string& filepath, int tileW, int tileH)
+    Tileset(std::string name, const std::string &filepath, int tileW, int tileH)
         : name(std::move(name)), tileWidth(tileW), tileHeight(tileH) {
         if (!texture.loadFromFile(filepath)) {
             throw std::runtime_error("Failed to load tileset: " + filepath);
@@ -26,11 +26,11 @@ struct Tileset {
 
 class TilesetManager {
 public:
-    void addTileset(const std::string& name, const std::string& filepath, int tileW, int tileH) {
+    void addTileset(const std::string &name, const std::string &filepath, int tileW, int tileH) {
         tilesets.emplace(name, Tileset(name, filepath, tileW, tileH));
     }
 
-    const Tileset& getTileset(const std::string& name) const {
+    const Tileset &getTileset(const std::string &name) const {
         auto it = tilesets.find(name);
         if (it == tilesets.end()) {
             throw std::runtime_error("Tileset not found: " + name);
@@ -38,7 +38,7 @@ public:
         return it->second;
     }
 
-    bool hasTileset(const std::string& name) const {
+    bool hasTileset(const std::string &name) const {
         return tilesets.find(name) != tilesets.end();
     }
 

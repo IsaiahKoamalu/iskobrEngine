@@ -9,10 +9,10 @@
 
 class AnimationSystem : public System {
 public:
-    void update(ComponentManager& components, float dt) {
-        for (Entity entity : entities) {
-            auto& animComp = components.getComponent<AnimationComponent>(entity);
-            auto& sprite = components.getComponent<SpriteComponent>(entity).sprite;
+    void update(ComponentManager &components, float dt) {
+        for (Entity entity: entities) {
+            auto &animComp = components.getComponent<AnimationComponent>(entity);
+            auto &sprite = components.getComponent<SpriteComponent>(entity).sprite;
 
             // Get the current state's animation data
             auto it = animComp.animations.find(animComp.currentState);
@@ -21,7 +21,7 @@ public:
                 continue;
             }
 
-            AnimationData& animData = it->second;
+            AnimationData &animData = it->second;
 
             // If state changed, reset frame and update texture
             if (animComp.currentState != animComp.previousState) {

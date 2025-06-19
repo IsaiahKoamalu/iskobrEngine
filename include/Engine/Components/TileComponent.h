@@ -5,11 +5,11 @@
 #include "Engine/Core/TileType.h"
 
 struct TileComponent {
-   sf::Sprite sprite;
-   TileType type = TileType::Empty;
-   bool isSolid = false;
-   bool isAnimated = false;
-   int tileID = -1; // For raw ID tracking.
+    sf::Sprite sprite;
+    TileType type = TileType::Empty;
+    bool isSolid = false;
+    bool isAnimated = false;
+    int tileID = -1; // For raw ID tracking.
 };
 
 #endif

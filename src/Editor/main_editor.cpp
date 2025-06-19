@@ -13,7 +13,7 @@ using json = nlohmann::json;
 std::unordered_map<std::string, int> nameToID;
 std::unordered_map<int, std::string> idToName;
 
-void loadTilesetData(const std::string& path) {
+void loadTilesetData(const std::string &path) {
     std::ifstream file(path);
     std::cout << "Trying to open: " << std::filesystem::absolute(path) << "\n";
 
@@ -24,7 +24,7 @@ void loadTilesetData(const std::string& path) {
     json tilesetData;
     file >> tilesetData;
 
-    for (const auto& [name, data] : tilesetData.items()) {
+    for (const auto &[name, data]: tilesetData.items()) {
         int id = data["id"];
         nameToID[name] = id;
         idToName[id] = name;
@@ -42,23 +42,23 @@ struct Tile {
     int tileID = -1;
 };
 
-void saveMapToFile(const std::vector<std::vector<Tile>>& map, const std::string& filename, std::string tileType) {
-   json j;
+void saveMapToFile(const std::vector<std::vector<Tile> > &map, const std::string &filename, std::string tileType) {
+    json j;
 
     j["width"] = MAP_WIDTH;
     j["height"] = MAP_HEIGHT;
 
     json tiles = json::array();
 
-    for (const auto& row : map) {
+    for (const auto &row: map) {
         json tileRow = json::array();
-        for (const auto& tile : row) {
+        for (const auto &tile: row) {
             if (tile.sheetID >= 0 && tile.tileID >= 0) {
                 tileRow.push_back({
                     {"sheet", idToName[tile.sheetID]},
                     {"id", tile.tileID}
                 });
-            }else {
+            } else {
                 tileRow.push_back(nullptr); // Empty tile
             }
         }
@@ -75,7 +75,6 @@ void saveMapToFile(const std::vector<std::vector<Tile>>& map, const std::string&
 }
 
 int main() {
-
     loadTilesetData("assets/tilesets.json");
     sf::RenderWindow window(sf::VideoMode(1600, 800), "Tilemap Editor");
     std::unordered_map<int, sf::Texture> tileSheets;
@@ -99,11 +98,11 @@ int main() {
     int selectedTileSheetID = 0;
     int selectedTileID = 0;
     std::string selectedType = "grass";
-    std::vector<std::vector<Tile>> tilemap(MAP_HEIGHT, std::vector<Tile>(MAP_WIDTH));
+    std::vector<std::vector<Tile> > tilemap(MAP_HEIGHT, std::vector<Tile>(MAP_WIDTH));
 
     // Stacks for redo and undo functionality
-    std::stack<std::vector<std::vector<Tile>>> undoStack;
-    std::stack<std::vector<std::vector<Tile>>> redoStack;
+    std::stack<std::vector<std::vector<Tile> > > undoStack;
+    std::stack<std::vector<std::vector<Tile> > > redoStack;
 
 
     while (window.isOpen()) {
@@ -113,11 +112,11 @@ int main() {
                 window.close();
 
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E) {
-                selectedTileSheetID ++;
+                selectedTileSheetID++;
                 std::cout << selectedTileID << std::endl;
             }
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Q) {
-                selectedTileSheetID --;
+                selectedTileSheetID--;
                 std::cout << selectedTileID << std::endl;
             }
 
@@ -148,7 +147,7 @@ int main() {
                     if (gridX >= 0 && gridX < MAP_WIDTH && gridY >= 0 && gridY < MAP_HEIGHT) {
                         undoStack.push(tilemap);
                         redoStack = {}; // Clear redo action upon new action
-                        tilemap[gridY][gridX] = { selectedTileSheetID, selectedTileID };
+                        tilemap[gridY][gridX] = {selectedTileSheetID, selectedTileID};
                     }
                 } else {
                     // Click on tile selector (right panel)

@@ -1,5 +1,6 @@
 [
   {
+    "player": true,
     "sprite": true,
     "spritePath": {
       "idleUp": {
@@ -18,7 +19,72 @@
         "name": "idleRight",
         "filePath": "assets/idle_right.png"
       },
-      "walkUp":{
+      "walkUp": {
+        "name": "runUp",
+        "filePath": "assets/walk_up.png"
+      },
+      "walkDown": {
+        "name": "runDown",
+        "filePath": "assets/walk_down.png"
+      },
+      "walkLeft": {
+        "name": "runLeft",
+        "filePath": "assets/walk_left.png"
+      },
+      "walkRight": {
+        "name": "runRight",
+        "filePath": "assets/walk_right.png"
+      },
+      "attackRight1": {
+        "name": "attackRight1",
+        "filePath": "assets/attack1_right.png"
+      }
+    },
+    "anim": {
+      "start": "idleDown",
+      "frameCount": 8,
+      "frameWidth": 96,
+      "frameHeight": 80,
+      "frameTime": 0.1
+    },
+    "Position": {
+      "x": 700,
+      "y": 600
+    },
+    "Velocity": {
+      "dx": 0,
+      "dy": 0
+    },
+    "Direction": true,
+    "Collision": {
+      "rectLeft": -15,
+      "rectTop": 38.5,
+      "rectWidth": 34,
+      "rectHeight": 20,
+      "isStatic": false
+    },
+    "Movement": true
+  },
+  {
+    "sprite": true,
+    "spritePath": {
+      "idleUp": {
+        "name": "idleUp",
+        "filePath": "assets/idle_up.png"
+      },
+      "idleDown": {
+        "name": "idleDown",
+        "filePath": "assets/idle_down.png"
+      },
+      "idleLeft": {
+        "name": "idleLeft",
+        "filePath": "assets/idle_Left.png"
+      },
+      "idleRight": {
+        "name": "idleRight",
+        "filePath": "assets/idle_right.png"
+      },
+      "walkUp": {
         "name": "runUp",
         "filePath": "assets/walk_up.png"
       },
@@ -35,7 +101,7 @@
         "filePath": "assets/walk_right.png"
       }
     },
-    "actor":{
+    "actor": {
       "name": "TestActor"
     },
     "anim": {
@@ -63,7 +129,6 @@
     },
     "Movement": true
   },
-
   {
     "sprite": true,
     "spritePath": {
@@ -131,5 +196,4 @@
       "y": 250
     }
   }
-
 ]

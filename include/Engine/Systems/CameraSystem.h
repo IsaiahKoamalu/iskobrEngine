@@ -16,10 +16,10 @@ public:
         view.setCenter(0.f, 0.f);
     }
 
-    void update(ComponentManager& components, float dt) {
-        for (Entity entity : entities) {
+    void update(ComponentManager &components, float dt) {
+        for (Entity entity: entities) {
             if (!components.hasComponent<Position>(entity)) continue;
-            auto& pos = components.getComponent<Position>(entity);
+            auto &pos = components.getComponent<Position>(entity);
 
             float targetX = pos.x;
             float targetY = pos.y;
