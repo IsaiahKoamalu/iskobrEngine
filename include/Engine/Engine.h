@@ -18,6 +18,9 @@
 #include "Systems/TriggerSystem.h"
 #include "Engine/TilesetManager.h"
 #include "Systems/ActorSystem.h"
+#include "external/json/json.hpp"
+
+using json = nlohmann::json;
 
 class  Engine {
 public:
@@ -29,6 +32,7 @@ private:
     void processEvents();
     void update(float dt);
     void render(bool debugMode);
+    bool loadEntities(std::string& filepath);
 
     InputManager input;
 

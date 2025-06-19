@@ -1,10 +1,10 @@
 {
   "grass": {
-    "path": "assets/Grass.png",
+    "filePath": "assets/Grass.png",
     "id": 0
   },
   "water": {
-    "path": "assets/Water.png",
+    "filePath": "assets/Water.png",
     "id": 1
   }
 }

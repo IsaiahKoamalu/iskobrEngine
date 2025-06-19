@@ -12,6 +12,7 @@
 #include "Engine/Systems/PlayerInputSystem.h"
 #include "Engine/Systems/RenderSystem.h"
 
+
 void Engine::run(bool debugMode) {
     int WINDOW_WIDTH = 800;
     int WINDOW_HEIGHT = 600;
@@ -38,8 +39,11 @@ void Engine::run(bool debugMode) {
 
 
     //Load texture and set up sprite
-    auto idleTex = std::make_shared<sf::Texture>();
-    idleTex->loadFromFile("assets/player.png");
+    auto idleRightTex = std::make_shared<sf::Texture>();
+    idleRightTex->loadFromFile("assets/idle_right.png");
+
+    auto idleLeftTex = std::make_shared<sf::Texture>();
+    idleLeftTex->loadFromFile("assets/idle_left.png");
 
     auto idleDownTex = std::make_shared<sf::Texture>();
     idleDownTex->loadFromFile("assets/idle_down.png");
@@ -47,8 +51,11 @@ void Engine::run(bool debugMode) {
     auto idleUpTex = std::make_shared<sf::Texture>();
     idleUpTex->loadFromFile("assets/idle_up.png");
 
-    auto walkTex = std::make_shared<sf::Texture>();
-    walkTex->loadFromFile("assets/walk.png");
+    auto walkRightTex = std::make_shared<sf::Texture>();
+    walkRightTex->loadFromFile("assets/walk_right.png");
+
+    auto walkLeftTex = std::make_shared<sf::Texture>();
+    walkLeftTex->loadFromFile("assets/walk_left.png");
 
     auto walkUpTex = std::make_shared<sf::Texture>();
     walkUpTex->loadFromFile("assets/walk_up.png");
@@ -57,10 +64,18 @@ void Engine::run(bool debugMode) {
     walkDownTex->loadFromFile("assets/walk_down.png");
 
     AnimationComponent anim;
-    anim.currentState = "idle";
+    anim.currentState = "idleRight";
 
-    anim.animations["idle"] = {
-        .texture = idleTex,
+    anim.animations["idleRight"] = {
+        .texture = idleRightTex,
+        .frameCount = 8,
+        .frameWidth = 96,
+        .frameHeight = 80,
+        .frameTime = 0.2f
+    };
+
+    anim.animations["idleLeft"] = {
+        .texture = idleLeftTex,
         .frameCount = 8,
         .frameWidth = 96,
         .frameHeight = 80,
@@ -83,15 +98,23 @@ void Engine::run(bool debugMode) {
         .frameTime = 0.2f
     };
 
-    anim.animations["walk"] = {
-        .texture = walkTex,
+    anim.animations["walkRight"] = {
+        .texture = walkRightTex,
         .frameCount = 8,
         .frameWidth = 96,
         .frameHeight = 80,
         .frameTime = 0.1f
     };
 
-    anim.animations["up"] = {
+    anim.animations["walkLeft"] = {
+        .texture = walkLeftTex,
+        .frameCount = 8,
+        .frameWidth = 96,
+        .frameHeight = 80,
+        .frameTime = 0.1f
+    };
+
+    anim.animations["walkUp"] = {
         .texture = walkUpTex,
         .frameCount = 8,
         .frameWidth = 96,
@@ -99,7 +122,7 @@ void Engine::run(bool debugMode) {
         .frameTime = 0.1f
     };
 
-    anim.animations["down"] = {
+    anim.animations["walkDown"] = {
         .texture = walkDownTex,
         .frameCount = 8,
         .frameWidth = 96,
@@ -108,23 +131,32 @@ void Engine::run(bool debugMode) {
     };
 
     sf::Sprite playerSprite;
-    playerSprite.setTexture(*idleTex);
+    playerSprite.setTexture(*idleRightTex);
     playerSprite.setScale(3, 3);
     playerSprite.setTextureRect(sf::IntRect(0,0,96,80));
     playerSprite.setOrigin(96 / 2.f, 80 / 2.f);
 
+    // Base collider
+    ColliderComponent baseCollider;
+    baseCollider.bounds = sf::FloatRect(-15,38.5,34,20);
+    baseCollider.isStatic = false;
+
+    // Creating Entities
+
     Entity npcActor = entityManager->createEntity();
     componentManager->addComponent<ActorComponent>(npcActor, {"npcActor"});
     componentManager->addComponent<Position>(npcActor, {500.f, 30.f});
-    componentManager->addComponent<Velocity>(npcActor, {0.f, 100.f});
+    componentManager->addComponent<Velocity>(npcActor, {0.f, 0.f});
     componentManager->addComponent<DirectionComponent>(npcActor, {});
     componentManager->addComponent<SpriteComponent>(npcActor, {playerSprite});
     componentManager->addComponent<AnimationComponent>(npcActor, anim);
+    componentManager->addComponent<ColliderComponent>(npcActor, baseCollider);
 
-    actorSystem->entities.insert(npcActor);
+    //actorSystem->entities.insert(npcActor);
     renderSystem->entities.insert(npcActor);
-    animationSystem->entities.insert(npcActor);
-    movementSystem->entities.insert(npcActor);
+    //animationSystem->entities.insert(npcActor);
+    //collisionSystem->entities.insert(npcActor);
+    //movementSystem->entities.insert(npcActor);
 
     // Create player entity.
     Entity player = entityManager->createEntity();
@@ -133,12 +165,7 @@ void Engine::run(bool debugMode) {
     componentManager->addComponent<SpriteComponent>(player, {playerSprite});
     componentManager->addComponent<AnimationComponent>(player,anim);
     componentManager->addComponent<DirectionComponent>(player, {});
-
-    //Player collider
-    ColliderComponent playerCollider;
-    playerCollider.bounds = sf::FloatRect(-15,38.5,34,20);
-    playerCollider.isStatic = false;
-    componentManager->addComponent<ColliderComponent>(player, playerCollider);
+    componentManager->addComponent<ColliderComponent>(player, baseCollider);
 
     // Register player entity with desired systems.
     movementSystem->entities.insert(player);
@@ -148,6 +175,11 @@ void Engine::run(bool debugMode) {
     collisionSystem->entities.insert(player);
     triggerSystem->entities.insert(player);
     cameraSystem->entities.insert(player);
+
+    auto entityFile = std::make_shared<std::string>("assets/entities.json");
+    if (!loadEntities(*entityFile)) {
+        std::cerr << "PROBLEM LOADING ENTITIES" << std::endl;
+    };
 
     tilesetManager->addTileset("grass", "assets/grassSheet.png", 16, 16);
     tilesetManager->addTileset("water", "assets/Water.png", 16, 16);
@@ -188,5 +220,103 @@ void Engine::render(bool debugMode) {
     renderSystem->update(window, *componentManager, debugMode);
     window.display();
 }
+
+bool Engine::loadEntities(std::string& filepath) {
+    std::ifstream file(filepath);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open entity file: " << filepath << std::endl;
+        return false;
+    }
+    nlohmann::json jsonArray;
+    file >> jsonArray;
+
+    for (const auto& j : jsonArray) {
+        Entity entity = entityManager->createEntity();
+
+        std::string startAnim = j["anim"]["start"];
+        std::shared_ptr<sf::Texture> entityTexture;
+        if (j.contains("anim")) {
+            AnimationComponent anim;
+            anim.currentState = startAnim;
+            for (auto it = j["spritePath"].begin(); it != j["spritePath"].end(); ++it) {
+                auto tex = std::make_shared<sf::Texture>();
+                if (!tex->loadFromFile(it.value()["filePath"])) {
+                    std::cerr << "Failed to load: " << it.value()["filePath"] << std::endl;
+                    continue;
+                }
+
+                anim.animations[it.key()] = {
+                    .texture = tex,
+                    .frameCount = j["anim"]["frameCount"],
+                    .frameWidth = j["anim"]["frameWidth"],
+                    .frameHeight = j["anim"]["frameHeight"],
+                    .frameTime = j["anim"]["frameTime"]
+                };
+
+                if (it.key() == startAnim) {
+                    entityTexture = tex;
+                }
+            }
+            componentManager->addComponent<AnimationComponent>(entity, {anim});
+            std::cout << "Added AnimationComponent for entity with states:\n";
+            for (const auto& [k, _] : anim.animations)
+                std::cout << " - " << k << '\n';
+            animationSystem->entities.insert(entity);
+        }
+        if (entityTexture) {
+            sf::Sprite entitySprite;
+            entitySprite.setTexture(*entityTexture);
+            entitySprite.setScale(3, 3);
+            entitySprite.setTextureRect(sf::IntRect(0, 0, j["anim"]["frameWidth"], j["anim"]["frameHeight"]));
+            float originX = j["anim"]["frameWidth"].get<float>() / 2.f;
+            float originY = j["anim"]["frameHeight"].get<float>() / 2.f;
+            entitySprite.setOrigin(originX, originY);
+
+            componentManager->addComponent<SpriteComponent>(entity, {entitySprite});
+        }
+
+        if (j.contains("sprite") && j["sprite"] == true) {
+            std::string startAnim = j["anim"]["start"];
+            auto entityTexture = std::make_shared<sf::Texture>();
+            entityTexture->loadFromFile(j["spritePath"][startAnim]["filePath"]);
+
+            sf::Sprite entitySprite;
+            entitySprite.setTexture(*entityTexture);
+            entitySprite.setScale(3, 3);
+            entitySprite.setTextureRect(sf::IntRect(0,0,48,64));
+            entitySprite.setOrigin(48 / 2.f, 64 / 2.f);
+        }
+        if (j.contains("actor")) {
+            componentManager->addComponent<ActorComponent>(entity, {j["actor"]["name"]});
+            actorSystem->entities.insert(entity);
+        }
+        if (j.contains("Position")) {
+            componentManager->addComponent<Position>(entity, {j["Position"]["x"], j["Position"]["y"]});
+        };
+        if (j.contains("Velocity")) {
+            componentManager->addComponent<Velocity>(entity, {j["Velocity"]["dx"], j["Velocity"]["dy"]});
+        }
+        if (j.contains("Direction") && j["Direction"] == true) {
+            componentManager->addComponent<DirectionComponent>(entity, {});
+        }
+        if (j.contains("Collision")) {
+            ColliderComponent colCom;
+            colCom.bounds = sf::FloatRect(j["Collision"]["rectLeft"], j["Collision"]["rectTop"], j["Collision"]["rectWidth"], j["Collision"]["rectHeight"]);
+            colCom.isStatic = j["Collision"]["isStatic"];
+
+            componentManager->addComponent<ColliderComponent>(entity, colCom);
+            collisionSystem->entities.insert(entity);
+        }
+
+        if (j.contains("Movement")) {
+            movementSystem->entities.insert(entity);
+        }
+
+        renderSystem->entities.insert(entity);
+    }
+
+    return true;
+}
+
 
 

@@ -39,13 +39,17 @@ public:
     auto& anim = components.getComponent<AnimationComponent>(entity);
     if (moveY < 0) {
      dir.current = Direction::Up;
-     anim.currentState = "up";
+     anim.currentState = "walkUp";
     }else if (moveY > 0) {
      dir.current = Direction::Down;
-     anim.currentState = "down";
-    }else if(moveX != 0) {
+     anim.currentState = "walkDown";
+    }else if(moveX > 0) {
      dir.current = Direction::Right;
-     anim.currentState = "walk";
+     anim.currentState = "walkRight";
+    }
+    else if (moveX < 0) {
+     dir.current = Direction::Left;
+     anim.currentState = "walkLeft";
     }else {
      switch (dir.current) {
       case Direction::Up:
@@ -55,8 +59,10 @@ public:
        anim.currentState = "idleDown";
        break;
       case Direction::Left:
+       anim.currentState = "idleLeft";
+       break;
       case Direction::Right:
-       anim.currentState = "idle";
+       anim.currentState = "idleRight";
        break;
      }
     }
@@ -66,11 +72,6 @@ public:
    auto& spriteComp = components.getComponent<SpriteComponent>(entity);
    velocity.dx = moveX * speed;
    velocity.dy = moveY * speed;
-   if (velocity.dx < 0) {
-    spriteComp.flipX = true;
-   }else if (velocity.dx > 0) {
-    spriteComp.flipX = false;
-   }
   }
  }
 };

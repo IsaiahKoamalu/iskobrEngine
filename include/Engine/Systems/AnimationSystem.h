@@ -12,7 +12,6 @@ public:
     void update(ComponentManager& components, float dt) {
         for (Entity entity : entities) {
             auto& animComp = components.getComponent<AnimationComponent>(entity);
-            auto& spriteComp = components.getComponent<SpriteComponent>(entity);
             auto& sprite = components.getComponent<SpriteComponent>(entity).sprite;
 
             // Get the current state's animation data
@@ -40,6 +39,7 @@ public:
                 animComp.currentFrame = (animComp.currentFrame + 1) % animData.frameCount;
             }
 
+            sprite.setTexture(*animData.texture);
             // Update the sprite's texture rectangle
             sprite.setTextureRect(sf::IntRect(
                 animComp.currentFrame * animData.frameWidth,
@@ -47,15 +47,6 @@ public:
                 animData.frameWidth,
                 animData.frameHeight
             ));
-
-            // Flip horizontally when needed.
-            if (spriteComp.flipX) {
-                sprite.setScale(-3.f, 3.f);
-                sprite.setOrigin(animData.frameWidth / 2.f, animData.frameHeight / 2.f);
-            }else {
-                sprite.setScale(3.f, 3.f);
-                sprite.setOrigin(animData.frameWidth / 2.f,animData.frameHeight / 2.f);
-            }
         }
     }
 };

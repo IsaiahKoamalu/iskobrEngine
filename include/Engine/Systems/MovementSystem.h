@@ -23,7 +23,7 @@ public:
    pos.x += vel.dx * dt;
    pos.y += vel.dy * dt;
 
-   // Level bounds (update to match your world size)
+   // Level bounds
    float levelWidth = 2000.f;
    float levelHeight = 2000.f;
 
