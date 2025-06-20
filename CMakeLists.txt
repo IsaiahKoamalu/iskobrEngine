@@ -28,21 +28,24 @@ add_library(engine
         include/Engine/ComponentManager.h
         include/Engine/System.h
         include/Engine/SystemManager.h
-        include/Engine/Systems/MovementSystem.h
+        include/Engine/TilesetManager.h
         include/Engine/Components/SpriteComponent.h
-        include/Engine/Systems/RenderSystem.h
         include/Engine/Components/Position.h
         include/Engine/Components/Velocity.h
         include/Engine/Components/DirectionComponent.h
+        include/Engine/Components/PlayerComponent.h
         include/Engine/Components/ColliderComponent.h
-        include/Engine/Systems/TriggerSystem.h
-        include/Engine/Systems/CameraSystem.h
-        include/Engine/Components/TileComponent.h
-        include/Engine/Systems/TileMapSystem.h
-        include/Engine/Core/TileType.h
-        include/Engine/TilesetManager.h
         include/Engine/Components/ActorComponent.h
+        include/Engine/Components/TileComponent.h
+        include/Engine/Systems/CameraSystem.h
+        include/Engine/Systems/TileMapSystem.h
+        include/Engine/Systems/TriggerSystem.h
+        include/Engine/Systems/RenderSystem.h
         include/Engine/Systems/ActorSystem.h
+        include/Engine/Systems/MovementSystem.h
+        include/Engine/Systems/PhysicsSystem.h
+        include/Engine/Systems/GroundResetSystem.h
+        include/Engine/Core/TileType.h
 )
 
 target_include_directories(engine
@@ -63,29 +66,32 @@ target_link_libraries(tilemap_editor PRIVATE sfml-graphics sfml-window sfml-syst
 target_include_directories(tilemap_editor PRIVATE include)
 
 add_executable(${PROJECT_NAME} main.cpp
-        include/Engine/InputManager.h
-        src/Engine/InputManager.cpp
-        include/Engine/EntityManager.h
         src/Engine/EntityManager.cpp
+        src/Engine/InputManager.cpp
+        include/Engine/InputManager.h
+        include/Engine/EntityManager.h
         include/Engine/ComponentManager.h
         include/Engine/System.h
         include/Engine/SystemManager.h
-        include/Engine/Systems/MovementSystem.h
+        include/Engine/TilesetManager.h
+        include/Engine/Components/PlayerComponent.h
         include/Engine/Components/SpriteComponent.h
-        include/Engine/Systems/RenderSystem.h
-        include/Engine/Systems/PlayerInputSystem.h
         include/Engine/Components/Position.h
         include/Engine/Components/Velocity.h
         include/Engine/Components/AnimationComponent.h
-        include/Engine/Systems/AnimationSystem.h
+        include/Engine/Components/TileComponent.h
         include/Engine/Components/DirectionComponent.h
         include/Engine/Components/ColliderComponent.h
         include/Engine/Systems/TriggerSystem.h
+        include/Engine/Systems/AnimationSystem.h
         include/Engine/Systems/CameraSystem.h
-        include/Engine/Components/TileComponent.h
         include/Engine/Systems/TileMapSystem.h
+        include/Engine/Systems/PlayerInputSystem.h
+        include/Engine/Systems/RenderSystem.h
+        include/Engine/Systems/MovementSystem.h
+        include/Engine/Systems/PhysicsSystem.h
+        include/Engine/Systems/GroundResetSystem.h
         include/Engine/Core/TileType.h
-        include/Engine/TilesetManager.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)

@@ -6,6 +6,7 @@
 #include "Engine/ComponentManager.h"
 #include "Engine/SystemManager.h"
 #include "Engine/Components/ColliderComponent.h"
+#include "Engine/Components/PlayerComponent.h"
 #include "Engine/Systems/ActorSystem.h"
 #include "Engine/Systems/CollisionSystem.h"
 #include "Engine/Systems/MovementSystem.h"
@@ -36,6 +37,8 @@ void Engine::run(bool debugMode) {
     cameraSystem = systemManager->registerSystem<CameraSystem>(WINDOW_WIDTH, WINDOW_HEIGHT);
     tileMapSystem = systemManager->registerSystem<TileMapSystem>();
     actorSystem = systemManager->registerSystem<ActorSystem>();
+    physicsSystem = systemManager->registerSystem<PhysicsSystem>();
+    groundResetSystem = systemManager->registerSystem<GroundResetSystem>();
 
     auto entityFile = std::make_shared<std::string>("assets/entities.json");
     if (!loadEntities(*entityFile)) {
@@ -59,10 +62,11 @@ void Engine::run(bool debugMode) {
 
 void Engine::update(float dt) {
     inputSystem->update(*componentManager, dt);
+    physicsSystem->update(*componentManager, dt);
     movementSystem->update(*componentManager, dt);
+    collisionSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
     actorSystem->update(*componentManager, dt);
-    collisionSystem->update(*componentManager, dt);
     triggerSystem->update(*componentManager, dt);
     cameraSystem->update(*componentManager, dt);
     window.setView(cameraSystem->view);
@@ -95,9 +99,15 @@ bool Engine::loadEntities(std::string &filepath) {
     for (const auto &j: jsonArray) {
         Entity entity = entityManager->createEntity();
 
+        std::cout << "|------WORKING ON ENTITY: " << j["name"] << "------|\n";
+
         if (j.contains("player") && j["player"] == true) {
             cameraSystem->entities.insert(entity);
             inputSystem->entities.insert(entity);
+            groundResetSystem->entities.insert(entity);
+            componentManager->addComponent<PlayerComponent>(entity,{});
+            std::cout << "...Registered To Systems: cameraSystem, inputSystem, groundResetSystem\n";
+            std::cout << "...Added Component: PlayerComponent\n";
         }
 
         std::string startAnim = j["anim"]["start"];
@@ -114,10 +124,10 @@ bool Engine::loadEntities(std::string &filepath) {
 
                 anim.animations[it.key()] = {
                     .texture = tex,
-                    .frameCount = j["anim"]["frameCount"],
+                    .frameCount = it.value()["frameCount"],
                     .frameWidth = j["anim"]["frameWidth"],
                     .frameHeight = j["anim"]["frameHeight"],
-                    .frameTime = j["anim"]["frameTime"]
+                    .frameTime = it.value()["frameTime"]
                 };
 
                 if (it.key() == startAnim) {
@@ -125,10 +135,11 @@ bool Engine::loadEntities(std::string &filepath) {
                 }
             }
             componentManager->addComponent<AnimationComponent>(entity, {anim});
-            std::cout << "Added AnimationComponent for entity with states:\n";
+            std::cout << "...Added Component: AnimationComponent->with the following states:";
             for (const auto &[k, _]: anim.animations)
                 std::cout << " - " << k << '\n';
             animationSystem->entities.insert(entity);
+            std::cout << "...Registered To System: animationSystem\n";
         }
         if (entityTexture) {
             sf::Sprite entitySprite;
@@ -140,6 +151,7 @@ bool Engine::loadEntities(std::string &filepath) {
             entitySprite.setOrigin(originX, originY);
 
             componentManager->addComponent<SpriteComponent>(entity, {entitySprite});
+            std::cout << "...Added Component: SpriteComponent\n";
         }
 
         if (j.contains("sprite") && j["sprite"] == true) {
@@ -156,15 +168,26 @@ bool Engine::loadEntities(std::string &filepath) {
         if (j.contains("actor")) {
             componentManager->addComponent<ActorComponent>(entity, {j["actor"]["name"]});
             actorSystem->entities.insert(entity);
+            std::cout << "...Added Component: Actor Name\n";
+            std::cout << "...Registered To System: actorSystem\n";
         }
         if (j.contains("Position")) {
             componentManager->addComponent<Position>(entity, {j["Position"]["x"], j["Position"]["y"]});
+            //float x = j["Positon"]["x"].get<float>();
+            //float y = j["Position"]["y"].get<float>();
+            //std::cout << "...Added Component: PositionComponent-> with coordinates {" << x << "," << y << "}\n";
         };
         if (j.contains("Velocity")) {
             componentManager->addComponent<Velocity>(entity, {j["Velocity"]["dx"], j["Velocity"]["dy"]});
+            physicsSystem->entities.insert(entity);
+            float dx = j["Velocity"]["dx"].get<float>();
+            float dy = j["Velocity"]["dy"].get<float>();
+            std::cout << "...Component Added: Velocity-> with vectors {" << dx << "," << dy << "}\n";
+            std::cout << "...Registered To System: physicsSystem\n";
         }
         if (j.contains("Direction") && j["Direction"] == true) {
             componentManager->addComponent<DirectionComponent>(entity, {});
+            std::cout << "...Added Component: DirectionComponent\n";
         }
         if (j.contains("Collision")) {
             ColliderComponent colCom;
@@ -174,13 +197,23 @@ bool Engine::loadEntities(std::string &filepath) {
 
             componentManager->addComponent<ColliderComponent>(entity, colCom);
             collisionSystem->entities.insert(entity);
+
+            std::cout << "...Added Component: ColliderComponent-> with the following parameters...\n "
+                         "        rectLeft:" << j["Collision"]["rectLeft"] << "\n "
+                         "        rectTop:" << j["Collision"]["rectTop"] << "\n"
+                         "        rectWidth:" << j["Collision"]["rectWidth"] << "\n"
+                         "        rectHeight:" << j["Collision"]["rectHeight"] << "\n"
+                         "        isStatic:" << j["Collision"]["isStatic"] << "\n";
+            std::cout << "...Registered To System: collisionSystem\n";
         }
 
         if (j.contains("Movement")) {
             movementSystem->entities.insert(entity);
+            std::cout << "...Registered To System: movementSystem\n";
         }
 
         renderSystem->entities.insert(entity);
+        std::cout << "Registered To System: renderSystem\n";
     }
 
     return true;

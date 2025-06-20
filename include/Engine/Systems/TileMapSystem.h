@@ -93,15 +93,15 @@ public:
                 tileComp.type = getTileTypeFromID(tileID, tilesetName);
                 tileComp.tileID = tileID;
                 tileComp.sprite = sprite;
-                tileComp.isSolid = (tilesetName == "water"); // or pull from JSON if available later
+                tileComp.isSolid = (tilesetName == "grass"); // or pull from JSON if available later
 
                 if (tileComp.isSolid) {
                     ColliderComponent collider;
                     collider.bounds = {
                         -ts.tileWidth * tileScale / 2.f,
-                        -ts.tileHeight * tileScale / 2.f,
+                        (-ts.tileHeight * tileScale / 2.f) + 10,
                         ts.tileWidth * tileScale,
-                        ts.tileHeight * tileScale
+                        (ts.tileHeight * tileScale) - 10
                     };
                     collider.isStatic = true;
                     collider.tag = "Tile";

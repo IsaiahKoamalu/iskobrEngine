@@ -5,6 +5,7 @@
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/Position.h"
+#include "Engine/Components/PlayerComponent.h"
 
 /**
  * @brief A system responsible for identifying collisions and resolving them.
@@ -33,7 +34,7 @@ public:
                 auto &bCollider = components.getComponent<ColliderComponent>(b);
                 auto &bPos = components.getComponent<Position>(b);
 
-                // World bounds off b
+                // World bounds of b
                 sf::FloatRect bBounds = {
                     bPos.x + bCollider.bounds.left,
                     bPos.y + bCollider.bounds.top,
@@ -48,17 +49,36 @@ public:
                         float overlapY = intersection.height;
 
                         if (overlapX < overlapY) {
-                            // Push in X direction
+                            // Resolve in X direction
                             if (aBounds.left < bBounds.left)
                                 aPos.x -= overlapX;
                             else
                                 aPos.x += overlapX;
                         } else {
-                            // Push in Y direction
-                            if (aBounds.top < bBounds.top)
+                            // Resolve in Y direction
+                            bool fromAbove = aBounds.top < bBounds.top;
+
+                            if (fromAbove) {
                                 aPos.y -= overlapY;
-                            else
+
+                                // Reset falling speed
+                                if (components.hasComponent<Velocity>(a)) {
+                                    components.getComponent<Velocity>(a).dy = 0;
+                                }
+
+                                // Mark grounded
+                                if (components.hasComponent<PlayerComponent>(a)) {
+                                    components.getComponent<PlayerComponent>(a).isGrounded = true;
+                                }
+                            } else {
+                                // Colliding from below
                                 aPos.y += overlapY;
+
+                                // Stop upward movement
+                                if (components.hasComponent<Velocity>(a)) {
+                                    components.getComponent<Velocity>(a).dy = 0;
+                                }
+                            }
                         }
                     }
                 }

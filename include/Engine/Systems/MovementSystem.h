@@ -19,6 +19,8 @@ public:
             auto &pos = components.getComponent<Position>(entity);
             auto &vel = components.getComponent<Velocity>(entity);
 
+            //std::cout << "{" << pos.x << ", " << pos.y << "}" << std::endl;
+
             pos.x += vel.dx * dt;
             pos.y += vel.dy * dt;
 

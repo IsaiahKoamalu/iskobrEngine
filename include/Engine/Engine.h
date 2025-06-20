@@ -19,6 +19,8 @@
 #include "Engine/TilesetManager.h"
 #include "Systems/ActorSystem.h"
 #include "external/json/json.hpp"
+#include "Systems/GroundResetSystem.h"
+#include "Systems/PhysicsSystem.h"
 
 using json = nlohmann::json;
 
@@ -54,6 +56,8 @@ private:
     std::shared_ptr<CameraSystem> cameraSystem;
     std::shared_ptr<TileMapSystem> tileMapSystem;
     std::shared_ptr<ActorSystem> actorSystem;
+    std::shared_ptr<PhysicsSystem> physicsSystem;
+    std::shared_ptr<GroundResetSystem> groundResetSystem;
 };
 
 #endif

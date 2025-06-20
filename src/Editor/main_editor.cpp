@@ -80,6 +80,7 @@ int main() {
     std::unordered_map<int, sf::Texture> tileSheets;
     sf::Texture grassSheet;
     sf::Texture waterSheet;
+    sf::Texture dirtSheet;
 
     if (!grassSheet.loadFromFile("assets/Grass.png")) {
         std::cerr << "Failed to load tileset.\n";
@@ -88,8 +89,13 @@ int main() {
     if (!waterSheet.loadFromFile("assets/Water.png")) {
         std::cerr << "Failed to load: assets/Water.png\n";
     }
+    if (!dirtSheet.loadFromFile("assets/dirtSheet.png")) {
+        std::cerr << "Failed to load: assets/dirtSheet.png\n";
+    }
+
     tileSheets[0] = grassSheet;
     tileSheets[1] = waterSheet;
+    tileSheets[2] = dirtSheet;
 
     // Calculate columns and rows from the tilesheet
     int tileCols = grassSheet.getSize().x / TILE_SIZE;

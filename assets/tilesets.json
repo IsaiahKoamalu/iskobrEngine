@@ -6,5 +6,9 @@
   "water": {
     "filePath": "assets/Water.png",
     "id": 1
+  },
+  "dirt": {
+    "filePath": "assets/dirtSheet.png",
+    "id": 2
   }
 }

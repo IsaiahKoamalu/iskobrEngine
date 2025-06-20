@@ -1,118 +1,71 @@
 [
   {
+    "name": "Player",
     "player": true,
     "sprite": true,
     "spritePath": {
-      "idleUp": {
-        "name": "idleUp",
-        "filePath": "assets/idle_up.png"
-      },
-      "idleDown": {
-        "name": "idleDown",
-        "filePath": "assets/idle_down.png"
-      },
       "idleLeft": {
         "name": "idleLeft",
-        "filePath": "assets/idle_Left.png"
+        "filePath": "assets/idle_left.png",
+        "frameCount": 10,
+        "frameTime": 0.1
       },
       "idleRight": {
         "name": "idleRight",
-        "filePath": "assets/idle_right.png"
-      },
-      "walkUp": {
-        "name": "runUp",
-        "filePath": "assets/walk_up.png"
-      },
-      "walkDown": {
-        "name": "runDown",
-        "filePath": "assets/walk_down.png"
+        "filePath": "assets/idle_right.png",
+        "frameCount": 10,
+        "frameTime": 0.1
       },
       "walkLeft": {
         "name": "runLeft",
-        "filePath": "assets/walk_left.png"
+        "filePath": "assets/walk_left.png",
+        "frameCount": 8,
+        "frameTime": 0.1
       },
       "walkRight": {
         "name": "runRight",
-        "filePath": "assets/walk_right.png"
+        "filePath": "assets/walk_right.png",
+        "frameCount": 8,
+        "frameTime": 0.1
       },
-      "attackRight1": {
-        "name": "attackRight1",
-        "filePath": "assets/attack1_right.png"
+      "jumpRight": {
+        "name": "jumpRight",
+        "filePath": "assets/jump_right.png",
+        "frameCount": 6,
+        "frameTime": 0.15
+      },
+      "jumpLeft": {
+        "name": "jumpLeft",
+        "filePath": "assets/jump_left.png",
+        "frameCount": 6,
+        "frameTime": 0.15
+      },
+      "landRight": {
+        "name": "landRight",
+        "filePath": "assets/land_right.png",
+        "frameCount": 9,
+        "frameTime": 0.1
+      },
+      "rollRight": {
+        "name": "rollRight",
+        "filePath": "assets/roll_right.png",
+        "frameCount": 7,
+        "frameTime": 0.1
+      },
+      "rollLeft": {
+        "name": "rollLeft",
+        "filePath": "assets/roll_left.png",
+        "frameCount": 7,
+        "frameTime": 0.1
       }
     },
     "anim": {
-      "start": "idleDown",
-      "frameCount": 8,
-      "frameWidth": 96,
-      "frameHeight": 80,
-      "frameTime": 0.1
+      "start": "idleRight",
+      "frameWidth": 48,
+      "frameHeight": 48
     },
     "Position": {
-      "x": 700,
-      "y": 600
-    },
-    "Velocity": {
-      "dx": 0,
-      "dy": 0
-    },
-    "Direction": true,
-    "Collision": {
-      "rectLeft": -15,
-      "rectTop": 38.5,
-      "rectWidth": 34,
-      "rectHeight": 20,
-      "isStatic": false
-    },
-    "Movement": true
-  },
-  {
-    "sprite": true,
-    "spritePath": {
-      "idleUp": {
-        "name": "idleUp",
-        "filePath": "assets/idle_up.png"
-      },
-      "idleDown": {
-        "name": "idleDown",
-        "filePath": "assets/idle_down.png"
-      },
-      "idleLeft": {
-        "name": "idleLeft",
-        "filePath": "assets/idle_Left.png"
-      },
-      "idleRight": {
-        "name": "idleRight",
-        "filePath": "assets/idle_right.png"
-      },
-      "walkUp": {
-        "name": "runUp",
-        "filePath": "assets/walk_up.png"
-      },
-      "walkDown": {
-        "name": "runDown",
-        "filePath": "assets/walk_down.png"
-      },
-      "walkLeft": {
-        "name": "runLeft",
-        "filePath": "assets/walk_left.png"
-      },
-      "walkRight": {
-        "name": "runRight",
-        "filePath": "assets/walk_right.png"
-      }
-    },
-    "actor": {
-      "name": "TestActor"
-    },
-    "anim": {
-      "start": "idleDown",
-      "frameCount": 8,
-      "frameWidth": 96,
-      "frameHeight": 80,
-      "frameTime": 0.1
-    },
-    "Position": {
-      "x": 500,
+      "x": 100,
       "y": 200
     },
     "Velocity": {
@@ -122,78 +75,32 @@
     "Direction": true,
     "Collision": {
       "rectLeft": -15,
-      "rectTop": 38.5,
+      "rectTop": -36,
       "rectWidth": 34,
-      "rectHeight": 20,
+      "rectHeight": 85,
       "isStatic": false
     },
     "Movement": true
   },
   {
+    "name": "Tree",
     "sprite": true,
     "spritePath": {
       "idle": {
         "name": "idle",
-        "filePath": "assets/green_pine_idle.png"
+        "filePath": "assets/green_pine_idle.png",
+        "frameCount": 4,
+        "frameTime": 0.2
       }
     },
     "anim": {
       "start": "idle",
-      "frameCount": 4,
-      "frameWidth": 48,
-      "frameHeight": 64,
-      "frameTime": 0.5
+      "frameWidth":48,
+      "frameHeight": 64
     },
     "Position": {
-      "x": 400,
-      "y": 400
-    }
-  },
-  {
-    "sprite": true,
-    "spritePath": {
-      "idle": {
-        "name": "idle",
-        "filePath": "assets/green_pine_idle.png"
-      }
-    },
-    "anim": {
-      "start": "idle",
-      "frameCount": 4,
-      "frameWidth": 48,
-      "frameHeight": 64,
-      "frameTime": 0.5
-    },
-    "Position": {
-      "x": 600,
-      "y": 300
-    },
-    "Collision": {
-      "rectLeft": -15,
-      "rectTop": 55,
-      "rectWidth": 34,
-      "rectHeight": 20,
-      "isStatic": false
-    }
-  },
-  {
-    "sprite": true,
-    "spritePath": {
-      "idle": {
-        "name": "idle",
-        "filePath": "assets/fire_sheet.png"
-      }
-    },
-    "anim": {
-      "start": "idle",
-      "frameCount": 7,
-      "frameWidth": 32,
-      "frameHeight": 32,
-      "frameTime": 0.1
-    },
-    "Position": {
-      "x": 100,
-      "y": 250
+      "x": 563,
+      "y": 160
     }
   }
 ]
