@@ -102,5 +102,26 @@
       "x": 563,
       "y": 160
     }
+  },
+  {
+    "name": "Tree",
+    "sprite": true,
+    "spritePath": {
+      "idle": {
+        "name": "idle",
+        "filePath": "assets/green_pine_idle.png",
+        "frameCount": 4,
+        "frameTime": 0.9
+      }
+    },
+    "anim": {
+      "start": "idle",
+      "frameWidth":48,
+      "frameHeight": 64
+    },
+    "Position": {
+      "x": 700,
+      "y": 400
+    }
   }
 ]

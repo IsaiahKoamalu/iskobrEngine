@@ -10,6 +10,7 @@
 #include "Engine/Components/AnimationComponent.h"
 #include "Engine/Components/DirectionComponent.h"
 #include "Engine/Components/PlayerComponent.h"
+#include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/SpriteComponent.h"
 
 /**
@@ -25,6 +26,15 @@ public:
         float moveX = 0.0f;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) moveX -= 1.0f;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) moveX += 1.0f;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+            for (Entity entity : entities) {
+                if (components.hasComponent<PlayerComponent>(entity)) {
+                    auto &pos = components.getComponent<Position>(entity);
+                    pos.x = 100;
+                    pos.y = 200;
+                }
+            }
+        }
 
         bool jumpPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
         bool rollPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
@@ -46,10 +56,16 @@ public:
                     std::cout << "Started Roll\n";
                 }
                 if (player.isRolling) {
+                    // Adjusting collision box to account for rolling. (NOTE: be sure to offset the height and top by equal values)
+                    auto& colCom = components.getComponent<ColliderComponent>(entity);
+                    colCom.bounds.top = -10;
+                    colCom.bounds.height = 59;
                     player.rollTimer -= dt;
                     if (player.rollTimer <= 0.0f) {
                         player.isRolling = false;
                         std::cout << "Ended Roll\n";
+                        colCom.bounds.top = -36;
+                        colCom.bounds.height = 85;
                     }
                     auto &dir = components.getComponent<DirectionComponent>(entity);
                     velocity.dx = (dir.current == Direction::Left ? -1.0f : 1.0f) * player.rollSpeed;
