@@ -12,7 +12,16 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/SFML/SFML.git
         GIT_TAG 2.6.x
 )
+
+FetchContent_Declare(
+        glm
+        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        GIT_TAG 1.0.1
+)
+
 FetchContent_MakeAvailable(SFML)
+FetchContent_MakeAvailable(glm)
+
 
 add_library(engine
         # src dir
@@ -46,6 +55,7 @@ add_library(engine
         include/Engine/Systems/PhysicsSystem.h
         include/Engine/Systems/GroundResetSystem.h
         include/Engine/Core/TileType.h
+        include/Engine/Components/WallClingComponent.h
 )
 
 target_include_directories(engine
@@ -59,6 +69,7 @@ target_link_libraries(engine
         sfml-window
         sfml-system
         sfml-audio
+        glm::glm
 )
 
 add_executable(tilemap_editor src/Editor/main_editor.cpp)
@@ -92,6 +103,7 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/PhysicsSystem.h
         include/Engine/Systems/GroundResetSystem.h
         include/Engine/Core/TileType.h
+        include/Engine/Components/WallClingComponent.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)

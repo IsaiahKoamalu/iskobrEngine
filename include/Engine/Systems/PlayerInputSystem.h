@@ -12,6 +12,7 @@
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/SpriteComponent.h"
+#include "Engine/Components/WallClingComponent.h"
 
 /**
  * System that updates velocity of player-controlled entities
@@ -50,6 +51,10 @@ public:
             // Handle Jumping
             if (components.hasComponent<PlayerComponent>(entity)) {
                 auto &player = components.getComponent<PlayerComponent>(entity);
+                auto &cling = components.getComponent<WallClingComponent>(entity);
+                if (cling.active) {
+                    std::cout << "Cling Active" << std::endl;
+                }
                 if (!player.isRolling && rollPressed && player.isGrounded) {
                     player.isRolling = true;
                     player.rollTimer = player.rollDuration;

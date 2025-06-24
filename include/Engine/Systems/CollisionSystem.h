@@ -6,12 +6,37 @@
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/Position.h"
 #include "Engine/Components/PlayerComponent.h"
+#include "Engine/Components/WallClingComponent.h"
+
+struct Contact {
+    Entity other;
+    glm::vec2 point;
+    glm::vec2 normal;
+    float penetration{};
+};
 
 /**
  * @brief A system responsible for identifying collisions and resolving them.
  */
 class CollisionSystem : public System {
 public:
+
+    void handleWallContacts(Entity entity, ComponentManager &components, const Contact& contact) {
+        const float verticalThreshold = 0.4f;
+        glm::vec2 up {0.f, -1.f};
+
+        float dotUp = glm::dot(contact.normal, up);
+        if (std::abs(dotUp) < verticalThreshold) {
+            auto& cling = components.getComponent<WallClingComponent>(entity);
+            cling.active = true;
+            cling.timer = 0.f;
+            cling.wallNormal = contact.normal; //Points from the wall to player
+            std::cout << "Wall contact" << std::endl;
+
+
+        }
+    }
+
     void update(ComponentManager &components, float dt) {
         for (Entity a: entities) {
             if (!components.hasComponent<ColliderComponent>(a) || !components.hasComponent<Position>(a)) continue;

@@ -106,6 +106,7 @@ bool Engine::loadEntities(std::string &filepath) {
             inputSystem->entities.insert(entity);
             groundResetSystem->entities.insert(entity);
             componentManager->addComponent<PlayerComponent>(entity,{});
+            componentManager->addComponent<WallClingComponent>(entity, {});
             std::cout << "...Registered To Systems: cameraSystem, inputSystem, groundResetSystem\n";
             std::cout << "...Added Component: PlayerComponent\n";
         }
