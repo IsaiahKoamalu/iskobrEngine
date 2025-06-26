@@ -30,7 +30,7 @@ public:
                 auto& player = components.getComponent<PlayerComponent>(entity);
                 if (cling.active) {
 
-                    player.gravityToggle = false;
+                    //player.gravityToggle = false;
 
                     // Limiting downward speed
                     if (vel.dy < cling.slideSpeed) {
@@ -50,7 +50,7 @@ public:
                     }
                 }else {
                     cling.timer = 0.f;
-                    player.gravityToggle = true;
+                    //player.gravityToggle = true;
                 }
             }
 

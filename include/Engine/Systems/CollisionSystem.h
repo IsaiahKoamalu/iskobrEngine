@@ -40,16 +40,14 @@ public:
 
     void update(ComponentManager &components, float dt)
 {
-    //----------------------------------------------------------------------
-    // 1) Frame prep – clear the *touched* flag (but NOT the active flag)
-    //----------------------------------------------------------------------
+
+    // clear the *touched* flag (but NOT the active flag)
     for (Entity e : entities)
         if (components.hasComponent<WallClingComponent>(e))
             components.getComponent<WallClingComponent>(e).touchedThisFrame = false;
 
-    //----------------------------------------------------------------------
-    // 2) Double loop: broad-phase & narrow-phase collision tests
-    //----------------------------------------------------------------------
+
+    // Double loop: broad-phase & narrow-phase collision tests
     for (Entity a : entities)
     {
         if (!components.hasComponent<ColliderComponent>(a) ||
@@ -83,9 +81,7 @@ public:
             if (!aBounds.intersects(bBounds, intersection))
                 continue;                        // → no collision this pair
 
-            //------------------------------------------------------------------
-            // Build a contact normal so we can tell “wall” vs “floor/ceiling”
-            //------------------------------------------------------------------
+            // Build a contact normal so we “wall” vs “floor/ceiling” is discernible
             float overlapX = intersection.width;
             float overlapY = intersection.height;
 
@@ -95,9 +91,7 @@ public:
             else                                     // top/bottom hit
                 normal.y = (aBounds.top < bBounds.top) ? -1.f : 1.f;
 
-            //------------------------------------------------------------------
-            // 2-A) Wall-cling hook
-            //------------------------------------------------------------------
+            //Wall-cling hook
             if (components.hasComponent<WallClingComponent>(a))
             {
                 Contact c;
@@ -109,9 +103,8 @@ public:
                 components.getComponent<WallClingComponent>(a).touchedThisFrame = true;
             }
 
-            //------------------------------------------------------------------
-            // 2-B) Your existing penetration–resolution logic (unchanged)
-            //------------------------------------------------------------------
+
+            //Your existing penetration–resolution logic (unchanged)
             if (!aCol.isTrigger && !bCol.isTrigger)
             {
                 if (overlapX < overlapY)                        // resolve along X
@@ -144,9 +137,7 @@ public:
         } // end inner loop
     }     // end outer loop
 
-    //----------------------------------------------------------------------
-    // 3) Post-pass – turn cling off if we *never* touched a wall this frame
-    //----------------------------------------------------------------------
+    //Post-pass – turn cling off if *never* touched a wall this frame
     for (Entity e : entities)
         if (components.hasComponent<WallClingComponent>(e))
         {
