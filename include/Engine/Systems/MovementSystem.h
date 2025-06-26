@@ -45,7 +45,7 @@ public:
 
                     cling.timer += dt;
 
-                    if (cling.maxTime > 0 && cling.timer > cling.maxTime) {
+                    if (cling.maxTime > 0 && cling.timer > cling.maxTime || player.isGrounded) {
                         cling.active = false; // Release timer after timeout
                     }
                 }else {

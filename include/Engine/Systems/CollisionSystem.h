@@ -99,8 +99,13 @@ public:
                 c.normal      = normal;
                 c.penetration = (overlapX < overlapY) ? overlapX : overlapY;
 
-                handleWallContacts(a, components, c);          // sets active, timer, etc.
-                components.getComponent<WallClingComponent>(a).touchedThisFrame = true;
+                if (components.hasComponent<PlayerComponent>(a)) {
+                    auto& player = components.getComponent<PlayerComponent>(a);
+                    if (!player.isGrounded) {
+                        handleWallContacts(a, components, c);          // sets active, timer, etc.
+                        components.getComponent<WallClingComponent>(a).touchedThisFrame = true;
+                    }
+                }
             }
 
 
