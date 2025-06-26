@@ -16,6 +16,12 @@
         "frameCount": 6,
         "frameTime": 0.1
       },
+      "wallLeft": {
+        "name": "wallLeft",
+        "filePath": "assets/wall_land_left.png",
+        "frameCount": 6,
+        "frameTime": 0.1
+      },
       "idleRight": {
         "name": "idleRight",
         "filePath": "assets/idle_right.png",

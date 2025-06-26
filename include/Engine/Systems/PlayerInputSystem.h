@@ -75,7 +75,7 @@ public:
                         velocity.dx = (dir.current == Direction::Left ? -1.0f : 1.0f) * player.rollSpeed;
                     }
                     if (jumpPressed && player.isGrounded || jumpPressed && cling.active) {
-                        player.gravityToggle = true;
+                        cling.active = false;
                         velocity.dy = -player.jumpForce;
                         player.isGrounded = false;
                     }
@@ -104,10 +104,12 @@ public:
                         }
                     }
                     else if (!player.isGrounded) {
-                        if (dir.current == Direction::Right) {
+                        if (moveX > 0 || dir.current == Direction::Right) {
+                            dir.current = Direction::Right;
                             anim.currentState = "jumpRight";
                         }
-                        else if (dir.current == Direction::Left) {
+                        if (moveX < 0 || dir.current == Direction::Left) {
+                            dir.current = Direction::Left;
                             anim.currentState = "jumpLeft";
                         }
                     }else if (moveX > 0) {

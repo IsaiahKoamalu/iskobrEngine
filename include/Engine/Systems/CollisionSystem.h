@@ -142,10 +142,9 @@ public:
         if (components.hasComponent<WallClingComponent>(e))
         {
             auto &cling = components.getComponent<WallClingComponent>(e);
-            //if (!cling.touchedThisFrame) cling.active = false;
+            //if (!cling.touchedThisFrame) cling.active = false; // (This was causing problems)
         }
-}
-
+    }
 
 };
 

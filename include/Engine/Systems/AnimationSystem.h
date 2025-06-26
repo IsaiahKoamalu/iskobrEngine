@@ -17,8 +17,13 @@ public:
             // Grab wall cling anim first.
             if (components.hasComponent<WallClingComponent>(entity)) {
                 auto& cling = components.getComponent<WallClingComponent>(entity);
+                auto& dir = components.getComponent<DirectionComponent>(entity);
                 if (cling.active) {
-                    animComp.currentState = "wallRight";
+                    if (animComp.currentState == "jumpLeft") {
+                        animComp.currentState = "wallLeft";
+                    }else if (animComp.currentState == "jumpRight") {
+                        animComp.currentState = "wallRight";
+                    }
                 }
             }
 
