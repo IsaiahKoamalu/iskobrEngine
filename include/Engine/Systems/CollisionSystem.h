@@ -8,6 +8,9 @@
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Components/WallClingComponent.h"
 
+
+// TESTING OUT COMMENTING AND DOCUMENTATION STYLE
+
 struct Contact {
     Entity other;
     glm::vec2 point;
