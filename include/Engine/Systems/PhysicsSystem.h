@@ -12,7 +12,11 @@ public:
         for (Entity entity : entities) {
             if (components.hasComponent<Velocity>(entity)) {
                 auto &velocity = components.getComponent<Velocity>(entity);
-                velocity.dy += gravity * dt;
+                auto &player = components.getComponent<PlayerComponent>(entity);
+
+                if (player.gravityToggle) {
+                    velocity.dy += gravity * dt;
+                }
             }
         }
     }

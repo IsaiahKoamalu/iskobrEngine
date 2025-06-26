@@ -32,84 +32,127 @@ public:
             cling.timer = 0.f;
             cling.wallNormal = contact.normal; //Points from the wall to player
             std::cout << "Wall contact" << std::endl;
-
-
         }
     }
 
-    void update(ComponentManager &components, float dt) {
-        for (Entity a: entities) {
-            if (!components.hasComponent<ColliderComponent>(a) || !components.hasComponent<Position>(a)) continue;
+    void update(ComponentManager &components, float dt)
+{
+    //----------------------------------------------------------------------
+    // 1) Frame prep – clear the *touched* flag (but NOT the active flag)
+    //----------------------------------------------------------------------
+    for (Entity e : entities)
+        if (components.hasComponent<WallClingComponent>(e))
+            components.getComponent<WallClingComponent>(e).touchedThisFrame = false;
 
-            auto &aCollider = components.getComponent<ColliderComponent>(a);
-            auto &aPos = components.getComponent<Position>(a);
+    //----------------------------------------------------------------------
+    // 2) Double loop: broad-phase & narrow-phase collision tests
+    //----------------------------------------------------------------------
+    for (Entity a : entities)
+    {
+        if (!components.hasComponent<ColliderComponent>(a) ||
+            !components.hasComponent<Position>(a))
+            continue;
 
-            // World bounds of a
-            sf::FloatRect aBounds = {
-                aPos.x + aCollider.bounds.left,
-                aPos.y + aCollider.bounds.top,
-                aCollider.bounds.width,
-                aCollider.bounds.height
-            };
+        auto &aCol = components.getComponent<ColliderComponent>(a);
+        auto &aPos = components.getComponent<Position>(a);
 
-            for (Entity b: entities) {
-                if (a == b) continue;
-                if (!components.hasComponent<ColliderComponent>(b) || !components.hasComponent<Position>(b)) continue;
+        sf::FloatRect aBounds{ aPos.x + aCol.bounds.left,
+                               aPos.y + aCol.bounds.top,
+                               aCol.bounds.width,
+                               aCol.bounds.height };
 
-                auto &bCollider = components.getComponent<ColliderComponent>(b);
-                auto &bPos = components.getComponent<Position>(b);
+        for (Entity b : entities)
+        {
+            if (a == b) continue;
+            if (!components.hasComponent<ColliderComponent>(b) ||
+                !components.hasComponent<Position>(b))
+                continue;
 
-                // World bounds of b
-                sf::FloatRect bBounds = {
-                    bPos.x + bCollider.bounds.left,
-                    bPos.y + bCollider.bounds.top,
-                    bCollider.bounds.width,
-                    bCollider.bounds.height
-                };
+            auto &bCol = components.getComponent<ColliderComponent>(b);
+            auto &bPos = components.getComponent<Position>(b);
 
-                sf::FloatRect intersection;
-                if (aBounds.intersects(bBounds, intersection)) {
-                    if (!aCollider.isTrigger && !bCollider.isTrigger) {
-                        float overlapX = intersection.width;
-                        float overlapY = intersection.height;
+            sf::FloatRect bBounds{ bPos.x + bCol.bounds.left,
+                                   bPos.y + bCol.bounds.top,
+                                   bCol.bounds.width,
+                                   bCol.bounds.height };
 
-                        if (overlapX < overlapY) {
-                            // Resolve in X direction
-                            if (aBounds.left < bBounds.left)
-                                aPos.x -= overlapX;
-                            else
-                                aPos.x += overlapX;
-                        } else {
-                            // Resolve in Y direction
-                            bool fromAbove = aBounds.top < bBounds.top;
+            sf::FloatRect intersection;
+            if (!aBounds.intersects(bBounds, intersection))
+                continue;                        // → no collision this pair
 
-                            if (fromAbove) {
-                                aPos.y -= overlapY;
+            //------------------------------------------------------------------
+            // Build a contact normal so we can tell “wall” vs “floor/ceiling”
+            //------------------------------------------------------------------
+            float overlapX = intersection.width;
+            float overlapY = intersection.height;
 
-                                // Reset falling speed
-                                if (components.hasComponent<Velocity>(a)) {
-                                    components.getComponent<Velocity>(a).dy = 0;
-                                }
+            glm::vec2 normal{0.f, 0.f};
+            if (overlapX < overlapY)                 // side hit
+                normal.x = (aBounds.left < bBounds.left) ? -1.f : 1.f;
+            else                                     // top/bottom hit
+                normal.y = (aBounds.top < bBounds.top) ? -1.f : 1.f;
 
-                                // Mark grounded
-                                if (components.hasComponent<PlayerComponent>(a)) {
-                                    components.getComponent<PlayerComponent>(a).isGrounded = true;
-                                }
-                            } else {
-                                // Colliding from below
-                                aPos.y += overlapY;
+            //------------------------------------------------------------------
+            // 2-A) Wall-cling hook
+            //------------------------------------------------------------------
+            if (components.hasComponent<WallClingComponent>(a))
+            {
+                Contact c;
+                c.other       = b;
+                c.normal      = normal;
+                c.penetration = (overlapX < overlapY) ? overlapX : overlapY;
 
-                                // Stop upward movement
-                                if (components.hasComponent<Velocity>(a)) {
-                                    components.getComponent<Velocity>(a).dy = 0;
-                                }
-                            }
-                        }
+                handleWallContacts(a, components, c);          // sets active, timer, etc.
+                components.getComponent<WallClingComponent>(a).touchedThisFrame = true;
+            }
+
+            //------------------------------------------------------------------
+            // 2-B) Your existing penetration–resolution logic (unchanged)
+            //------------------------------------------------------------------
+            if (!aCol.isTrigger && !bCol.isTrigger)
+            {
+                if (overlapX < overlapY)                        // resolve along X
+                {
+                    if (normal.x < 0) aPos.x -= overlapX;
+                    else              aPos.x += overlapX;
+                }
+                else                                            // resolve along Y
+                {
+                    bool fromAbove = normal.y < 0;              // a is above b
+                    if (fromAbove)
+                    {
+                        aPos.y -= overlapY;
+
+                        if (components.hasComponent<Velocity>(a))
+                            components.getComponent<Velocity>(a).dy = 0.f;
+
+                        if (components.hasComponent<PlayerComponent>(a))
+                            components.getComponent<PlayerComponent>(a).isGrounded = true;
+                    }
+                    else  // collision from below
+                    {
+                        aPos.y += overlapY;
+
+                        if (components.hasComponent<Velocity>(a))
+                            components.getComponent<Velocity>(a).dy = 0.f;
                     }
                 }
             }
+        } // end inner loop
+    }     // end outer loop
+
+    //----------------------------------------------------------------------
+    // 3) Post-pass – turn cling off if we *never* touched a wall this frame
+    //----------------------------------------------------------------------
+    for (Entity e : entities)
+        if (components.hasComponent<WallClingComponent>(e))
+        {
+            auto &cling = components.getComponent<WallClingComponent>(e);
+            //if (!cling.touchedThisFrame) cling.active = false;
         }
-    }
+}
+
+
 };
 
 #endif

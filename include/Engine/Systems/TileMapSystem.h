@@ -101,7 +101,7 @@ public:
                         -ts.tileWidth * tileScale / 2.f,
                         (-ts.tileHeight * tileScale / 2.f) + 10,
                         ts.tileWidth * tileScale,
-                        (ts.tileHeight * tileScale) - 10
+                        (ts.tileHeight * tileScale)
                     };
                     collider.isStatic = true;
                     collider.tag = "Tile";

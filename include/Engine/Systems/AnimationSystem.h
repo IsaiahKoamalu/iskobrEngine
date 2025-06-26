@@ -14,6 +14,14 @@ public:
             auto &animComp = components.getComponent<AnimationComponent>(entity);
             auto &sprite = components.getComponent<SpriteComponent>(entity).sprite;
 
+            // Grab wall cling anim first.
+            if (components.hasComponent<WallClingComponent>(entity)) {
+                auto& cling = components.getComponent<WallClingComponent>(entity);
+                if (cling.active) {
+                    animComp.currentState = "wallRight";
+                }
+            }
+
             // Get the current state's animation data
             auto it = animComp.animations.find(animComp.currentState);
             if (it == animComp.animations.end()) {

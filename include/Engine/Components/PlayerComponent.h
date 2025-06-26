@@ -14,6 +14,8 @@ struct PlayerComponent {
     float rollDuration = 0.7f;
     float rollSpeed = 300.f;
     float speed = 300.f;
+
+    bool gravityToggle = true;
 };
 
 #endif

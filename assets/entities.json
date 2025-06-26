@@ -12,7 +12,7 @@
       },
       "wallRight": {
         "name": "wallRight",
-        "filePath": "assets/wall_land_right",
+        "filePath": "assets/wall_land_right.png",
         "frameCount": 6,
         "frameTime": 0.1
       },
@@ -87,47 +87,5 @@
       "isStatic": false
     },
     "Movement": true
-  },
-  {
-    "name": "Tree",
-    "sprite": true,
-    "spritePath": {
-      "idle": {
-        "name": "idle",
-        "filePath": "assets/green_pine_idle.png",
-        "frameCount": 4,
-        "frameTime": 0.2
-      }
-    },
-    "anim": {
-      "start": "idle",
-      "frameWidth":48,
-      "frameHeight": 64
-    },
-    "Position": {
-      "x": 563,
-      "y": 160
-    }
-  },
-  {
-    "name": "Tree",
-    "sprite": true,
-    "spritePath": {
-      "idle": {
-        "name": "idle",
-        "filePath": "assets/green_pine_idle.png",
-        "frameCount": 4,
-        "frameTime": 0.9
-      }
-    },
-    "anim": {
-      "start": "idle",
-      "frameWidth":48,
-      "frameHeight": 64
-    },
-    "Position": {
-      "x": 700,
-      "y": 400
-    }
   }
 ]
