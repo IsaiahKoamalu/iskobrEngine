@@ -16,6 +16,24 @@
         "frameCount": 6,
         "frameTime": 0.1
       },
+      "crouchIdleRight": {
+        "name": "crouchIdleRight",
+        "filePath": "assets/crouch_idle_right.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
+      "crouchIdleLeft": {
+        "name": "crouchIdleLeft",
+        "filePath": "assets/crouch_idle_left.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
+      "crouchWalkRight": {
+        "name": "crouchWalkRight",
+        "filePath": "assets/crouch_walk_right.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
       "wallLeft": {
         "name": "wallLeft",
         "filePath": "assets/wall_land_left.png",

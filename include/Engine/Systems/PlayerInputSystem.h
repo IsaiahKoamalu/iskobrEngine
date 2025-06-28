@@ -22,6 +22,7 @@
 
 class PlayerInputSystem : public System {
 public:
+    bool wasXPressedLastFrame = false;
     void update(ComponentManager &components, float dt) {
         // Determine the direction of input
         for (Entity entity : entities) {
@@ -32,15 +33,26 @@ public:
                 auto& pos = components.getComponent<Position>(entity);
 
                 float moveX = 0.0f;
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !cling.active) moveX -= 1.0f;
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && !cling.active) moveX += 1.0f;
+
+
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !cling.active ||
+                    sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) < -20 && !cling.active) moveX -= 1.0f;
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && !cling.active ||
+                    sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) > 20 && !cling.active) moveX += 1.0f;
+                bool isXPressed = sf::Joystick::isButtonPressed(0, 2);
+                if (isXPressed && !wasXPressedLastFrame) {
+                    player.isCrouching = !player.isCrouching;
+                }
+                wasXPressedLastFrame = isXPressed;
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
                     pos.x = 100;
                     pos.y = 200;
                 }
 
-                bool jumpPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
-                bool rollPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
+                bool jumpPressed = (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
+                                    sf::Joystick::isButtonPressed(0, 0));
+                bool rollPressed = (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
+                                    sf::Joystick::isButtonPressed(0, 1));
                 float speed = 300.0f;
 
                 // Apply velocity to all controlled entities.
@@ -73,8 +85,22 @@ public:
                         }
                         auto &dir = components.getComponent<DirectionComponent>(entity);
                         velocity.dx = (dir.current == Direction::Left ? -1.0f : 1.0f) * player.rollSpeed;
+                        speed = player.rollSpeed;
+                    }
+                    else if (player.isCrouching) {
+                        auto& colCom = components.getComponent<ColliderComponent>(entity);
+                        colCom.bounds.top = -5;
+                        colCom.bounds.height = 54;
+                        auto &dir = components.getComponent<DirectionComponent>(entity);
+                        velocity.dx = (dir.current == Direction::Left ? -1.0f : 1.0f) * player.crouchSpeed;
+                        speed = player.crouchSpeed;
+                    }else {
+                        auto& colCom = components.getComponent<ColliderComponent>(entity);
+                        colCom.bounds.top = -36;
+                        colCom.bounds.height = 85;
                     }
                     if (jumpPressed && player.isGrounded || jumpPressed && cling.active) {
+                        player.isCrouching = false;
                         cling.active = false;
                         velocity.dy = -player.jumpForce;
                         player.isGrounded = false;
@@ -101,6 +127,15 @@ public:
                         }
                         else if (dir.current == Direction::Left) {
                             anim.currentState = "rollLeft";
+                        }
+                    }
+                    else if (player.isCrouching) {
+                        if (dir.current == Direction::Right) {
+                            if (moveX > 0){anim.currentState = "crouchWalkRight";}
+                            else{anim.currentState = "crouchIdleRight";}
+                        }
+                        else if (dir.current == Direction::Left) {
+                            anim.currentState = "crouchIdleLeft";
                         }
                     }
                     else if (!player.isGrounded) {

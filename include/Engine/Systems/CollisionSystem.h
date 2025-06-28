@@ -38,8 +38,7 @@ public:
         }
     }
 
-    void update(ComponentManager &components, float dt)
-{
+    void update(ComponentManager &components, float dt){
 
     // clear the *touched* flag (but NOT the active flag)
     for (Entity e : entities)
