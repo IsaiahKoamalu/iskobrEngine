@@ -30,7 +30,13 @@
       },
       "crouchWalkRight": {
         "name": "crouchWalkRight",
-        "filePath": "assets/crouch_walk_right.png",
+        "filePath": "assets/sword/crouch_walk_right_sword.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
+      "crouchWalkLeft": {
+        "name": "crouchLeft",
+        "filePath":"assets/sword/crouch_walk_left_sword.png",
         "frameCount": 10,
         "frameTime": 0.1
       },
@@ -42,7 +48,7 @@
       },
       "idleRight": {
         "name": "idleRight",
-        "filePath": "assets/idle_right.png",
+        "filePath": "assets/sword/idle_right_sword.png",
         "frameCount": 10,
         "frameTime": 0.1
       },
@@ -54,7 +60,7 @@
       },
       "walkRight": {
         "name": "runRight",
-        "filePath": "assets/walk_right.png",
+        "filePath": "assets/sword/run_right_sword.png",
         "frameCount": 8,
         "frameTime": 0.1
       },
@@ -79,7 +85,7 @@
       "rollRight": {
         "name": "rollRight",
         "filePath": "assets/roll_right.png",
-        "frameCount": 7,
+        "frameCount": 6,
         "frameTime": 0.1
       },
       "rollLeft": {
@@ -87,6 +93,12 @@
         "filePath": "assets/roll_left.png",
         "frameCount": 7,
         "frameTime": 0.1
+      },
+      "slashRight": {
+        "name": "slashRight",
+        "filePath": "assets/sword/slash_right_sword.png",
+        "frameCount": 6,
+        "frameTime": 0.07
       }
     },
     "anim": {
