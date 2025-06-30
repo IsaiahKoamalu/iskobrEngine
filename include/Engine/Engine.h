@@ -19,6 +19,7 @@
 #include "Engine/TilesetManager.h"
 #include "Systems/ActorSystem.h"
 #include "external/json/json.hpp"
+#include "Systems/DamageSystem.h"
 #include "Systems/GroundResetSystem.h"
 #include "Systems/PhysicsSystem.h"
 
@@ -58,6 +59,7 @@ private:
     std::shared_ptr<ActorSystem> actorSystem;
     std::shared_ptr<PhysicsSystem> physicsSystem;
     std::shared_ptr<GroundResetSystem> groundResetSystem;
+    std::shared_ptr<DamageSystem> damageSystem;
 };
 
 #endif

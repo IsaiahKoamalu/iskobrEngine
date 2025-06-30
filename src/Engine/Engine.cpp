@@ -6,6 +6,7 @@
 #include "Engine/ComponentManager.h"
 #include "Engine/SystemManager.h"
 #include "Engine/Components/ColliderComponent.h"
+#include "Engine/Components/HealthComponent.h"
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Systems/ActorSystem.h"
 #include "Engine/Systems/CollisionSystem.h"
@@ -39,6 +40,7 @@ void Engine::run(bool debugMode) {
     actorSystem = systemManager->registerSystem<ActorSystem>();
     physicsSystem = systemManager->registerSystem<PhysicsSystem>();
     groundResetSystem = systemManager->registerSystem<GroundResetSystem>();
+    damageSystem = systemManager->registerSystem<DamageSystem>();
 
     auto entityFile = std::make_shared<std::string>("assets/entities.json");
     if (!loadEntities(*entityFile)) {
@@ -66,6 +68,7 @@ void Engine::update(float dt) {
     movementSystem->update(*componentManager, dt);
     collisionSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
+    damageSystem->update(*componentManager, dt);
     actorSystem->update(*componentManager, dt);
     triggerSystem->update(*componentManager, dt);
     cameraSystem->update(*componentManager, dt);
@@ -136,7 +139,7 @@ bool Engine::loadEntities(std::string &filepath) {
                 }
             }
             componentManager->addComponent<AnimationComponent>(entity, {anim});
-            std::cout << "...Added Component: AnimationComponent->with the following states:";
+            std::cout << "...Added Component: AnimationComponent->with the following states:\n";
             for (const auto &[k, _]: anim.animations)
                 std::cout << " - " << k << '\n';
             animationSystem->entities.insert(entity);
@@ -213,8 +216,15 @@ bool Engine::loadEntities(std::string &filepath) {
             std::cout << "...Registered To System: movementSystem\n";
         }
 
+        if (j.contains("health") && j["health"] == true) {
+            componentManager->addComponent<HealthComponent>(entity, {});
+            damageSystem->entities.insert(entity);
+            std::cout << "...Added Component: HealthComponent\n";
+            std::cout << "...Registered To System: damageSystem\n";
+        }
+
         renderSystem->entities.insert(entity);
-        std::cout << "Registered To System: renderSystem\n";
+        std::cout << "...Registered To System: renderSystem\n";
     }
 
     return true;

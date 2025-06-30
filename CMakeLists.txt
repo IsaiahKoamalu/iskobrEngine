@@ -46,6 +46,7 @@ add_library(engine
         include/Engine/Components/ColliderComponent.h
         include/Engine/Components/ActorComponent.h
         include/Engine/Components/TileComponent.h
+        include/Engine/Components/HealthComponent.h
         include/Engine/Systems/CameraSystem.h
         include/Engine/Systems/TileMapSystem.h
         include/Engine/Systems/TriggerSystem.h
@@ -54,6 +55,7 @@ add_library(engine
         include/Engine/Systems/MovementSystem.h
         include/Engine/Systems/PhysicsSystem.h
         include/Engine/Systems/GroundResetSystem.h
+        include/Engine/Systems/DamageSystem.h
         include/Engine/Core/TileType.h
         include/Engine/Components/WallClingComponent.h
 )
@@ -93,6 +95,8 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Components/TileComponent.h
         include/Engine/Components/DirectionComponent.h
         include/Engine/Components/ColliderComponent.h
+        include/Engine/Components/WallClingComponent.h
+        include/Engine/Components/HealthComponent.h
         include/Engine/Systems/TriggerSystem.h
         include/Engine/Systems/AnimationSystem.h
         include/Engine/Systems/CameraSystem.h
@@ -102,8 +106,8 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/MovementSystem.h
         include/Engine/Systems/PhysicsSystem.h
         include/Engine/Systems/GroundResetSystem.h
+        include/Engine/Systems/DamageSystem.h
         include/Engine/Core/TileType.h
-        include/Engine/Components/WallClingComponent.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)
