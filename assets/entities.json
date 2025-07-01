@@ -249,6 +249,6 @@
       "rectHeight": 85,
       "isStatic": false
     },
-    "Movement": true
+    "Movement": false
   }
 ]

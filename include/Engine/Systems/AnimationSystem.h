@@ -11,7 +11,7 @@ class AnimationSystem : public System {
 public:
     void update(ComponentManager &components, float dt) {
         for (Entity entity: entities) {
-            if (components.hasComponent<AnimationSystem>(entity) && components.hasComponent<SpriteComponent>(entity)) {
+            if (components.hasComponent<AnimationComponent>(entity) && components.hasComponent<SpriteComponent>(entity)) {
                 auto &animComp = components.getComponent<AnimationComponent>(entity);
                 auto &sprite = components.getComponent<SpriteComponent>(entity).sprite;
 
