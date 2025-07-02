@@ -113,8 +113,11 @@ public:
                 if (overlapX < overlapY)                        // resolve along X
                 {
                     if (components.hasComponent<HealthComponent>(b) && !components.hasComponent<PlayerComponent>(b)) {
-                        auto& health = components.getComponent<HealthComponent>(b);
-                        health.isDead = true;
+                        auto& player = components.getComponent<PlayerComponent>(a);
+                        if (player.isSlashing) {
+                            auto& health = components.getComponent<HealthComponent>(b);
+                            health.isDead = true;
+                        }
 
                     }
                     if (normal.x < 0) aPos.x -= overlapX;

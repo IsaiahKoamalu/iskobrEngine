@@ -75,6 +75,12 @@ public:
                         if (player.slashTimer <= 0.f || moveX > 0.f || moveX < 0.f) {
                             player.isSlashing = false;
                         }
+                        auto& colCom = components.getComponent<ColliderComponent>(entity);
+                        colCom.bounds.left = 35;
+                    }
+                    else {
+                        auto& colCom = components.getComponent<ColliderComponent>(entity);
+                        colCom.bounds.left = -15;
                     }
 
                     if (!player.isRolling && rollPressed && player.isGrounded) {
@@ -96,7 +102,6 @@ public:
                         velocity.dx = (dir.current == Direction::Left ? -1.0f : 1.0f) * player.rollSpeed;
                         speed = player.rollSpeed;
                     }
-
                     else if (player.isCrouching) {
                         auto& colCom = components.getComponent<ColliderComponent>(entity);
                         colCom.bounds.top = -5;
