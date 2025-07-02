@@ -68,7 +68,7 @@ void Engine::update(float dt) {
     movementSystem->update(*componentManager, dt);
     collisionSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
-    damageSystem->update(*componentManager, dt);
+    damageSystem->update(*componentManager, *entityManager, *systemManager, dt);
     actorSystem->update(*componentManager, dt);
     triggerSystem->update(*componentManager, dt);
     cameraSystem->update(*componentManager, dt);

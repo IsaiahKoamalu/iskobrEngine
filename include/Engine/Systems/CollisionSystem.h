@@ -107,12 +107,16 @@ public:
                 }
             }
 
-
             //Your existing penetration–resolution logic (unchanged)
             if (!aCol.isTrigger && !bCol.isTrigger)
             {
                 if (overlapX < overlapY)                        // resolve along X
                 {
+                    if (components.hasComponent<HealthComponent>(b) && !components.hasComponent<PlayerComponent>(b)) {
+                        auto& health = components.getComponent<HealthComponent>(b);
+                        health.isDead = true;
+
+                    }
                     if (normal.x < 0) aPos.x -= overlapX;
                     else              aPos.x += overlapX;
                 }

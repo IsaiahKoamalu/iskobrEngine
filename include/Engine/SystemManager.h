@@ -31,6 +31,12 @@ public:
         return std::static_pointer_cast<T>(systems[typeID]);
     }
 
+    // Function responsible for erasing an entity from all registered systems.
+    void entityDestroyed(Entity entity) {
+        for (auto& [_, system] : systems) {
+            system->entities.erase(entity);
+        }
+    }
 private:
     std::unordered_map<std::type_index, std::shared_ptr<System> > systems;
 };

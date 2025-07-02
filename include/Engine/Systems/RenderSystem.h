@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Engine/Components/ColliderComponent.h"
+#include "Engine/Components/HealthComponent.h"
 #include "Engine/Components/TileComponent.h"
 
 /**
