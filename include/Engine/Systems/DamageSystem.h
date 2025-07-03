@@ -2,6 +2,8 @@
 #define DAMAGESYSTEM_H
 
 #include <iostream>
+
+#include "ParticleSystem.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/System.h"
 #include "Engine/SystemManager.h"
@@ -19,8 +21,6 @@ public:
                     std::cout << "LOW HEALTH\n";
                 }
 
-                std::cout << entity << ":" << health.health << std::endl;
-
                 if (health.health < 80) {
                     health.isLow = true;
                 }
@@ -28,10 +28,15 @@ public:
             // Deleting entities upon 'Death'
             if (components.hasComponent<HealthComponent>(entity) && !components.hasComponent<PlayerComponent>(entity)) {
                 auto& health = components.getComponent<HealthComponent>(entity);
+                auto& pos = components.getComponent<Position>(entity);
+                sf::Vector2f vecPos = {pos.x, pos.y};
                 if (health.isDead) {
+                    ParticleSystem particles;
                     std::cout << "Entity Destroyed\n";
                     entityManager.destroyEntity(entity);
                     systemManager.entityDestroyed(entity);
+
+                    particles.setEmitter(vecPos);
                 }
             }
         }

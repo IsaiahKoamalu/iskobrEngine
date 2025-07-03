@@ -42,6 +42,7 @@ void Engine::run(bool debugMode) {
     physicsSystem = systemManager->registerSystem<PhysicsSystem>();
     groundResetSystem = systemManager->registerSystem<GroundResetSystem>();
     damageSystem = systemManager->registerSystem<DamageSystem>();
+    particleSystem = systemManager->registerSystem<ParticleSystem>();
 
     auto entityFile = std::make_shared<std::string>("assets/entities.json");
     if (!loadEntities(*entityFile)) {
@@ -57,19 +58,21 @@ void Engine::run(bool debugMode) {
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
+        sf::Time tDt;
         processEvents();
-        update(dt);
+        update(dt, tDt);
         render(debugMode);
     }
 }
 
-void Engine::update(float dt) {
+void Engine::update(float dt, sf::Time tDt) {
     inputSystem->update(*componentManager, dt);
     physicsSystem->update(*componentManager, dt);
     movementSystem->update(*componentManager, dt);
     collisionSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
     damageSystem->update(*componentManager, *entityManager, *systemManager, dt);
+    particleSystem->update(tDt);
     actorSystem->update(*componentManager, dt);
     triggerSystem->update(*componentManager, dt);
     cameraSystem->update(*componentManager, dt);

@@ -21,6 +21,7 @@
 #include "external/json/json.hpp"
 #include "Systems/DamageSystem.h"
 #include "Systems/GroundResetSystem.h"
+#include "Systems/ParticleSystem.h"
 #include "Systems/PhysicsSystem.h"
 
 using json = nlohmann::json;
@@ -34,7 +35,7 @@ private:
 
     void processEvents();
 
-    void update(float dt);
+    void update(float dt, sf::Time tDt);
 
     void render(bool debugMode);
 
@@ -60,6 +61,7 @@ private:
     std::shared_ptr<PhysicsSystem> physicsSystem;
     std::shared_ptr<GroundResetSystem> groundResetSystem;
     std::shared_ptr<DamageSystem> damageSystem;
+    std::shared_ptr<ParticleSystem> particleSystem;
 };
 
 #endif

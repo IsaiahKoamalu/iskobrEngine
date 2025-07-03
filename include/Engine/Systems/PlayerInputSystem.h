@@ -93,8 +93,8 @@ public:
                     if (player.isRolling) {
                         // Adjusting collision box to account for rolling. (NOTE: be sure to offset the height and top by equal values)
                         auto& colCom = components.getComponent<ColliderComponent>(entity);
-                        colCom.bounds.top = -10;
-                        colCom.bounds.height = 59;
+                        colCom.bounds.top = -5;
+                        colCom.bounds.height = 54;
                         player.rollTimer -= dt;
                         if (player.rollTimer <= 0.0f) {
                             player.isRolling = false;

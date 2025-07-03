@@ -56,6 +56,7 @@ add_library(engine
         include/Engine/Systems/MovementSystem.h
         include/Engine/Systems/PhysicsSystem.h
         include/Engine/Systems/GroundResetSystem.h
+        include/Engine/Systems/ParticleSystem.h
         include/Engine/Systems/DamageSystem.h
         include/Engine/Core/TileType.h
         include/Engine/Components/WallClingComponent.h
@@ -107,6 +108,7 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/RenderSystem.h
         include/Engine/Systems/MovementSystem.h
         include/Engine/Systems/PhysicsSystem.h
+        include/Engine/Systems/ParticleSystem.h
         include/Engine/Systems/GroundResetSystem.h
         include/Engine/Systems/DamageSystem.h
         include/Engine/Core/TileType.h

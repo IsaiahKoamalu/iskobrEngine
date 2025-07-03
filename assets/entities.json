@@ -126,7 +126,7 @@
     "AttackCollision": {
       "rectLeft": 35,
       "rectTop": -36,
-      "rectWidth": 34,
+      "rectWidth": 40,
       "rectHeight": 85
     },
     "Movement": true
