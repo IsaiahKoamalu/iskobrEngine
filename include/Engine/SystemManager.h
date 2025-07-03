@@ -26,7 +26,7 @@ public:
     template<typename T>
     std::shared_ptr<T> getSystem() {
         std::type_index typeID = typeid(T);
-        assert(systems.find(typeID) != systems.end() && "Ststem NOT registered");
+        assert(systems.find(typeID) != systems.end() && "System NOT registered");
 
         return std::static_pointer_cast<T>(systems[typeID]);
     }

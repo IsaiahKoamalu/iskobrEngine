@@ -47,6 +47,7 @@ add_library(engine
         include/Engine/Components/ActorComponent.h
         include/Engine/Components/TileComponent.h
         include/Engine/Components/HealthComponent.h
+        include/Engine/Components/AttackColliderComponent.h
         include/Engine/Systems/CameraSystem.h
         include/Engine/Systems/TileMapSystem.h
         include/Engine/Systems/TriggerSystem.h
@@ -97,6 +98,7 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Components/ColliderComponent.h
         include/Engine/Components/WallClingComponent.h
         include/Engine/Components/HealthComponent.h
+        include/Engine/Components/AttackColliderComponent.h
         include/Engine/Systems/TriggerSystem.h
         include/Engine/Systems/AnimationSystem.h
         include/Engine/Systems/CameraSystem.h

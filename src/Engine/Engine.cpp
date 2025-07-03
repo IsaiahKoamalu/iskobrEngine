@@ -6,6 +6,7 @@
 #include "Engine/ComponentManager.h"
 #include "Engine/SystemManager.h"
 #include "Engine/Components/ColliderComponent.h"
+#include "Engine/Components/AttackColliderComponent.h"
 #include "Engine/Components/HealthComponent.h"
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Systems/ActorSystem.h"
@@ -209,6 +210,19 @@ bool Engine::loadEntities(std::string &filepath) {
                          "        rectHeight:" << j["Collision"]["rectHeight"] << "\n"
                          "        isStatic:" << j["Collision"]["isStatic"] << "\n";
             std::cout << "...Registered To System: collisionSystem\n";
+        }
+        if (j.contains("AttackCollision")) {
+            AttackColliderComponent colCom;
+            colCom.bounds = sf::FloatRect(j["AttackCollision"]["rectLeft"], j["AttackCollision"]["rectTop"],
+                                          j["AttackCollision"]["rectWidth"], j["AttackCollision"]["rectHeight"]);
+
+            componentManager->addComponent<AttackColliderComponent>(entity, colCom);
+
+            std::cout << "...Added Component: AttackColliderComponent-> with the following parameters...\n "
+                         "        rectLeft:" << j["AttackCollision"]["rectLeft"] << "\n "
+                         "        rectTop:" << j["AttackCollision"]["rectTop"] << "\n"
+                         "        rectWidth:" << j["AttackCollision"]["rectWidth"] << "\n"
+                         "        rectHeight:" << j["AttackCollision"]["rectHeight"] << "\n";
         }
 
         if (j.contains("Movement")) {

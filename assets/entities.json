@@ -123,6 +123,12 @@
       "rectHeight": 85,
       "isStatic": false
     },
+    "AttackCollision": {
+      "rectLeft": 35,
+      "rectTop": -36,
+      "rectWidth": 34,
+      "rectHeight": 85
+    },
     "Movement": true
   },
   {
@@ -234,8 +240,8 @@
       "frameHeight": 48
     },
     "Position": {
-      "x": 300,
-      "y": 200
+      "x": 200,
+      "y": 50
     },
     "Velocity": {
       "dx": 0,

@@ -8,6 +8,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include "Engine/Components/AnimationComponent.h"
+#include "Engine/Components/AttackColliderComponent.h"
 #include "Engine/Components/DirectionComponent.h"
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Components/ColliderComponent.h"
@@ -53,7 +54,8 @@ public:
                                     sf::Joystick::isButtonPressed(0, 0));
                 bool rollPressed = (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
                                     sf::Joystick::isButtonPressed(0, 1));
-                bool slashPressed = sf::Joystick::isButtonPressed(0, 5);
+                bool slashPressed = (sf::Joystick::isButtonPressed(0, 5) ||
+                                    sf::Mouse::isButtonPressed(sf::Mouse::Left));
 
                 float speed = 300.0f;
 
@@ -65,6 +67,7 @@ public:
                 if (components.hasComponent<PlayerComponent>(entity)) {
                     auto &player = components.getComponent<PlayerComponent>(entity);
                     auto &cling = components.getComponent<WallClingComponent>(entity);
+                    auto &attackCol = components.getComponent<AttackColliderComponent>(entity);
 
                     if (!player.isSlashing && slashPressed && player.isGrounded && !cling.active) {
                         player.isSlashing = true;
@@ -75,12 +78,12 @@ public:
                         if (player.slashTimer <= 0.f || moveX > 0.f || moveX < 0.f) {
                             player.isSlashing = false;
                         }
-                        auto& colCom = components.getComponent<ColliderComponent>(entity);
-                        colCom.bounds.left = 35;
+                        if (player.slashTimer <= player.slashDuration / 2)
+                            attackCol.active = true;
                     }
                     else {
-                        auto& colCom = components.getComponent<ColliderComponent>(entity);
-                        colCom.bounds.left = -15;
+                        auto& attackCol = components.getComponent<AttackColliderComponent>(entity);
+                        attackCol.active = false;
                     }
 
                     if (!player.isRolling && rollPressed && player.isGrounded) {

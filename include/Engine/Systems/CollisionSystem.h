@@ -35,6 +35,7 @@ public:
             cling.timer = 0.f;
             cling.wallNormal = contact.normal; //Points from the wall to player
             std::cout << "Wall contact" << std::endl;
+
         }
     }
 
@@ -45,6 +46,46 @@ public:
         if (components.hasComponent<WallClingComponent>(e))
             components.getComponent<WallClingComponent>(e).touchedThisFrame = false;
 
+        // Attack collision loop
+        for (Entity entity : entities) {
+            if (components.hasComponent<AttackColliderComponent>(entity) && components.hasComponent<Position>(entity)) {
+                auto &attCol = components.getComponent<AttackColliderComponent>(entity);
+                auto &attPos = components.getComponent<Position>(entity);
+
+                sf::FloatRect attBounds{ attPos.x + attCol.bounds.left,
+                              attPos.y + attCol.bounds.top,
+                              attCol.bounds.width,
+                              attCol.bounds.height };
+
+                for (Entity other : entities) {
+                    if (other == entity) continue;
+                    if (!components.hasComponent<ColliderComponent>(other) || !components.hasComponent<HealthComponent>(other)) {
+                        continue;
+                    }
+                    auto& otherCol = components.getComponent<ColliderComponent>(other);
+                    auto& otherPos = components.getComponent<Position>(other);
+
+                    sf::FloatRect otherBounds{ otherPos.x + otherCol.bounds.left,
+                                   otherPos.y + otherCol.bounds.top,
+                                   otherCol.bounds.width,
+                                   otherCol.bounds.height
+                    };
+
+                    sf::FloatRect attackIntersection;
+                    if (!attBounds.intersects(otherBounds, attackIntersection))
+                        continue;                        // → no collision this pair
+
+                    float overlapX = attackIntersection.width;
+                    float overlapY = attackIntersection.height;
+
+                    if (overlapX < overlapY && attCol.active) {
+                        auto& otherHealth = components.getComponent<HealthComponent>(other);
+                        otherHealth.isDead = true;
+                        std::cout << "Hit" << std::endl;
+                    }
+                }
+            }
+        }
 
     // Double loop: broad-phase & narrow-phase collision tests
     for (Entity a : entities)

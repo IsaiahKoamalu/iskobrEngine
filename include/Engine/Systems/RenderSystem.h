@@ -7,6 +7,7 @@
 #include "Engine/Components/SpriteComponent.h"
 #include <SFML/Graphics.hpp>
 
+#include "Engine/Components/AttackColliderComponent.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/HealthComponent.h"
 #include "Engine/Components/TileComponent.h"
@@ -43,6 +44,20 @@ public:
                     debugRect.setOutlineColor(sf::Color::Red);
                     debugRect.setOutlineThickness(1.0f);
                     window.draw(debugRect);
+                }
+                if (components.hasComponent<AttackColliderComponent>(entity)) {
+                    const auto& collider = components.getComponent<AttackColliderComponent>(entity);
+                    if (collider.active) {
+                        const auto& pos = components.getComponent<Position>(entity);
+
+                        sf::RectangleShape debugRect;
+                        debugRect.setSize({collider.bounds.width, collider.bounds.height});
+                        debugRect.setPosition(pos.x + collider.bounds.left, pos.y + collider.bounds.top);
+                        debugRect.setFillColor(sf::Color::Transparent);
+                        debugRect.setOutlineColor(sf::Color::Green);
+                        debugRect.setOutlineThickness(1.0f);
+                        window.draw(debugRect);
+                    }
                 }
             }
         }
