@@ -7,12 +7,14 @@
  * A collision component for attacks.
  */
 struct AttackColliderComponent {
-    sf::FloatRect bounds;
+    sf::FloatRect boundsRight;
+    sf::FloatRect boundsLeft;
     bool isStatic = false;
     bool isTrigger = false;
     std::string tag = "";
 
-    bool active = false;
+    bool activeRight = false;
+    bool activeLeft = false;
 };
 
 #endif

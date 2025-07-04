@@ -100,6 +100,12 @@
         "filePath": "assets/sword/slash_right_sword.png",
         "frameCount": 6,
         "frameTime": 0.07
+      },
+      "slashLeft": {
+        "name": "slashLeft",
+        "filePath": "assets/sword/slash_left_sword.png",
+        "frameCount": 6,
+        "frameTime": 0.07
       }
     },
     "anim": {
@@ -123,8 +129,14 @@
       "rectHeight": 85,
       "isStatic": false
     },
-    "AttackCollision": {
+    "AttackCollisionRight": {
       "rectLeft": 35,
+      "rectTop": -36,
+      "rectWidth": 40,
+      "rectHeight": 85
+    },
+    "AttackCollisionLeft": {
+      "rectLeft": -63,
       "rectTop": -36,
       "rectWidth": 40,
       "rectHeight": 85

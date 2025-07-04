@@ -4,6 +4,7 @@
 #include "Engine/System.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/ColliderComponent.h"
+#include "Engine/Components/AttackColliderComponent.h"
 #include "Engine/Components/Position.h"
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Components/WallClingComponent.h"
@@ -52,10 +53,15 @@ public:
                 auto &attCol = components.getComponent<AttackColliderComponent>(entity);
                 auto &attPos = components.getComponent<Position>(entity);
 
-                sf::FloatRect attBounds{ attPos.x + attCol.bounds.left,
-                              attPos.y + attCol.bounds.top,
-                              attCol.bounds.width,
-                              attCol.bounds.height };
+                sf::FloatRect attBoundsRight{ attPos.x + attCol.boundsRight.left,
+                              attPos.y + attCol.boundsRight.top,
+                              attCol.boundsRight.width,
+                              attCol.boundsRight.height };
+
+                sf::FloatRect attBoundsLeft{ attPos.x + attCol.boundsLeft.left,
+                       attPos.y + attCol.boundsLeft.top,
+                              attCol.boundsLeft.width,
+                              attCol.boundsRight.height };
 
                 for (Entity other : entities) {
                     if (other == entity) continue;
@@ -72,16 +78,35 @@ public:
                     };
 
                     sf::FloatRect attackIntersection;
-                    if (!attBounds.intersects(otherBounds, attackIntersection))
-                        continue;                        // → no collision this pair
+                    bool hit = false;
+
+                    if (attCol.activeRight) {
+                        hit = attBoundsRight.intersects(otherBounds, attackIntersection);
+                        if (hit) {
+                            auto &health = components.getComponent<HealthComponent>(other);
+                            health.isDead = true;
+                        }
+                    }
+                    if (!hit && attCol.activeLeft) {
+                        hit = attBoundsLeft.intersects(otherBounds, attackIntersection);
+                        if (hit) {      // left swing landed
+                            components.getComponent<HealthComponent>(other).isDead = true;
+                            std::cout << "Hit Left\n";
+                        }
+                    }
 
                     float overlapX = attackIntersection.width;
                     float overlapY = attackIntersection.height;
 
-                    if (overlapX < overlapY && attCol.active) {
+                    if (overlapX < overlapY && attCol.activeRight) {
                         auto& otherHealth = components.getComponent<HealthComponent>(other);
                         otherHealth.isDead = true;
-                        std::cout << "Hit" << std::endl;
+                        std::cout << "Hit Right" << std::endl;
+                    }
+                    else if (overlapX < overlapY && attCol.activeLeft) {
+                        auto &otherHealth = components.getComponent<HealthComponent>(other);
+                        otherHealth.isDead = true;
+                        std::cout << "Hit Left" << std::endl;
                     }
                 }
             }
@@ -153,14 +178,6 @@ public:
             {
                 if (overlapX < overlapY)                        // resolve along X
                 {
-                    if (components.hasComponent<HealthComponent>(b) && !components.hasComponent<PlayerComponent>(b)) {
-                        auto& player = components.getComponent<PlayerComponent>(a);
-                        if (player.isSlashing) {
-                            auto& health = components.getComponent<HealthComponent>(b);
-                            health.isDead = true;
-                        }
-
-                    }
                     if (normal.x < 0) aPos.x -= overlapX;
                     else              aPos.x += overlapX;
                 }

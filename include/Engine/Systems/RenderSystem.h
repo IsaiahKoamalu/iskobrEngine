@@ -7,6 +7,7 @@
 #include "Engine/Components/SpriteComponent.h"
 #include <SFML/Graphics.hpp>
 
+#include "ParticleSystem.h"
 #include "Engine/Components/AttackColliderComponent.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/HealthComponent.h"
@@ -20,7 +21,7 @@
 
 class RenderSystem : public System {
 public:
-    void update(sf::RenderWindow &window, ComponentManager &components, bool debugMode) {
+    void update(sf::RenderWindow &window, ComponentManager &components, ParticleSystem& particles, bool debugMode) {
         // First draw all tile components
         for (auto entity: entities) {
             if (components.hasComponent<TileComponent>(entity)) {
@@ -47,12 +48,23 @@ public:
                 }
                 if (components.hasComponent<AttackColliderComponent>(entity)) {
                     const auto& collider = components.getComponent<AttackColliderComponent>(entity);
-                    if (collider.active) {
+                    if (collider.activeRight) {
                         const auto& pos = components.getComponent<Position>(entity);
 
                         sf::RectangleShape debugRect;
-                        debugRect.setSize({collider.bounds.width, collider.bounds.height});
-                        debugRect.setPosition(pos.x + collider.bounds.left, pos.y + collider.bounds.top);
+                        debugRect.setSize({collider.boundsRight.width, collider.boundsRight.height});
+                        debugRect.setPosition(pos.x + collider.boundsRight.left, pos.y + collider.boundsRight.top);
+                        debugRect.setFillColor(sf::Color::Transparent);
+                        debugRect.setOutlineColor(sf::Color::Green);
+                        debugRect.setOutlineThickness(1.0f);
+                        window.draw(debugRect);
+                    }
+                    else if (collider.activeLeft) {
+                        const auto& pos = components.getComponent<Position>(entity);
+
+                        sf::RectangleShape debugRect;
+                        debugRect.setSize({collider.boundsLeft.width, collider.boundsLeft.height});
+                        debugRect.setPosition(pos.x + collider.boundsLeft.left, pos.y + collider.boundsLeft.top);
                         debugRect.setFillColor(sf::Color::Transparent);
                         debugRect.setOutlineColor(sf::Color::Green);
                         debugRect.setOutlineThickness(1.0f);
@@ -73,7 +85,9 @@ public:
                 window.draw(spriteComp.sprite);
             }
         }
+        window.draw(particles);
     }
+
 };
 
 #endif

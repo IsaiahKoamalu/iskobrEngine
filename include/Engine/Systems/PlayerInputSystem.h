@@ -32,6 +32,13 @@ public:
                 auto& cling = components.getComponent<WallClingComponent>(entity);
                 auto &velocity = components.getComponent<Velocity>(entity);
                 auto& pos = components.getComponent<Position>(entity);
+                auto& dir = components.getComponent<DirectionComponent>(entity);
+                if (dir.current == Direction::Right) {
+                    std::cout << "Right" << std::endl;
+                }
+                if (dir.current == Direction::Left) {
+                    std::cout << "Left" << std::endl;
+                }
 
                 float moveX = 0.0f;
 
@@ -68,6 +75,7 @@ public:
                     auto &player = components.getComponent<PlayerComponent>(entity);
                     auto &cling = components.getComponent<WallClingComponent>(entity);
                     auto &attackCol = components.getComponent<AttackColliderComponent>(entity);
+                    auto &dir = components.getComponent<DirectionComponent>(entity);
 
                     if (!player.isSlashing && slashPressed && player.isGrounded && !cling.active) {
                         player.isSlashing = true;
@@ -78,12 +86,19 @@ public:
                         if (player.slashTimer <= 0.f || moveX > 0.f || moveX < 0.f) {
                             player.isSlashing = false;
                         }
-                        if (player.slashTimer <= player.slashDuration / 2)
-                            attackCol.active = true;
+                        if (player.slashTimer <= player.slashDuration / 2 && dir.current == Direction::Right) {
+                            std::cout << "Right Attack" << std::endl;
+                            attackCol.activeRight = true;
+                        }
+                        if (player.slashTimer <= player.slashDuration / 2 && dir.current == Direction::Left) {
+                            std::cout << "Left Attack" << std::endl;
+                            attackCol.activeLeft = true;
+                        }
                     }
                     else {
                         auto& attackCol = components.getComponent<AttackColliderComponent>(entity);
-                        attackCol.active = false;
+                        attackCol.activeRight = false;
+                        attackCol.activeLeft = false;
                     }
 
                     if (!player.isRolling && rollPressed && player.isGrounded) {
@@ -158,7 +173,12 @@ public:
                         }
                     }
                     else if (player.isSlashing) {
-                        anim.currentState = "slashRight";
+                        if (dir.current == Direction::Right) {
+                            anim.currentState = "slashRight";
+                        }
+                        else if (dir.current == Direction::Left) {
+                            anim.currentState = "slashLeft";
+                        }
                     }
                     else if (!player.isGrounded) {
                         if (moveX > 0 || dir.current == Direction::Right) {

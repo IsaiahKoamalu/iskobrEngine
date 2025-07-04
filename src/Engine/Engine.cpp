@@ -58,7 +58,7 @@ void Engine::run(bool debugMode) {
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
-        sf::Time tDt;
+        sf::Time tDt = sf::seconds(dt);
         processEvents();
         update(dt, tDt);
         render(debugMode);
@@ -71,7 +71,7 @@ void Engine::update(float dt, sf::Time tDt) {
     movementSystem->update(*componentManager, dt);
     collisionSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
-    damageSystem->update(*componentManager, *entityManager, *systemManager, dt);
+    damageSystem->update(*componentManager, *entityManager, *systemManager, *particleSystem, dt);
     particleSystem->update(tDt);
     actorSystem->update(*componentManager, dt);
     triggerSystem->update(*componentManager, dt);
@@ -90,7 +90,7 @@ void Engine::processEvents() {
 
 void Engine::render(bool debugMode) {
     window.clear(sf::Color(155, 212, 195));
-    renderSystem->update(window, *componentManager, debugMode);
+    renderSystem->update(window, *componentManager, *particleSystem, debugMode);
     window.display();
 }
 
@@ -214,18 +214,18 @@ bool Engine::loadEntities(std::string &filepath) {
                          "        isStatic:" << j["Collision"]["isStatic"] << "\n";
             std::cout << "...Registered To System: collisionSystem\n";
         }
-        if (j.contains("AttackCollision")) {
+        if (j.contains("AttackCollisionRight")) {
             AttackColliderComponent colCom;
-            colCom.bounds = sf::FloatRect(j["AttackCollision"]["rectLeft"], j["AttackCollision"]["rectTop"],
-                                          j["AttackCollision"]["rectWidth"], j["AttackCollision"]["rectHeight"]);
+            // Right directional attack collision
+            colCom.boundsRight = sf::FloatRect(j["AttackCollisionRight"]["rectLeft"], j["AttackCollisionRight"]["rectTop"],
+                                          j["AttackCollisionRight"]["rectWidth"], j["AttackCollisionRight"]["rectHeight"]);
+            // Left directional attack collision
+            colCom.boundsLeft = sf::FloatRect(j["AttackCollisionLeft"]["rectLeft"], j["AttackCollisionLeft"]["rectTop"],
+                                          j["AttackCollisionLeft"]["rectWidth"], j["AttackCollisionLeft"]["rectHeight"]);
 
             componentManager->addComponent<AttackColliderComponent>(entity, colCom);
 
-            std::cout << "...Added Component: AttackColliderComponent-> with the following parameters...\n "
-                         "        rectLeft:" << j["AttackCollision"]["rectLeft"] << "\n "
-                         "        rectTop:" << j["AttackCollision"]["rectTop"] << "\n"
-                         "        rectWidth:" << j["AttackCollision"]["rectWidth"] << "\n"
-                         "        rectHeight:" << j["AttackCollision"]["rectHeight"] << "\n";
+            std::cout << "...Added Component: AttackColliderComponent-> with the following parameters...\n ";
         }
 
         if (j.contains("Movement")) {
