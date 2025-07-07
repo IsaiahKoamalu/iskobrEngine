@@ -33,15 +33,8 @@ public:
                 auto &velocity = components.getComponent<Velocity>(entity);
                 auto& pos = components.getComponent<Position>(entity);
                 auto& dir = components.getComponent<DirectionComponent>(entity);
-                if (dir.current == Direction::Right) {
-                    std::cout << "Right" << std::endl;
-                }
-                if (dir.current == Direction::Left) {
-                    std::cout << "Left" << std::endl;
-                }
 
                 float moveX = 0.0f;
-
 
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !cling.active ||
                     sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) < -20 && !cling.active) moveX -= 1.0f;
@@ -66,10 +59,6 @@ public:
 
                 float speed = 300.0f;
 
-                // Apply velocity to all controlled entities.
-                // Reset grounded state. It will be set true by collision system if needed
-
-
                 // Handle Jumping
                 if (components.hasComponent<PlayerComponent>(entity)) {
                     auto &player = components.getComponent<PlayerComponent>(entity);
@@ -87,11 +76,9 @@ public:
                             player.isSlashing = false;
                         }
                         if (player.slashTimer <= player.slashDuration / 2 && dir.current == Direction::Right) {
-                            std::cout << "Right Attack" << std::endl;
                             attackCol.activeRight = true;
                         }
                         if (player.slashTimer <= player.slashDuration / 2 && dir.current == Direction::Left) {
-                            std::cout << "Left Attack" << std::endl;
                             attackCol.activeLeft = true;
                         }
                     }

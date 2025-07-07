@@ -173,15 +173,24 @@ public:
                 }
             }
 
-            //Your existing penetration–resolution logic (unchanged)
+            // existing penetration–resolution logic (unchanged)
             if (!aCol.isTrigger && !bCol.isTrigger)
             {
-                if (overlapX < overlapY)                        // resolve along X
+                if (overlapX < overlapY && !components.hasComponent<TileComponent>(b) && components.hasComponent<PlayerComponent>(a))                        // resolve along X
+                {
+                    auto& player = components.getComponent<PlayerComponent>(a);
+                    if (!player.isRolling) {
+                        if (normal.x < 0) aPos.x -= overlapX;
+                        else              aPos.x += overlapX;
+                    }
+                }
+
+                if (overlapX < overlapY && components.hasComponent<TileComponent>(b))                        // resolve along X
                 {
                     if (normal.x < 0) aPos.x -= overlapX;
                     else              aPos.x += overlapX;
                 }
-                else                                            // resolve along Y
+                else if (components.hasComponent<TileComponent>(b))                                            // resolve along Y
                 {
                     bool fromAbove = normal.y < 0;              // a is above b
                     if (fromAbove)

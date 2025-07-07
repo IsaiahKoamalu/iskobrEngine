@@ -10,8 +10,12 @@
 
 class ParticleSystem : public System, public sf::Drawable, public sf::Transformable {
 public:
-    explicit ParticleSystem(std::size_t reserve = 0) {
-        m_particles.reserve(reserve);
+    explicit ParticleSystem(std::size_t maxParticles = 500)
+        : m_capacity(maxParticles)
+    {
+        m_particles.reserve(m_capacity);
+        m_vertices.setPrimitiveType(sf::Quads);
+        m_vertices.resize(maxParticles * 4);
     }
 
     void setEmitter(const sf::Vector2f& position) {
@@ -23,36 +27,53 @@ public:
     }
 
     void spawnParticles(std::size_t count) {
+        // Clamping the pool size
+        if (m_particles.size() + count > m_capacity) {
+            count = m_capacity - m_particles.size();
+        }
         for (std::size_t n = 0; n < count; ++n) {
-            m_particles.emplace_back();
-            m_vertices.append(sf::Vertex());
-
-            resetParticle(m_particles.back(), m_vertices[m_vertices.getVertexCount() - 1]);
+           Particle p;
+            resetParticle(p);
+            m_particles.push_back(p);
         }
     }
 
-    void update(sf::Time dt) {
-        constexpr std::size_t maxBurst = 100;
+    void update(sf::Time dt)
+    {
+        std::size_t vertexIndex = 0;
+        m_vertices.resize(m_particles.size() * 4);
 
-        for (std::size_t i = 0; i < m_particles.size(); ) {
+        for (std::size_t i = 0; i < m_particles.size();) {
             Particle& p = m_particles[i];
-            sf::Vertex& v = m_vertices[i];
-
             p.lifeTime -= dt;
-            v.position += p.Velocity * dt.asSeconds();
+
 
             if (p.lifeTime <= sf::Time::Zero) {
-                std::size_t last = m_particles.size() - 1;
-                m_particles[i] = m_particles[last];
-                m_vertices[i] = m_vertices[last];
+                m_particles[i] = m_particles.back();
                 m_particles.pop_back();
-                m_vertices.resize(last);
                 continue;
             }
 
-            float ratio = p.lifeTime.asSeconds() / m_lifetime.asSeconds();
-            ratio = std::clamp(ratio, 0.f, 1.f);
-            v.color.a = static_cast<std::uint8_t>(ratio * 225);
+            float lifeRatio = p.lifeTime.asSeconds() / m_lifetime.asSeconds();
+            sf::Uint8 alpha = static_cast<sf::Uint8>(lifeRatio * 255);
+
+            sf::Vector2f pos = p.startPos + p.velocity * (m_lifetime.asSeconds() - p.lifeTime.asSeconds());
+            float half = p.size * 0.5f;
+
+            sf::Color color(255, 0, 0, alpha);
+
+            // 4 vertices per quad (TL, TR, BR, BL)
+            m_vertices[vertexIndex + 0].position = { pos.x - half, pos.y - half };
+            m_vertices[vertexIndex + 1].position = { pos.x + half, pos.y - half };
+            m_vertices[vertexIndex + 2].position = { pos.x + half, pos.y + half };
+            m_vertices[vertexIndex + 3].position = { pos.x - half, pos.y + half };
+
+            m_vertices[vertexIndex + 0].color = color;
+            m_vertices[vertexIndex + 1].color = color;
+            m_vertices[vertexIndex + 2].color = color;
+            m_vertices[vertexIndex + 3].color = color;
+
+            vertexIndex += 4;
 
             ++i;
         }
@@ -60,30 +81,33 @@ public:
 
 private:
     struct Particle {
-        sf::Vector2f Velocity;
+        sf::Vector2f velocity;
+        sf::Vector2f startPos;
         sf::Time lifeTime;
+        float size;
     };
 
+    std::size_t m_capacity;
     std::vector<Particle> m_particles;
     sf::VertexArray m_vertices{sf::Points};
-    sf::Time m_lifetime{sf::seconds(3.f)};
+    sf::Time m_lifetime{sf::seconds(1.5f)};
     sf::Vector2f m_emitter{};
 
     static std::random_device rd;
     static std::mt19937 rng;
     static std::uniform_real_distribution<float> angleDeg;
     static std::uniform_real_distribution<float> speedDist;
+    static std::uniform_real_distribution<float> sizeDist;
 
-    void resetParticle(Particle& p, sf::Vertex& v) {
+    void resetParticle(Particle& p) {
         float theta = angleDeg(rng) * 3.14159265f / 180.f;
         float speed = speedDist(rng);
 
-        p.Velocity = {std::cos(theta) * speed, std::sin(theta) * speed };
+        p.velocity = {std::cos(theta) * speed, std::sin(theta) * speed };
         p.lifeTime = m_lifetime;
 
-        v.position = m_emitter;
-
-        v.color = sf::Color::Red;
+        p.size = sizeDist(rng);
+        p.startPos = m_emitter;
     }
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
@@ -96,6 +120,7 @@ private:
 inline std::random_device ParticleSystem::rd;
 inline std::mt19937 ParticleSystem::rng;
 inline std::uniform_real_distribution<float> ParticleSystem::angleDeg(-360.f, 90.f);
-inline std::uniform_real_distribution<float> ParticleSystem::speedDist(10.f, 50.f);
+inline std::uniform_real_distribution<float> ParticleSystem::speedDist(50.f, 150.f);
+inline std::uniform_real_distribution<float> ParticleSystem::sizeDist(6.f, 12.f);
 
 #endif
