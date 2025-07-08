@@ -54,7 +54,7 @@ public:
                         sf::RectangleShape debugRect;
                         debugRect.setSize({collider.boundsRight.width, collider.boundsRight.height});
                         debugRect.setPosition(pos.x + collider.boundsRight.left, pos.y + collider.boundsRight.top);
-                        debugRect.setFillColor(sf::Color::Transparent);
+                        debugRect.setFillColor(sf::Color::Green);
                         debugRect.setOutlineColor(sf::Color::Green);
                         debugRect.setOutlineThickness(1.0f);
                         window.draw(debugRect);
@@ -65,7 +65,7 @@ public:
                         sf::RectangleShape debugRect;
                         debugRect.setSize({collider.boundsLeft.width, collider.boundsLeft.height});
                         debugRect.setPosition(pos.x + collider.boundsLeft.left, pos.y + collider.boundsLeft.top);
-                        debugRect.setFillColor(sf::Color::Transparent);
+                        debugRect.setFillColor(sf::Color::Green);
                         debugRect.setOutlineColor(sf::Color::Green);
                         debugRect.setOutlineThickness(1.0f);
                         window.draw(debugRect);

@@ -5,8 +5,10 @@
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/AttackColliderComponent.h"
+#include "Engine/Components/HealthComponent.h"
 #include "Engine/Components/Position.h"
 #include "Engine/Components/PlayerComponent.h"
+#include "Engine/Components/TileComponent.h"
 #include "Engine/Components/WallClingComponent.h"
 
 
@@ -24,6 +26,27 @@ struct Contact {
  */
 class CollisionSystem : public System {
 public:
+
+    bool isSolidAt(ComponentManager& component, float x, float y) const {
+        for (Entity e : entities) {
+            if (component.hasComponent<TileComponent>(e)
+                && component.hasComponent<ColliderComponent>(e)
+                && component.hasComponent<Position>(e)) {
+                auto& col = component.getComponent<ColliderComponent>(e);
+                auto& pos = component.getComponent<Position>(e);
+
+                sf::FloatRect bounds{ pos.x + col.bounds.left,
+                                      pos.y + col.bounds.top,
+                                             col.bounds.width,
+                                             col.bounds.height};
+
+                if (bounds.contains(x, y)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     void handleWallContacts(Entity entity, ComponentManager &components, const Contact& contact) {
         const float verticalThreshold = 0.4f;
@@ -46,6 +69,7 @@ public:
     for (Entity e : entities)
         if (components.hasComponent<WallClingComponent>(e))
             components.getComponent<WallClingComponent>(e).touchedThisFrame = false;
+
 
         // Attack collision loop
         for (Entity entity : entities) {

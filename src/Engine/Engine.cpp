@@ -23,6 +23,7 @@ void Engine::run(bool debugMode) {
 
     sf::Clock clock;
 
+
     //======== ECS SETUP ============
     entityManager = std::make_unique<EntityManager>();
     componentManager = std::make_unique<ComponentManager>();
@@ -43,6 +44,12 @@ void Engine::run(bool debugMode) {
     groundResetSystem = systemManager->registerSystem<GroundResetSystem>();
     damageSystem = systemManager->registerSystem<DamageSystem>();
     particleSystem = systemManager->registerSystem<ParticleSystem>();
+
+    /**
+     *Passing the collision system to the particle system so that it can handle
+     * its own collision. Using .get() since the collision system is a shared_ptr.
+     */
+    particleSystem->setCollisionSystem(collisionSystem.get());
 
     auto entityFile = std::make_shared<std::string>("assets/entities.json");
     if (!loadEntities(*entityFile)) {
@@ -72,7 +79,7 @@ void Engine::update(float dt, sf::Time tDt) {
     collisionSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
     damageSystem->update(*componentManager, *entityManager, *systemManager, *particleSystem, dt);
-    particleSystem->update(tDt);
+    particleSystem->update(tDt, *componentManager);
     actorSystem->update(*componentManager, dt);
     triggerSystem->update(*componentManager, dt);
     cameraSystem->update(*componentManager, dt);
