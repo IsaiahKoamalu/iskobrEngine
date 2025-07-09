@@ -19,28 +19,30 @@ public:
     void update(ComponentManager &components, float dt) {
         for (Entity entity: entities) {
             if (!components.hasComponent<Position>(entity)) continue;
-            auto &pos = components.getComponent<Position>(entity);
+            if (components.hasComponent<PlayerComponent>(entity)) {
+                auto &pos = components.getComponent<Position>(entity);
 
-            float targetX = pos.x;
-            float targetY = pos.y;
+                float targetX = pos.x;
+                float targetY = pos.y;
 
-            float halfWidth = view.getSize().x / 2.f;
-            float halfHeight = view.getSize().y / 2.f;
+                float halfWidth = view.getSize().x / 2.f;
+                float halfHeight = view.getSize().y / 2.f;
 
-            // Level bounds (example: 2000x2000 pixels)
-            float levelWidth = 2000.f;
-            float levelHeight = 2000.f;
+                // Level bounds (example: 2000x2000 pixels)
+                float levelWidth = 2000.f;
+                float levelHeight = 2000.f;
 
-            // Clamp X
-            if (targetX < halfWidth) targetX = halfWidth;
-            if (targetX > levelWidth - halfWidth) targetX = levelWidth - halfWidth;
+                // Clamp X
+                if (targetX < halfWidth) targetX = halfWidth;
+                if (targetX > levelWidth - halfWidth) targetX = levelWidth - halfWidth;
 
-            // Clamp Y
-            if (targetY < halfHeight) targetY = halfHeight;
-            if (targetY > levelHeight - halfHeight) targetY = levelHeight - halfHeight;
+                // Clamp Y
+                if (targetY < halfHeight) targetY = halfHeight;
+                if (targetY > levelHeight - halfHeight) targetY = levelHeight - halfHeight;
 
-            view.setCenter(targetX, targetY);
-            break; // Only first entity should be tracked (player)
+                view.setCenter(targetX, targetY);
+                break; // Only first entity should be tracked (player)
+            }
         }
     }
 };

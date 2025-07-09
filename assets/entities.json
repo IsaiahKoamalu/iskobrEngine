@@ -144,6 +144,132 @@
     "Movement": true
   },
   {
+    "name": "Enemy",
+    "player": false,
+    "sprite": true,
+    "health": true,
+    "spritePath": {
+      "idleLeft": {
+        "name": "idleLeft",
+        "filePath": "assets/idle_left.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
+      "wallRight": {
+        "name": "wallRight",
+        "filePath": "assets/wall_land_right.png",
+        "frameCount": 6,
+        "frameTime": 0.1
+      },
+      "crouchIdleRight": {
+        "name": "crouchIdleRight",
+        "filePath": "assets/crouch_idle_right.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
+      "crouchIdleLeft": {
+        "name": "crouchIdleLeft",
+        "filePath": "assets/crouch_idle_left.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
+      "crouchWalkRight": {
+        "name": "crouchWalkRight",
+        "filePath": "assets/sword/crouch_walk_right_sword.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
+      "crouchWalkLeft": {
+        "name": "crouchLeft",
+        "filePath":"assets/sword/crouch_walk_left_sword.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
+      "wallLeft": {
+        "name": "wallLeft",
+        "filePath": "assets/wall_land_left.png",
+        "frameCount": 6,
+        "frameTime": 0.1
+      },
+      "idleRight": {
+        "name": "idleRight",
+        "filePath": "assets/sword/idle_right_sword.png",
+        "frameCount": 10,
+        "frameTime": 0.1
+      },
+      "walkLeft": {
+        "name": "runLeft",
+        "filePath": "assets/walk_left.png",
+        "frameCount": 8,
+        "frameTime": 0.1
+      },
+      "walkRight": {
+        "name": "runRight",
+        "filePath": "assets/sword/run_right_sword.png",
+        "frameCount": 8,
+        "frameTime": 0.1
+      },
+      "jumpRight": {
+        "name": "jumpRight",
+        "filePath": "assets/jump_right.png",
+        "frameCount": 6,
+        "frameTime": 0.15
+      },
+      "jumpLeft": {
+        "name": "jumpLeft",
+        "filePath": "assets/jump_left.png",
+        "frameCount": 6,
+        "frameTime": 0.15
+      },
+      "landRight": {
+        "name": "landRight",
+        "filePath": "assets/land_right.png",
+        "frameCount": 9,
+        "frameTime": 0.1
+      },
+      "rollRight": {
+        "name": "rollRight",
+        "filePath": "assets/roll_right.png",
+        "frameCount": 6,
+        "frameTime": 0.1
+      },
+      "rollLeft": {
+        "name": "rollLeft",
+        "filePath": "assets/roll_left.png",
+        "frameCount": 7,
+        "frameTime": 0.1
+      },
+      "slashRight": {
+        "name": "slashRight",
+        "filePath": "assets/sword/slash_right_sword.png",
+        "frameCount": 6,
+        "frameTime": 0.07
+      }
+    },
+    "anim": {
+      "start": "idleRight",
+      "frameWidth": 48,
+      "frameHeight": 48
+    },
+    "Position": {
+      "x": 200,
+      "y": 20
+    },
+    "Velocity": {
+      "dx": 0,
+      "dy": 0
+    },
+    "Direction": true,
+    "Collision": {
+      "rectLeft": -15,
+      "rectTop": -36,
+      "rectWidth": 34,
+      "rectHeight": 85,
+      "isStatic": false
+    },
+    "Movement": false
+  },
+  {
     "name": "Enemy2",
     "player": false,
     "sprite": true,
