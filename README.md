@@ -18,14 +18,18 @@ Entities can be removed the same way by removing all of its corresponding inform
 **KEYBOARD/CONTROLLER**
 -
 Player input is handled within the PlayerInput system, which is a system reserved only for the **one** entity with a Player flag that is equal to true.
-Keyboard & Mouse:
+
+**Keyboard & Mouse:**
+
   - A,D -> left and right movement.
   - Space -> jump, you can jump on to walls to utilize the WallCling component which allows for the player to jump back and forth between walls to reach higher spots. (currently still buggy)
   - C -> crouch, allows for movement under spaces that you would not be able to get through while standing.(as of now you cannot attack while crouching)
   - Shift -> roll, allows for the player to roll through select entities collision boxes, also allows for passage under low spaces (like crouch).
   - LMB -> attack, the attack system is directional, so if the player is facing right they will attack right and vice versa.
   - R -> reset player position.
-Controller:
+
+**Controller:**
+
   - Left Stick -> left and right movement.
   - A bttn -> jump, you can jump on to walls to utilize the WallCling component which allows for the player to jump back and forth between walls to reach higher spots. (currently still buggy)
   - R3 -> crouch, allows for movement under spaces that you would not be able to get through while standing.(as of now you cannot attack while crouching)
