@@ -1,4 +1,4 @@
-[MAIN](../README.md)
+[MAIN](index.md)
 
 Hello!
 -
