@@ -1,5 +1,3 @@
 theme: jekyll-theme-Cayman
-sass:
-  style: compressed
-
-layout: page
+title: Iskobr Engine
+description: 2D Game Engine Written in C++
