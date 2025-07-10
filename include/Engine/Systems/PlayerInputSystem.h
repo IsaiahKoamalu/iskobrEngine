@@ -75,7 +75,7 @@ public:
                         if (player.slashTimer <= 0.f || moveX > 0.f || moveX < 0.f) {
                             player.isSlashing = false;
                         }
-                        if (player.slashTimer <= player.slashDuration / 2 && dir.current == Direction::Right) {
+                        if (player.slashTimer <= player.slashDuration / 3.f && dir.current == Direction::Right) {
                             attackCol.activeRight = true;
                         }
                         if (player.slashTimer <= player.slashDuration / 2 && dir.current == Direction::Left) {
