@@ -1,0 +1,5 @@
+theme: jekyll-theme-Cayman
+sass:
+  style: compressed
+
+layout: page

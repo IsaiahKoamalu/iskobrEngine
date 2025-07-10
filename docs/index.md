@@ -5,14 +5,14 @@ layout: default
 # Iskobr Engine
 **Isaiah Broderson - ISKOBR Engine Documentation**
 
-**[ABOUT](docs/ABOUT.md)**
+**[ABOUT](ABOUT.md)**
 
 **EDITING THE LEVEL INSTANCE**
 -
 The current level can be accessed and edited through the tilemap editor. Once you are satisfied with the level changes press 's' and the level data will be written to the level.json file.
 The editor also currently supports undo functionality with 'ctrl z'.
 
-**ADDING AND REMOVING ENTITIES** 
+**ADDING AND REMOVING ENTITIES**
 -
 Entities can be added by adding the required and desired entity information to the entities.json file that is read and parsed automatically within the load function of the Engine class.
 The load function will automatically register entities to the proper systems and add the needed components based off the data that has been provided in the entities.json file.
@@ -25,20 +25,20 @@ Player input is handled within the PlayerInput system, which is a system reserve
 
 **Keyboard & Mouse:**
 
-  - A,D -> left and right movement.
-  - Space -> jump, you can jump on to walls to utilize the WallCling component which allows for the player to jump back and forth between walls to reach higher spots. (currently still buggy)
-  - C -> crouch, allows for movement under spaces that you would not be able to get through while standing.(as of now you cannot attack while crouching)
-  - Shift -> roll, allows for the player to roll through select entities collision boxes, also allows for passage under low spaces (like crouch).
-  - LMB -> attack, the attack system is directional, so if the player is facing right they will attack right and vice versa.
-  - R -> reset player position.
+- A,D -> left and right movement.
+- Space -> jump, you can jump on to walls to utilize the WallCling component which allows for the player to jump back and forth between walls to reach higher spots. (currently still buggy)
+- C -> crouch, allows for movement under spaces that you would not be able to get through while standing.(as of now you cannot attack while crouching)
+- Shift -> roll, allows for the player to roll through select entities collision boxes, also allows for passage under low spaces (like crouch).
+- LMB -> attack, the attack system is directional, so if the player is facing right they will attack right and vice versa.
+- R -> reset player position.
 
 **Controller:**
 
-  - Left Stick -> left and right movement.
-  - A bttn -> jump, you can jump on to walls to utilize the WallCling component which allows for the player to jump back and forth between walls to reach higher spots. (currently still buggy)
-  - R3 -> crouch, allows for movement under spaces that you would not be able to get through while standing.(as of now you cannot attack while crouching)
-  - B bttn -> roll, allows for the player to roll through select entities collision boxes, also allows for passage under low spaces (like crouch).
-  - Rignt Bumper -> attack, the attack system is directional, so if the player is facing right they will attack right and vice versa.
+- Left Stick -> left and right movement.
+- A bttn -> jump, you can jump on to walls to utilize the WallCling component which allows for the player to jump back and forth between walls to reach higher spots. (currently still buggy)
+- R3 -> crouch, allows for movement under spaces that you would not be able to get through while standing.(as of now you cannot attack while crouching)
+- B bttn -> roll, allows for the player to roll through select entities collision boxes, also allows for passage under low spaces (like crouch).
+- Rignt Bumper -> attack, the attack system is directional, so if the player is facing right they will attack right and vice versa.
 
 **MANAGERS**
 -
@@ -89,13 +89,13 @@ struct DirectionComponent {
 **Health Component**: As mentioned earlier, the health component defines attributes related to health. Entities given a health component are subsequently able to be affected by the damage system and 'killed'.
 The component defines a health amount, a low health boolean, a full health boolean, and an is-dead boolean.
 
-**Player Component**: The player component is pretty much what it sounds like. It defines all the data that is associated with the player entity. 
+**Player Component**: The player component is pretty much what it sounds like. It defines all the data that is associated with the player entity.
 However, this will more than likely change as I begin to move properties into the actor component since many actors also require data defined in the player component.
 
 **Position Component**: The position component is just a struct with two float variables x and y that determine an entities current position the screen.
 Nearly all entities will require a position component.
 
-**Tile Component**: The tile component defines properties of the level tiles. It holds a 
+**Tile Component**: The tile component defines properties of the level tiles. It holds a
 
 **Sprite Component**: The sprite component defines properties related to... you guessed it, a sprite! The struct defines a sf::Sprite as well as a flipX boolean
 that is really only utilized if you don't want to have to make the opposite side of a sprite. An entity needs a sprite component in order to be registered to the animation system effectively.
@@ -111,7 +111,7 @@ auto& velocity = components.getComponent<Velocity>(entity);
 velocity.dy += gravity * dt; // where dt is just delta time
 ```
 
-**Wall-Cling Component**: The wall cling component is a component that defines the properties that allow an entity to preform a 'wall cling' which opens up wall jumping and sliding. 
+**Wall-Cling Component**: The wall cling component is a component that defines the properties that allow an entity to preform a 'wall cling' which opens up wall jumping and sliding.
 As of right now, it is the only component that utilizes the glm library, it defines a vec2 variable that acts as a unit vector pointing out of a wall. The struct is composed of the following...
 ```c++
 struct WallClingComponent {
@@ -128,7 +128,7 @@ struct WallClingComponent {
 
 **SYSTEMS**
 -
-All systems are children that derive publicly from System and define their own component filters and behaviors. Entities registered to certain systems must possess the required components in order for the system to run correctly, 
+All systems are children that derive publicly from System and define their own component filters and behaviors. Entities registered to certain systems must possess the required components in order for the system to run correctly,
 there are multiple fail safes in place that attempt maintain component to system consistency. However, if a system expects a component from an entity that does not possess it will result
 in a breach of the following assertion statement ``assert(components.find(entity) != components.end() && "Component not found.");`` this statement can be found in the get function of the ComponentManager.
 
@@ -143,13 +143,13 @@ in a breach of the following assertion statement ``assert(components.find(entity
 
 **Ground Reset System**: The ground reset system is a small simple system whose only responsibility is to set the player component's isGrounded member variable to false in order to prevent bugs within certain movement functionalities.
 
-**Movement System**: The movement system is responsible for grabbing all entities that possess both a position and velocity component. 
-The movement system takes into account the entities current velocity and position in order to update its new velocity and position. 
+**Movement System**: The movement system is responsible for grabbing all entities that possess both a position and velocity component.
+The movement system takes into account the entities current velocity and position in order to update its new velocity and position.
 The movement system is also responsible for preventing entities from leaving the set level boundaries.
 
-**Particle System**: The particle system holds all the logic and data concerning particles and the way they behave within the engine. 
-The particles are rendered within the render system just like all other entities. However, the collision logic is handled within itself in its update function. 
-This is done through the declaration of a variable (m_collisionSystem) of type CollisionSystem which is assigned to a const collision system pointer. 
+**Particle System**: The particle system holds all the logic and data concerning particles and the way they behave within the engine.
+The particles are rendered within the render system just like all other entities. However, the collision logic is handled within itself in its update function.
+This is done through the declaration of a variable (m_collisionSystem) of type CollisionSystem which is assigned to a const collision system pointer.
 This allows for the access of the isSolidAt function which checks if a tile meets the requirements to collide with a particle.
 
 **Physics System**: The physics system defines and implements physical forces on all entities that possess a velocity component, as of now the only physical force that is implemented through the physics system is gravity.
