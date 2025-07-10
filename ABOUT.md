@@ -1,4 +1,4 @@
-**[MAIN](README.md)**
+[MAIN](README.md)
 
 Hello!
 -
