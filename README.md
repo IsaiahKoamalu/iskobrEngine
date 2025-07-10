@@ -1,9 +1,8 @@
 **Isaiah Broderson - ISKOBR Engine Documentation**
--
-*2D Game Engine Written in c++ Leveraging an ECS Architecture and Utilizing the SFML library*
--
 
 [About](ABOUT.md)
+
+-
 
 **EDITING THE LEVEL INSTANCE**
 -
