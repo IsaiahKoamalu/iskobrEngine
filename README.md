@@ -2,8 +2,6 @@
 
 [About](ABOUT.md)
 
--
-
 **EDITING THE LEVEL INSTANCE**
 -
 The current level can be accessed and edited through the tilemap editor. Once you are satisfied with the level changes press 's' and the level data will be written to the level.json file.
