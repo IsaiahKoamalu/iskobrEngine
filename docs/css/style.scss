@@ -3,13 +3,13 @@
 
 @import "jekyll-theme-cayman";
 
+.page-header {
+  background-color: #1a1a1a;
+  border-bottom: 3px solid #4caf50;
+}
+
 body {
   background-color: #121212;
   color: #f0f0f0;
   font-family: 'Fira Code', monospace;
-}
-
-.page-header {
-  background-color: #1a1a1a;
-  border-bottom: 3px solid #4caf50;
 }
