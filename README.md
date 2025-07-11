@@ -31,7 +31,7 @@ You will also notice the line `window.setView(cameraSystem->view)` which hooks t
 
 **EDITING THE LEVEL INSTANCE**
 -
-The current level can be accessed and edited by running the tile map editor. While the editor is running you can select files by left clicking on them and place them in the level my left clicking on the desired location. You can cycle through the different tilesets by pressing E (right) and Q (left), however only the grass tileset has collision setup right now. The editor also currently supports undo functionality with 'ctrl z'.  As of now the size of the map is pretty restricrted and fixed, I plan on expanding the features of the editor soon. Once you are satisfied with the level changes you can press 's' and the level data will be written to the level.json file.
+The current level can be accessed and edited by running the tile map editor. While the editor is running the current tileset will be displayed on the left hand side of the window, you can select a tile by left clicking on it and place it in the level my left clicking on the desired location. You can cycle through the different tilesets by pressing E (right) and Q (left), however only the grass tileset has collision setup right now. The editor also currently supports undo functionality with 'ctrl z'.  As of now the size of the map is pretty restricted and fixed, I plan on expanding the features of the editor soon. Once you are satisfied with the level changes you can press 's' and the level data will be written to the level.json file.
 
 **ADDING AND REMOVING ENTITIES** 
 -
