@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="assets/css/style.css">
 
-**[ABOUT](ABOUT.md)**
+**[GO TO ABOUT](ABOUT.md)**
 
 **EDITING THE LEVEL INSTANCE**
 -
