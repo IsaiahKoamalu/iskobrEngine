@@ -2,18 +2,6 @@
 # Iskobr Engine
 **Isaiah Broderson - ISKOBR Engine Documentation**
 
-**EDITING THE LEVEL INSTANCE**
--
-The current level can be accessed and edited through the tilemap editor. Once you are satisfied with the level changes press 's' and the level data will be written to the level.json file.
-The editor also currently supports undo functionality with 'ctrl z'.
-
-**ADDING AND REMOVING ENTITIES** 
--
-Entities can be added by adding the required and desired entity information to the entities.json file that is read and parsed automatically within the load function of the Engine class.
-The load function will automatically register entities to the proper systems and add the needed components based off the data that has been provided in the entities.json file.
-It is important that no more than one entity is given a Player data entry that is equal to true.
-Entities can be removed the same way by removing all of its corresponding information from the entities.json file.
-
 **ENGINE CLASS**
 -
 
@@ -41,8 +29,18 @@ The final logic is a while loop which is the main engine loop. Within this loop 
 The event function is proceeded by the `update();` function which takes the float delta time as well as the delta time as an object of `sf::Time` (for the particle system). Within the update function you will see all systems calling their own respective update functions (save for the render system which calls its update function in the actual render function).
 You will also notice the line `window.setView(cameraSystem->view)` which hooks the camera system up to the window. The last line calls the `void render()` function which is responsible for clearing the window and implementing the render systems update function.
 
+**EDITING THE LEVEL INSTANCE**
+-
+The current level can be accessed and edited by running the tile map editor. While the editor is running you can select files by left clicking on them and place them in the level my left clicking on the desired location. You can cycle through the different tilesets by pressing E (right) and Q (left), however only the grass tileset has collision setup right now. The editor also currently supports undo functionality with 'ctrl z'.  As of now the size of the map is pretty restricrted and fixed, I plan on expanding the features of the editor soon. Once you are satisfied with the level changes you can press 's' and the level data will be written to the level.json file.
 
-**KEYBOARD/CONTROLLER**
+**ADDING AND REMOVING ENTITIES** 
+-
+Entities can be added by adding the required and desired entity information to the entities.json file that is read and parsed automatically within the load function of the Engine class.
+The load function will automatically register entities to the proper systems and add the needed components based off the data that has been provided in the entities.json file.
+It is important that no more than one entity is given a Player data entry that is equal to true.
+Entities can be removed the same way by removing all of its corresponding information from the entities.json file.
+
+**PLAYER CONTROLS**
 -
 Player input is handled within the PlayerInput system, which is a system reserved only for the **one** entity with a Player flag that is equal to true.
 
