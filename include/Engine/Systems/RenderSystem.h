@@ -74,10 +74,10 @@ public:
             }
         }
 
-        // Then draw all sprite components (like player)
+        //  drawing all sprite components (like player)
         for (auto entity: entities) {
             if (components.hasComponent<SpriteComponent>(entity) &&
-                !components.hasComponent<TileComponent>(entity)) // Don't draw tiles twice
+                !components.hasComponent<TileComponent>(entity))
             {
                 auto &spriteComp = components.getComponent<SpriteComponent>(entity);
                 auto &pos = components.getComponent<Position>(entity);

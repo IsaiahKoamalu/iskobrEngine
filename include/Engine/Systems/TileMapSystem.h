@@ -37,7 +37,7 @@ public:
                  ComponentManager &components,
                  EntityManager &entityManager,
                  TilesetManager &tilesetManager,
-                 RenderSystem &renderSystem, // Pass render system by reference
+                 RenderSystem &renderSystem,
                  CollisionSystem &collisionSystem,
                  float tileScale = 3.0f
     ) {
@@ -93,7 +93,7 @@ public:
                 tileComp.type = getTileTypeFromID(tileID, tilesetName);
                 tileComp.tileID = tileID;
                 tileComp.sprite = sprite;
-                tileComp.isSolid = (tilesetName == "grass"); // or pull from JSON if available later
+                tileComp.isSolid = (tilesetName == "grass"); // might try to pull from JSON if available later
 
                 if (tileComp.isSolid) {
                     ColliderComponent collider;

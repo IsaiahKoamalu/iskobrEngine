@@ -72,7 +72,7 @@ public:
     }
 
     void update(ComponentManager &components, float dt) {
-        // clear the *touched* flag (but NOT the active flag)
+        // clear the *touched* flag ( not the active flag)
         for (Entity e: entities)
             if (components.hasComponent<WallClingComponent>(e))
                 components.getComponent<WallClingComponent>(e).touchedThisFrame = false;
@@ -150,7 +150,7 @@ public:
             }
         }
 
-        // Double loop: broad-phase & narrow-phase collision tests
+        // Double loop: broad-phase & narrow-phase collision tests (might change)
         for (Entity a: entities) {
             if (!components.hasComponent<ColliderComponent>(a) ||
                 !components.hasComponent<Position>(a))
@@ -186,7 +186,7 @@ public:
                 if (!aBounds.intersects(bBounds, intersection))
                     continue; // → no collision this pair
 
-                // Build a contact normal so we “wall” vs “floor/ceiling” is discernible
+                // Build a contact normal so that “wall” vs “floor/ceiling” is discernible
                 float overlapX = intersection.width;
                 float overlapY = intersection.height;
 
@@ -196,7 +196,7 @@ public:
                 else // top/bottom hit
                     normal.y = (aBounds.top < bBounds.top) ? -1.f : 1.f;
 
-                //Wall-cling hook
+                //Wall-cling
                 if (components.hasComponent<WallClingComponent>(a)) {
                     Contact c;
                     c.other = b;
@@ -212,7 +212,7 @@ public:
                     }
                 }
 
-                // existing penetration–resolution logic (unchanged)
+                // base penetration–resolution logic
                 if (!aCol.isTrigger && !bCol.isTrigger) {
                     if (overlapX < overlapY && !components.hasComponent<TileComponent>(b) && components.hasComponent<
                             PlayerComponent>(a)) // resolve along X
@@ -248,14 +248,13 @@ public:
                         }
                     }
                 }
-            } // end inner loop
-        } // end outer loop
-
+            } // inner
+        } // outer
         //Post-pass – turn cling off if *never* touched a wall this frame
         for (Entity e: entities)
             if (components.hasComponent<WallClingComponent>(e)) {
                 auto &cling = components.getComponent<WallClingComponent>(e);
-                //if (!cling.touchedThisFrame) cling.active = false; // (This was causing problems)
+                //if (!cling.touchedThisFrame) cling.active = false;
             }
     }
 };
