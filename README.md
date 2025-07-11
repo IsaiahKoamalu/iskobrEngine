@@ -14,6 +14,34 @@ The load function will automatically register entities to the proper systems and
 It is important that no more than one entity is given a Player data entry that is equal to true.
 Entities can be removed the same way by removing all of its corresponding information from the entities.json file.
 
+**ENGINE CLASS**
+-
+
+The Engine class is the heart of this program. It is responsible for the following:
+- Defines the run function which houses the main loop. ``void run(bool debugMode);``
+- Defines all manager objects as unique pointers.
+- Defines all system objects as shared pointers.
+- Defines the render window.
+- Defines an overall event processing function. ``void processEvents();``
+- Defines the main update function in which all separate system updates are called. ``void update(float dt, sf::Time tDt);``
+- Defines a function that loads and configures all entities from the entities.json file. ``bool loadEntities(std::string &filepath);``
+
+Within the run function you will see the logic required for setting up the engine, the managers are first assigned followed by the registration of all systems
+to the system manager with the following format: ``thisSystem = systemManager->registerSystem<ThisSystem>();``
+Due to the fact that the particle system is responsible for resolving its own collisions, an instance of the collision system
+is passed to the particle system via the following line below system registration: ``particleSystem->setCollisionSystem(collisionSystem.get());``
+
+After the system logic you will find the logic responsible for loading the entity data from entities.json using the `loadEntities()` function which is called
+with a shared pointer to the entity file. The load function utilizes the nlohmann json.hpp file which can be found within the json directory that resides in the external directory.
+The function begins by open the file and creating an entity via this line: ``Entity entity = entityManager->createEntity()``. It then parses the entity file and assigns the relevant systems and components accordingly.
+
+The next step in the run function involves the addition of tile sets to the tileset manager and the loading of the tile map through the tile map system.
+
+The final logic is a while loop which is the main engine loop. Within this loop delta time is constantly calculated. Followed by a call to the `processEvents();` function which as of now is really only responsible for closing the window correctly.
+The event function is proceeded by the `update();` function which takes the float delta time as well as the delta time as an object of `sf::Time` (for the particle system). Within the update function you will see all systems calling their own respective update functions (save for the render system which calls its update function in the actual render function).
+You will also notice the line `window.setView(cameraSystem->view)` which hooks the camera system up to the window. The last line calls the `void render()` function which is responsible for clearing the window and implementing the render systems update function.
+
+
 **KEYBOARD/CONTROLLER**
 -
 Player input is handled within the PlayerInput system, which is a system reserved only for the **one** entity with a Player flag that is equal to true.
