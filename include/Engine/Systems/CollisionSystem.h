@@ -224,7 +224,7 @@ public:
                         }
                     }
 
-                    if (overlapX < overlapY && components.hasComponent<TileComponent>(b)) // resolve along X
+                    else if (overlapX < overlapY && components.hasComponent<TileComponent>(b)) // resolve along X
                     {
                         if (normal.x < 0) aPos.x -= overlapX;
                         else aPos.x += overlapX;

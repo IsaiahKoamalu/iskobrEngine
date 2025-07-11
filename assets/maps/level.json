@@ -84,14 +84,8 @@
             null,
             null,
             null,
-            {
-                "id": 0,
-                "sheet": "grass"
-            },
-            {
-                "id": 2,
-                "sheet": "grass"
-            },
+            null,
+            null,
             null,
             null
         ],
@@ -112,267 +106,8 @@
             null,
             null,
             null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
             null,
-            null
-        ],
-        [
             null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-                "id": 4,
-                "sheet": "grass"
-            },
-            {
-                "id": 6,
-                "sheet": "grass"
-            },
-            {
-                "id": 1,
-                "sheet": "grass"
-            },
-            {
-                "id": 2,
-                "sheet": "grass"
-            },
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-                "id": 33,
-                "sheet": "grass"
-            },
-            {
-                "id": 41,
-                "sheet": "grass"
-            },
-            {
-                "id": 39,
-                "sheet": "grass"
-            },
-            {
-                "id": 17,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
-            null,
-            null
-        ],
-        [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-                "id": 22,
-                "sheet": "grass"
-            },
-            {
-                "id": 24,
-                "sheet": "grass"
-            },
-            null,
-            null,
-            null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
             null,
             null
         ],
@@ -393,18 +128,102 @@
             null,
             null,
             null,
-            {
-                "id": 11,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
+            null,
+            null,
             null,
             null
         ],
         [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
             {
                 "id": 0,
                 "sheet": "grass"
@@ -446,113 +265,102 @@
                 "sheet": "grass"
             },
             {
-                "id": 1,
+                "id": 2,
                 "sheet": "grass"
             },
-            {
-                "id": 1,
-                "sheet": "grass"
-            },
-            {
-                "id": 1,
-                "sheet": "grass"
-            },
-            {
-                "id": 1,
-                "sheet": "grass"
-            },
-            {
-                "id": 1,
-                "sheet": "grass"
-            },
-            {
-                "id": 1,
-                "sheet": "grass"
-            },
-            {
-                "id": 28,
-                "sheet": "grass"
-            },
-            {
-                "id": 13,
-                "sheet": "grass"
-            },
+            null,
+            null,
+            null,
+            null,
+            null,
             null,
             null
         ],
         [
-            {
-                "id": 22,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 23,
-                "sheet": "grass"
-            },
-            {
-                "id": 24,
-                "sheet": "grass"
-            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
             null,
             null
         ]
