@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="assets/css/style.css">
-
 **[GO TO MAIN](index.md)**
 
 Hello!
