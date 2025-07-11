@@ -1,8 +1,5 @@
 <link rel="stylesheet" href="assets/css/style.css">
 
-# Iskobr Engine
-**Isaiah Broderson - ISKOBR Engine Documentation**
-
 **[ABOUT](ABOUT.md)**
 
 **EDITING THE LEVEL INSTANCE**
