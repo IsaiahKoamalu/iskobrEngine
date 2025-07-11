@@ -1,11 +1,6 @@
----
-layout: default
----
 
 # Iskobr Engine
 **Isaiah Broderson - ISKOBR Engine Documentation**
-
-**[ABOUT](docs/ABOUT.md)**
 
 **EDITING THE LEVEL INSTANCE**
 -
