@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="assets/css/style.css">
-
 **[GO TO ABOUT](ABOUT.md)**
 
 **EDITING THE LEVEL INSTANCE**
