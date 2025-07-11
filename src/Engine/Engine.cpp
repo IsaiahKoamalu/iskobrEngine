@@ -1,6 +1,8 @@
 #include "Engine/Engine.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <fstream>  // Ensure included for std::ifstream
+#include <nlohmann/json.hpp>  // Assuming nlohmann::json is used, include it explicitly if not in headers
 
 #include "Engine/EntityManager.h"
 #include "Engine/ComponentManager.h"
@@ -14,15 +16,14 @@
 #include "Engine/Systems/MovementSystem.h"
 #include "Engine/Systems/PlayerInputSystem.h"
 #include "Engine/Systems/RenderSystem.h"
-
+// Include other necessary headers for systems and components mentioned in the code
 
 void Engine::run(bool debugMode) {
-    int WINDOW_WIDTH = 800;
-    int WINDOW_HEIGHT = 600;
+    const int WINDOW_WIDTH = 800;  // Consider making configurable via config file
+    const int WINDOW_HEIGHT = 600;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "iskobr-Engine");
 
     sf::Clock clock;
-
 
     //======== ECS SETUP ============
     entityManager = std::make_unique<EntityManager>();
@@ -30,7 +31,7 @@ void Engine::run(bool debugMode) {
     systemManager = std::make_unique<SystemManager>();
     tilesetManager = std::make_unique<TilesetManager>();
 
-    // Register systems
+    // Register systems (ensure all used systems are registered)
     renderSystem = systemManager->registerSystem<RenderSystem>();
     movementSystem = systemManager->registerSystem<MovementSystem>();
     inputSystem = systemManager->registerSystem<PlayerInputSystem>();
@@ -45,23 +46,23 @@ void Engine::run(bool debugMode) {
     damageSystem = systemManager->registerSystem<DamageSystem>();
     particleSystem = systemManager->registerSystem<ParticleSystem>();
 
-    /**
-     *Passing the collision system to the particle system so that it can handle
-     * its own collision. Using .get() since the collision system is a shared_ptr.
-     */
+    // Pass collision system to particle system
     particleSystem->setCollisionSystem(collisionSystem.get());
 
-    auto entityFile = std::make_shared<std::string>("assets/entities.json");
-    if (!loadEntities(*entityFile)) {
-        std::cerr << "PROBLEM LOADING ENTITIES" << std::endl;
-    };
+    std::string entityFilePath = "assets/entities.json";
+    if (!loadEntities(entityFilePath)) {
+        std::cerr << "Failed to load entities. Exiting." << std::endl;
+        return;  // Exit early on failure
+    }
 
+    // Load tilesets (consider loading from a config JSON for flexibility)
     tilesetManager->addTileset("grass", "assets/grassSheet.png", 16, 16);
     tilesetManager->addTileset("water", "assets/Water.png", 16, 16);
     tilesetManager->addTileset("dirt", "assets/dirtSheet.png", 16, 16);
     tilesetManager->addTileset("*water", "assets/NCWater.png", 16, 16);
-    tileMapSystem->loadMap("assets/maps/level.json", *componentManager, *entityManager, *tilesetManager, *renderSystem,
-                           *collisionSystem);
+
+    // Load map
+    tileMapSystem->loadMap("assets/maps/level.json", *componentManager, *entityManager, *tilesetManager, *renderSystem, *collisionSystem);
 
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
@@ -73,6 +74,7 @@ void Engine::run(bool debugMode) {
 }
 
 void Engine::update(float dt, sf::Time tDt) {
+    // System update order is critical; ensure dependencies are respected (e.g., input before movement)
     inputSystem->update(*componentManager, dt);
     physicsSystem->update(*componentManager, dt);
     movementSystem->update(*componentManager, dt);
@@ -92,6 +94,7 @@ void Engine::processEvents() {
         if (event.type == sf::Event::Closed) {
             window.close();
         }
+        // Consider adding more event handling, e.g., resize, key presses if not handled in systems
     }
 }
 
@@ -101,152 +104,225 @@ void Engine::render(bool debugMode) {
     window.display();
 }
 
-bool Engine::loadEntities(std::string &filepath) {
+bool Engine::loadEntities(const std::string& filepath) {
     std::ifstream file(filepath);
     if (!file.is_open()) {
         std::cerr << "Failed to open entity file: " << filepath << std::endl;
         return false;
     }
-    nlohmann::json jsonArray;
-    file >> jsonArray;
 
-    for (const auto &j: jsonArray) {
-        Entity entity = entityManager->createEntity();
+    nlohmann::json jsonArray;
+    try {
+        file >> jsonArray;
+    } catch (const nlohmann::json::exception& e) {
+        std::cerr << "JSON parsing error: " << e.what() << std::endl;
+        return false;
+    }
+
+    for (const auto& j : jsonArray) {
+        if (!j.contains("name")) {
+            std::cerr << "Entity missing 'name' field. Skipping." << std::endl;
+            continue;
+        }
 
         std::cout << "|------WORKING ON ENTITY: " << j["name"] << "------|\n";
 
-        if (j.contains("player") && j["player"] == true) {
+        Entity entity = entityManager->createEntity();
+
+        // Player-specific setup
+        if (j.value("player", false)) {
             cameraSystem->entities.insert(entity);
             inputSystem->entities.insert(entity);
             groundResetSystem->entities.insert(entity);
-            componentManager->addComponent<PlayerComponent>(entity,{});
+            componentManager->addComponent<PlayerComponent>(entity, {});
             componentManager->addComponent<WallClingComponent>(entity, {});
             std::cout << "...Registered To Systems: cameraSystem, inputSystem, groundResetSystem\n";
-            std::cout << "...Added Component: PlayerComponent\n";
+            std::cout << "...Added Component: PlayerComponent, WallClingComponent\n";
         }
 
-        std::string startAnim = j["anim"]["start"];
+        // Animation handling
         std::shared_ptr<sf::Texture> entityTexture;
         if (j.contains("anim")) {
+            const auto& animJson = j["anim"];
+            std::string startAnim = animJson.value("start", "");
+            if (startAnim.empty()) {
+                std::cerr << "Animation missing 'start' state for entity: " << j["name"] << std::endl;
+                continue;
+            }
+
             AnimationComponent anim;
             anim.currentState = startAnim;
+
+            if (!j.contains("spritePath")) {
+                std::cerr << "Animation defined but missing 'spritePath' for entity: " << j["name"] << std::endl;
+                continue;
+            }
+
             for (auto it = j["spritePath"].begin(); it != j["spritePath"].end(); ++it) {
+                const std::string& state = it.key();
+                const auto& pathJson = it.value();
+
                 auto tex = std::make_shared<sf::Texture>();
-                if (!tex->loadFromFile(it.value()["filePath"])) {
-                    std::cerr << "Failed to load: " << it.value()["filePath"] << std::endl;
+                std::string filePath = pathJson.value("filePath", "");
+                if (filePath.empty() || !tex->loadFromFile(filePath)) {
+                    std::cerr << "Failed to load texture for state '" << state << "': " << filePath << std::endl;
                     continue;
                 }
 
-                anim.animations[it.key()] = {
+                anim.animations[state] = {
                     .texture = tex,
-                    .frameCount = it.value()["frameCount"],
-                    .frameWidth = j["anim"]["frameWidth"],
-                    .frameHeight = j["anim"]["frameHeight"],
-                    .frameTime = it.value()["frameTime"]
+                    .frameCount = pathJson.value("frameCount", 1),
+                    .frameWidth = animJson.value("frameWidth", 0),
+                    .frameHeight = animJson.value("frameHeight", 0),
+                    .frameTime = pathJson.value("frameTime", 0.0f)
                 };
 
-                if (it.key() == startAnim) {
+                if (state == startAnim) {
                     entityTexture = tex;
                 }
             }
-            componentManager->addComponent<AnimationComponent>(entity, {anim});
-            std::cout << "...Added Component: AnimationComponent->with the following states:\n";
-            for (const auto &[k, _]: anim.animations)
-                std::cout << " - " << k << '\n';
+
+            componentManager->addComponent<AnimationComponent>(entity, anim);
             animationSystem->entities.insert(entity);
+            std::cout << "...Added Component: AnimationComponent->with the following states:\n";
+            for (const auto& [k, _] : anim.animations) {
+                std::cout << " - " << k << '\n';
+            }
             std::cout << "...Registered To System: animationSystem\n";
         }
+
+        // Sprite component (requires texture from animation or separate sprite handling)
         if (entityTexture) {
             sf::Sprite entitySprite;
             entitySprite.setTexture(*entityTexture);
-            entitySprite.setScale(3, 3);
-            entitySprite.setTextureRect(sf::IntRect(0, 0, j["anim"]["frameWidth"], j["anim"]["frameHeight"]));
-            float originX = j["anim"]["frameWidth"].get<float>() / 2.f;
-            float originY = j["anim"]["frameHeight"].get<float>() / 2.f;
-            entitySprite.setOrigin(originX, originY);
+            entitySprite.setScale(3.f, 3.f);  // Consider making scale configurable
+            int frameWidth = j.value("anim", nlohmann::json{}).value("frameWidth", 0);
+            int frameHeight = j.value("anim", nlohmann::json{}).value("frameHeight", 0);
+            entitySprite.setTextureRect(sf::IntRect(0, 0, frameWidth, frameHeight));
+            entitySprite.setOrigin(static_cast<float>(frameWidth) / 2.f, static_cast<float>(frameHeight) / 2.f);
 
             componentManager->addComponent<SpriteComponent>(entity, {entitySprite});
             std::cout << "...Added Component: SpriteComponent\n";
-        }
-
-        if (j.contains("sprite") && j["sprite"] == true) {
-            std::string startAnim = j["anim"]["start"];
-            auto entityTexture = std::make_shared<sf::Texture>();
-            entityTexture->loadFromFile(j["spritePath"][startAnim]["filePath"]);
-
+        } else if (j.value("sprite", false)) {
+            // Handle static sprites separately if no animation
+            std::string filePath = j.value("spritePath", "");
+            if (filePath.empty()) {
+                std::cerr << "Static sprite missing 'spritePath' for entity: " << j["name"] << std::endl;
+                continue;
+            }
+            auto tex = std::make_shared<sf::Texture>();
+            if (!tex->loadFromFile(filePath)) {
+                std::cerr << "Failed to load static sprite: " << filePath << std::endl;
+                continue;
+            }
             sf::Sprite entitySprite;
-            entitySprite.setTexture(*entityTexture);
-            entitySprite.setScale(3, 3);
+            entitySprite.setTexture(*tex);
+            entitySprite.setScale(3.f, 3.f);
+            // Assume default dimensions for static sprites; make configurable
             entitySprite.setTextureRect(sf::IntRect(0, 0, 48, 64));
-            entitySprite.setOrigin(48 / 2.f, 64 / 2.f);
+            entitySprite.setOrigin(24.f, 32.f);
+            componentManager->addComponent<SpriteComponent>(entity, {entitySprite});
+            std::cout << "...Added Component: SpriteComponent (static)\n";
         }
+
+        // Actor component
         if (j.contains("actor")) {
-            componentManager->addComponent<ActorComponent>(entity, {j["actor"]["name"]});
-            actorSystem->entities.insert(entity);
-            std::cout << "...Added Component: Actor Name\n";
-            std::cout << "...Registered To System: actorSystem\n";
+            std::string actorName = j["actor"].value("name", "");
+            if (!actorName.empty()) {
+                componentManager->addComponent<ActorComponent>(entity, {actorName});
+                actorSystem->entities.insert(entity);
+                std::cout << "...Added Component: ActorComponent (" << actorName << ")\n";
+                std::cout << "...Registered To System: actorSystem\n";
+            }
         }
+
+        // Position component
         if (j.contains("Position")) {
-            componentManager->addComponent<Position>(entity, {j["Position"]["x"], j["Position"]["y"]});
-            //float x = j["Positon"]["x"].get<float>();
-            //float y = j["Position"]["y"].get<float>();
-            //std::cout << "...Added Component: PositionComponent-> with coordinates {" << x << "," << y << "}\n";
-        };
+            const auto& pos = j["Position"];
+            float x = pos.value("x", 0.f);
+            float y = pos.value("y", 0.f);
+            componentManager->addComponent<Position>(entity, {x, y});
+            std::cout << "...Added Component: PositionComponent-> with coordinates {" << x << "," << y << "}\n";
+        }
+
+        // Velocity component
         if (j.contains("Velocity")) {
-            componentManager->addComponent<Velocity>(entity, {j["Velocity"]["dx"], j["Velocity"]["dy"]});
+            const auto& vel = j["Velocity"];
+            float dx = vel.value("dx", 0.f);
+            float dy = vel.value("dy", 0.f);
+            componentManager->addComponent<Velocity>(entity, {dx, dy});
             physicsSystem->entities.insert(entity);
-            float dx = j["Velocity"]["dx"].get<float>();
-            float dy = j["Velocity"]["dy"].get<float>();
-            std::cout << "...Component Added: Velocity-> with vectors {" << dx << "," << dy << "}\n";
+            std::cout << "...Added Component: Velocity-> with vectors {" << dx << "," << dy << "}\n";
             std::cout << "...Registered To System: physicsSystem\n";
         }
-        if (j.contains("Direction") && j["Direction"] == true) {
+
+        // Direction component
+        if (j.value("Direction", false)) {
             componentManager->addComponent<DirectionComponent>(entity, {});
             std::cout << "...Added Component: DirectionComponent\n";
         }
+
+        // Collider component
         if (j.contains("Collision")) {
+            const auto& col = j["Collision"];
             ColliderComponent colCom;
-            colCom.bounds = sf::FloatRect(j["Collision"]["rectLeft"], j["Collision"]["rectTop"],
-                                          j["Collision"]["rectWidth"], j["Collision"]["rectHeight"]);
-            colCom.isStatic = j["Collision"]["isStatic"];
+            colCom.bounds = sf::FloatRect(
+                col.value("rectLeft", 0.f),
+                col.value("rectTop", 0.f),
+                col.value("rectWidth", 0.f),
+                col.value("rectHeight", 0.f)
+            );
+            colCom.isStatic = col.value("isStatic", false);
 
             componentManager->addComponent<ColliderComponent>(entity, colCom);
             collisionSystem->entities.insert(entity);
 
-            std::cout << "...Added Component: ColliderComponent-> with the following parameters...\n "
-                         "        rectLeft:" << j["Collision"]["rectLeft"] << "\n "
-                         "        rectTop:" << j["Collision"]["rectTop"] << "\n"
-                         "        rectWidth:" << j["Collision"]["rectWidth"] << "\n"
-                         "        rectHeight:" << j["Collision"]["rectHeight"] << "\n"
-                         "        isStatic:" << j["Collision"]["isStatic"] << "\n";
+            std::cout << "...Added Component: ColliderComponent-> with parameters:\n"
+                      << "  rectLeft: " << colCom.bounds.left << "\n"
+                      << "  rectTop: " << colCom.bounds.top << "\n"
+                      << "  rectWidth: " << colCom.bounds.width << "\n"
+                      << "  rectHeight: " << colCom.bounds.height << "\n"
+                      << "  isStatic: " << colCom.isStatic << "\n";
             std::cout << "...Registered To System: collisionSystem\n";
         }
-        if (j.contains("AttackCollisionRight")) {
+
+        // Attack collider component
+        if (j.contains("AttackCollisionRight") && j.contains("AttackCollisionLeft")) {
             AttackColliderComponent colCom;
-            // Right directional attack collision
-            colCom.boundsRight = sf::FloatRect(j["AttackCollisionRight"]["rectLeft"], j["AttackCollisionRight"]["rectTop"],
-                                          j["AttackCollisionRight"]["rectWidth"], j["AttackCollisionRight"]["rectHeight"]);
-            // Left directional attack collision
-            colCom.boundsLeft = sf::FloatRect(j["AttackCollisionLeft"]["rectLeft"], j["AttackCollisionLeft"]["rectTop"],
-                                          j["AttackCollisionLeft"]["rectWidth"], j["AttackCollisionLeft"]["rectHeight"]);
+            const auto& right = j["AttackCollisionRight"];
+            colCom.boundsRight = sf::FloatRect(
+                right.value("rectLeft", 0.f),
+                right.value("rectTop", 0.f),
+                right.value("rectWidth", 0.f),
+                right.value("rectHeight", 0.f)
+            );
+            const auto& left = j["AttackCollisionLeft"];
+            colCom.boundsLeft = sf::FloatRect(
+                left.value("rectLeft", 0.f),
+                left.value("rectTop", 0.f),
+                left.value("rectWidth", 0.f),
+                left.value("rectHeight", 0.f)
+            );
 
             componentManager->addComponent<AttackColliderComponent>(entity, colCom);
-
-            std::cout << "...Added Component: AttackColliderComponent-> with the following parameters...\n ";
+            std::cout << "...Added Component: AttackColliderComponent\n";
         }
 
-        if (j.contains("Movement")) {
+        // Movement system registration (assuming no specific component, just registration)
+        if (j.value("Movement", false)) {
             movementSystem->entities.insert(entity);
             std::cout << "...Registered To System: movementSystem\n";
         }
 
-        if (j.contains("health") && j["health"] == true) {
-            componentManager->addComponent<HealthComponent>(entity, {});
+        // Health component
+        if (j.value("health", false)) {
+            componentManager->addComponent<HealthComponent>(entity, {});  // Consider adding initial health value from JSON
             damageSystem->entities.insert(entity);
             std::cout << "...Added Component: HealthComponent\n";
             std::cout << "...Registered To System: damageSystem\n";
         }
 
+        // Always register to render system if it has visual components
         renderSystem->entities.insert(entity);
         std::cout << "...Registered To System: renderSystem\n";
     }
