@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="assets/css/style.css">
 
-**[MAIN](index.md)**
+**[GO TO MAIN](index.md)**
 
 Hello!
 -
