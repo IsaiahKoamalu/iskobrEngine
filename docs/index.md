@@ -40,6 +40,8 @@ The load function will automatically register entities to the proper systems and
 It is important that no more than one entity is given a Player data entry that is equal to true.
 Entities can be removed the same way by removing all of its corresponding information from the entities.json file.
 
+For an example of what a valid entitiy file should look like view [this page](EntitiesExample.md].
+
 **PLAYER CONTROLS**
 -
 Player input is handled within the PlayerInput system, which is a system reserved only for the **one** entity with a Player flag that is equal to true.
