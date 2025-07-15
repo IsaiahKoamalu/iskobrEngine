@@ -1,4 +1,4 @@
-**[GO TO ABOUT](ABOUT.md) || [GO TO UPDATES](recentAdditions.md)** 
+**[GO TO ABOUT](ABOUT.md)** || **[GO TO UPDATES](recentAdditions.md)** 
 
 # **DOCUMENTATION**
 
