@@ -1,6 +1,6 @@
-**[GO TO ABOUT](ABOUT.md)**
+**[GO TO ABOUT](ABOUT.md) || [GO TO UPDATES](recentAdditions.md)** 
 
-# **||DOCUMENTATION||**
+# **DOCUMENTATION**
 
 **ENGINE CLASS**
 -
