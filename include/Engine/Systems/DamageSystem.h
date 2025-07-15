@@ -29,6 +29,9 @@ public:
             // Deleting entities upon 'Death'
             if (components.hasComponent<HealthComponent>(entity) && !components.hasComponent<PlayerComponent>(entity)) {
                 auto& health = components.getComponent<HealthComponent>(entity);
+                if (health.health <= 0) {
+                    health.isDead = true;
+                }
                 if (health.isDead) {
                     auto& pos = components.getComponent<Position>(entity);
                     sf::Vector2f burstPos = {0.f, 0.f};
@@ -36,11 +39,21 @@ public:
 
                     particleSystem.setEmitter(burstPos);
                     std::cout << "Entity Destroyed\n";
-                    particleSystem.spawnParticles(80);
+                    particleSystem.spawnParticles(20);
                     entityManager.destroyEntity(entity);
                     systemManager.entityDestroyed(entity);
                 }
             }
+        }
+    }
+    void affectHealth(int amount, Entity entity, ComponentManager &components) {
+        if (components.hasComponent<HealthComponent>(entity)) {
+            auto &health = components.getComponent<HealthComponent>(entity);
+            health.health += amount;
+            if (amount < 0) {
+                auto& pos = components.getComponent<Position>(entity);
+            }
+            if (health.health <= 0) { health.isDead = true; }
         }
     }
 };

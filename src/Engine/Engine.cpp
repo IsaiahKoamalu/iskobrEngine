@@ -44,6 +44,7 @@ void Engine::run(bool debugMode) {
     groundResetSystem = systemManager->registerSystem<GroundResetSystem>();
     damageSystem = systemManager->registerSystem<DamageSystem>();
     particleSystem = systemManager->registerSystem<ParticleSystem>();
+    knockBackSystem = systemManager->registerSystem<KnockBackSystem>();
 
     /**
      *Passing the collision system to the particle system so that it can handle
@@ -76,6 +77,7 @@ void Engine::update(float dt, sf::Time tDt) {
     inputSystem->update(*componentManager, dt);
     physicsSystem->update(*componentManager, dt);
     movementSystem->update(*componentManager, dt);
+    knockBackSystem->update(*componentManager, dt);
     collisionSystem->update(*componentManager, dt);
     animationSystem->update(*componentManager, dt);
     damageSystem->update(*componentManager, *entityManager, *systemManager, *particleSystem, dt);
@@ -194,7 +196,9 @@ bool Engine::loadEntities(std::string &filepath) {
         };
         if (j.contains("Velocity")) {
             componentManager->addComponent<Velocity>(entity, {j["Velocity"]["dx"], j["Velocity"]["dy"]});
+            componentManager->addComponent<KnockBackComponent>(entity, {});
             physicsSystem->entities.insert(entity);
+            knockBackSystem->entities.insert(entity);
             float dx = j["Velocity"]["dx"].get<float>();
             float dy = j["Velocity"]["dy"].get<float>();
             std::cout << "...Component Added: Velocity-> with vectors {" << dx << "," << dy << "}\n";

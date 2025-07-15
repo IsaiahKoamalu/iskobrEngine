@@ -1,11 +1,13 @@
 #ifndef COLLISIONSYSTEM_H
 #define COLLISIONSYSTEM_H
 
+
 #include "Engine/System.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/AttackColliderComponent.h"
 #include "Engine/Components/HealthComponent.h"
+#include "Engine/Components/KnockBackComponent.h"
 #include "Engine/Components/Position.h"
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Components/TileComponent.h"
@@ -71,7 +73,9 @@ public:
         }
     }
 
-    void update(ComponentManager &components, float dt) {
+    //void setDamageSystem(const DamageSystem* ds) {m_damageSystem = ds;}
+
+    void update(ComponentManager &components,float dt) {
         // clear the *touched* flag ( not the active flag)
         for (Entity e: entities)
             if (components.hasComponent<WallClingComponent>(e))
@@ -125,11 +129,6 @@ public:
                     }
                     if (!hit && attCol.activeLeft) {
                         hit = attBoundsLeft.intersects(otherBounds, attackIntersection);
-                        if (hit) {
-                            // left swing landed
-                            components.getComponent<HealthComponent>(other).isDead = true;
-                            std::cout << "Hit Left\n";
-                        }
                     }
 
                     float overlapX = attackIntersection.width;
@@ -138,13 +137,28 @@ public:
                     if (overlapX < overlapY && attCol.activeRight) {
                         std::cout << "Hit Right" << std::endl;
                         auto& player = components.getComponent<PlayerComponent>(entity);
+                        auto& pos = components.getComponent<Position>(entity);
+                        auto& otherPos = components.getComponent<Position>(other);
                         affectHealth(-20, other, components);
                         player.isSlashing = false;
 
+                        auto& knockOther = components.getComponent<KnockBackComponent>(other);
+                        sf::Vector2f direction = normalize(sf::Vector2f{otherPos.x, otherPos.y} - sf::Vector2f{pos.x, pos.y});
+                        knockOther.velocity = direction * knockOther.force;
+                        knockOther.isKnockback = true;
+
                     } else if (overlapX < overlapY && attCol.activeLeft) {
-                        auto &otherHealth = components.getComponent<HealthComponent>(other);
-                        otherHealth.isDead = true;
-                        std::cout << "Hit Left" << std::endl;
+                        auto& player = components.getComponent<PlayerComponent>(entity);
+                        auto& pos = components.getComponent<Position>(entity);
+                        auto& otherPos = components.getComponent<Position>(other);
+                        affectHealth(-20, other, components);
+                        player.isSlashing = false;
+
+                        auto& knockOther = components.getComponent<KnockBackComponent>(other);
+                        sf::Vector2f direction = normalize(sf::Vector2f{otherPos.x, otherPos.y} - sf::Vector2f{pos.x, pos.y}); //Make direction = (pos - otherPos) for a pull effect
+                        float force = 300.f;
+                        knockOther.velocity = direction * force;
+                        knockOther.isKnockback = true;
                     }
                 }
             }
@@ -257,6 +271,9 @@ public:
                 //if (!cling.touchedThisFrame) cling.active = false;
             }
     }
+
+private:
+    //const DamageSystem* m_damageSystem = nullptr;
 };
 
 #endif

@@ -23,6 +23,7 @@
 #include "Systems/GroundResetSystem.h"
 #include "Systems/ParticleSystem.h"
 #include "Systems/PhysicsSystem.h"
+#include "Systems/KnockBackSystem.h"
 
 using json = nlohmann::json;
 
@@ -62,6 +63,7 @@ private:
     std::shared_ptr<GroundResetSystem> groundResetSystem;
     std::shared_ptr<DamageSystem> damageSystem;
     std::shared_ptr<ParticleSystem> particleSystem;
+    std::shared_ptr<KnockBackSystem> knockBackSystem;
 };
 
 #endif

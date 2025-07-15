@@ -15,6 +15,14 @@ public:
                 auto &animComp = components.getComponent<AnimationComponent>(entity);
                 auto &sprite = components.getComponent<SpriteComponent>(entity).sprite;
 
+                if (components.hasComponent<KnockBackComponent>(entity) && !components.hasComponent<PlayerComponent>(entity)) {
+                    auto& knock = components.getComponent<KnockBackComponent>(entity);
+                    if(knock.isKnockback) {
+                        animComp.currentState = "hurt";
+                    }else {
+                        animComp.currentState = "idleLeft";
+                    }
+                }
 
                 // Grab wall cling anim first.
                 if (components.hasComponent<WallClingComponent>(entity)) {
