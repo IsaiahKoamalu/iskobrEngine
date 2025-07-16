@@ -2,19 +2,22 @@
 #define ACTORSYSTEM_H
 
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/EntityManager.h"
 #include "Engine/Components/ActorComponent.h"
 
 class ActorSystem : public System {
 public:
-    void update(ComponentManager &componentManager, float dt) {
+    void update(const UpdateContext& ctxt) override{
+        ComponentManager& component = *ctxt.component;
+        float dt = ctxt.dt;
         for (Entity entity: entities) {
-            auto &actorComp = componentManager.getComponent<ActorComponent>(entity);
-            auto &dir = componentManager.getComponent<DirectionComponent>(entity);
-            auto &anim = componentManager.getComponent<AnimationComponent>(entity);
-            auto &vel = componentManager.getComponent<Velocity>(entity);
-            auto &pos = componentManager.getComponent<Position>(entity);
+            auto &actorComp = component.getComponent<ActorComponent>(entity);
+            auto &dir = component.getComponent<DirectionComponent>(entity);
+            auto &anim = component.getComponent<AnimationComponent>(entity);
+            auto &vel = component.getComponent<Velocity>(entity);
+            auto &pos = component.getComponent<Position>(entity);
 
             if (pos.y < 500) {
                 vel.dy = 100.f;

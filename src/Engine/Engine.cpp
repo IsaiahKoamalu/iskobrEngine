@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/EntityManager.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/SystemManager.h"
@@ -30,6 +31,10 @@ void Engine::run(bool debugMode) {
     systemManager = std::make_unique<SystemManager>();
     tilesetManager = std::make_unique<TilesetManager>();
 
+    ctxt = std::make_shared<UpdateContext>();
+
+
+
     // Register systems
     renderSystem = systemManager->registerSystem<RenderSystem>();
     movementSystem = systemManager->registerSystem<MovementSystem>();
@@ -43,14 +48,23 @@ void Engine::run(bool debugMode) {
     physicsSystem = systemManager->registerSystem<PhysicsSystem>();
     groundResetSystem = systemManager->registerSystem<GroundResetSystem>();
     damageSystem = systemManager->registerSystem<DamageSystem>();
-    particleSystem = systemManager->registerSystem<ParticleSystem>();
     knockBackSystem = systemManager->registerSystem<KnockBackSystem>();
+    homingParticleSystem = systemManager->registerSystem<HomingParticleSystem>();
+    fluidParticleSystem = systemManager->registerSystem<FluidParticleSystem>();
+    //Passing the collision system to the particle system so that it can handle
+    //its own collision. Using .get() since the collision system is a shared_ptr.
+    homingParticleSystem->setCollisionSystem(collisionSystem.get());
+    fluidParticleSystem->setCollisionSystem(collisionSystem.get());
 
-    /**
-     *Passing the collision system to the particle system so that it can handle
-     * its own collision. Using .get() since the collision system is a shared_ptr.
-     */
-    particleSystem->setCollisionSystem(collisionSystem.get());
+
+    // Vector of drawables(pretty much just the different particle systems) for the update context.
+    //calling them with .get() so that the actual raw pointer is retrieved.
+    drawables.push_back(homingParticleSystem.get());
+    drawables.push_back(fluidParticleSystem.get());
+
+    // Vector of the particle systems as objects of ParticleSystem.
+    particleSystems.push_back(homingParticleSystem);
+    particleSystems.push_back(fluidParticleSystem);
 
     auto entityFile = std::make_shared<std::string>("assets/entities.json");
     if (!loadEntities(*entityFile)) {
@@ -67,24 +81,36 @@ void Engine::run(bool debugMode) {
     while (window.isOpen()) {
         float dt = clock.restart().asSeconds();
         sf::Time tDt = sf::seconds(dt);
+
+        // Wiring update context
+        ctxt->tDt = tDt;
+        ctxt->dt = dt;
+        ctxt->component = componentManager.get();
+        ctxt->entity = entityManager.get();
+        ctxt->system = systemManager.get();
+        ctxt->window = &window;
+        ctxt->drawables = drawables;
+        ctxt->particleSystems = particleSystems;
+
         processEvents();
-        update(dt, tDt);
-        render(debugMode);
+        update(*ctxt);
+        render(*ctxt, false);
     }
 }
 
-void Engine::update(float dt, sf::Time tDt) {
-    inputSystem->update(*componentManager, dt);
-    physicsSystem->update(*componentManager, dt);
-    movementSystem->update(*componentManager, dt);
-    knockBackSystem->update(*componentManager, dt);
-    collisionSystem->update(*componentManager, dt);
-    animationSystem->update(*componentManager, dt);
-    damageSystem->update(*componentManager, *entityManager, *systemManager, *particleSystem, dt);
-    particleSystem->update(tDt, *componentManager);
-    actorSystem->update(*componentManager, dt);
-    triggerSystem->update(*componentManager, dt);
-    cameraSystem->update(*componentManager, dt);
+void Engine::update(UpdateContext& ctxt) {
+    inputSystem->update(ctxt);
+    physicsSystem->update(ctxt);
+    movementSystem->update(ctxt);
+    knockBackSystem->update(ctxt);
+    collisionSystem->update(ctxt);
+    animationSystem->update(ctxt);
+    damageSystem->update(ctxt);
+    homingParticleSystem->update(ctxt);
+    fluidParticleSystem->update(ctxt);
+    actorSystem->update(ctxt);
+    triggerSystem->update(ctxt);
+    cameraSystem->update(ctxt);
     window.setView(cameraSystem->view);
 }
 
@@ -97,9 +123,9 @@ void Engine::processEvents() {
     }
 }
 
-void Engine::render(bool debugMode) {
+void Engine::render(UpdateContext& ctxt, bool debugMode) {
     window.clear(sf::Color(155, 212, 195));
-    renderSystem->update(window, *componentManager, *particleSystem, debugMode);
+    renderSystem->update(ctxt);
     window.display();
 }
 
@@ -121,6 +147,7 @@ bool Engine::loadEntities(std::string &filepath) {
             cameraSystem->entities.insert(entity);
             inputSystem->entities.insert(entity);
             groundResetSystem->entities.insert(entity);
+            homingParticleSystem->entities.insert(entity);
             componentManager->addComponent<PlayerComponent>(entity,{});
             componentManager->addComponent<WallClingComponent>(entity, {});
             std::cout << "...Registered To Systems: cameraSystem, inputSystem, groundResetSystem\n";

@@ -56,7 +56,9 @@ add_library(engine
         include/Engine/Systems/MovementSystem.h
         include/Engine/Systems/PhysicsSystem.h
         include/Engine/Systems/GroundResetSystem.h
-        include/Engine/Systems/ParticleSystem.h
+        include/Engine/Systems/ParticleSystem/ParticleSystemBase.h
+        include/Engine/Systems/ParticleSystem/HomingParticleSystem.h
+        include/Engine/Systems/ParticleSystem/FluidParticleSystem.h
         include/Engine/Systems/DamageSystem.h
         include/Engine/Systems/KnockBackSystem.h
         include/Engine/Core/TileType.h
@@ -109,12 +111,15 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/RenderSystem.h
         include/Engine/Systems/MovementSystem.h
         include/Engine/Systems/PhysicsSystem.h
-        include/Engine/Systems/ParticleSystem.h
+        include/Engine/Systems/ParticleSystem/ParticleSystemBase.h
+        include/Engine/Systems/ParticleSystem/HomingParticleSystem.h
+        include/Engine/Systems/ParticleSystem/FluidParticleSystem.h
         include/Engine/Systems/GroundResetSystem.h
         include/Engine/Systems/DamageSystem.h
         include/Engine/Core/TileType.h
         include/Engine/Systems/KnockBackSystem.h
         include/Engine/Components/KnockBackComponent.h
+        include/Engine/Core/UpdateContext.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)

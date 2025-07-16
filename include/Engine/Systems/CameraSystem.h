@@ -2,6 +2,7 @@
 #define CAMERASYSTEM_H
 
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/Components/Position.h"
 #include <SFML/Graphics/View.hpp>
 
@@ -16,7 +17,9 @@ public:
         view.setCenter(0.f, 0.f);
     }
 
-    void update(ComponentManager &components, float dt) {
+    void update(const UpdateContext& ctxt) override{
+        ComponentManager& components = *ctxt.component;
+        float dt = ctxt.dt;
         for (Entity entity: entities) {
             if (!components.hasComponent<Position>(entity)) continue;
             if (components.hasComponent<PlayerComponent>(entity)) {

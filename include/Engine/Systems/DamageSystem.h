@@ -3,16 +3,29 @@
 
 #include <iostream>
 
-#include "ParticleSystem.h"
+#include "ParticleSystem/ParticleSystemBase.h"
+#include "ParticleSystem/HomingParticleSystem.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/SystemManager.h"
 #include "Engine/Components/Position.h"
 #include "Engine/Components/HealthComponent.h"
+#include "ParticleSystem/FluidParticleSystem.h"
 
 class DamageSystem : public System {
 public:
-    void update(ComponentManager& components, EntityManager& entityManager, SystemManager& systemManager,  ParticleSystem& particleSystem, float dt) {
+    void update(const UpdateContext& ctxt) override{
+        ComponentManager& components = *ctxt.component;
+        EntityManager& entityManager = *ctxt.entity;
+        SystemManager& systemManager = *ctxt.system;
+        std::vector<sf::Drawable*> drawables = ctxt.drawables;
+        auto& basePtrH = ctxt.particleSystems[0];
+        auto& basePtrF = ctxt.particleSystems[1];
+        auto hps = std::dynamic_pointer_cast<HomingParticleSystem>(basePtrH);
+        auto fps = std::dynamic_pointer_cast<FluidParticleSystem>(basePtrF);
+        float dt = ctxt.dt;
+
         for (Entity entity : entities) {
             if (components.hasComponent<PlayerComponent>(entity)) {
                 auto& health = components.getComponent<HealthComponent>(entity);
@@ -37,9 +50,12 @@ public:
                     sf::Vector2f burstPos = {0.f, 0.f};
                     burstPos = {pos.x, pos.y};
 
-                    particleSystem.setEmitter(burstPos);
+                    hps->setEmitter(burstPos);
+                    fps->setEmitter(burstPos);
+                    hps->spawnParticles(5);
+                    fps->spawnParticles(20);
+
                     std::cout << "Entity Destroyed\n";
-                    particleSystem.spawnParticles(20);
                     entityManager.destroyEntity(entity);
                     systemManager.entityDestroyed(entity);
                 }

@@ -2,6 +2,7 @@
 #define ANIMATIONSYSTEM_H
 
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/AnimationComponent.h"
 #include "Engine/Components/SpriteComponent.h"
@@ -9,7 +10,9 @@
 
 class AnimationSystem : public System {
 public:
-    void update(ComponentManager &components, float dt) {
+    void update(const UpdateContext& ctxt) override{
+        ComponentManager& components = *ctxt.component;
+        float dt = ctxt.dt;
         for (Entity entity: entities) {
             if (components.hasComponent<AnimationComponent>(entity) && components.hasComponent<SpriteComponent>(entity)) {
                 auto &animComp = components.getComponent<AnimationComponent>(entity);

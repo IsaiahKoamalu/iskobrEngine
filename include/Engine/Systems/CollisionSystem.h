@@ -3,6 +3,7 @@
 
 
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/AttackColliderComponent.h"
@@ -75,8 +76,10 @@ public:
 
     //void setDamageSystem(const DamageSystem* ds) {m_damageSystem = ds;}
 
-    void update(ComponentManager &components,float dt) {
+    void update(const UpdateContext& ctxt) override{
         // clear the *touched* flag ( not the active flag)
+        float dt =  ctxt.dt;
+        ComponentManager& components = *ctxt.component;
         for (Entity e: entities)
             if (components.hasComponent<WallClingComponent>(e))
                 components.getComponent<WallClingComponent>(e).touchedThisFrame = false;

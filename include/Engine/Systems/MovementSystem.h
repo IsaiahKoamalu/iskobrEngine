@@ -2,6 +2,8 @@
 #define MOVEMENTSYSTEM_H
 
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/Position.h"
 #include "Engine/Components/Velocity.h"
@@ -17,7 +19,10 @@
  */
 class MovementSystem : public System {
 public:
-    void update(ComponentManager &components, float dt) {
+    void update(const UpdateContext& ctxt) override{
+        ComponentManager& components = *ctxt.component;
+        float dt = ctxt.dt;
+
         for (Entity entity: entities) {
             auto &pos = components.getComponent<Position>(entity);
             auto &vel = components.getComponent<Velocity>(entity);

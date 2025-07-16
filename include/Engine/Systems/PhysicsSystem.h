@@ -2,11 +2,15 @@
 #define PHYSICSSYSTEM_H
 #include "Engine/ComponentManager.h"
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/Components/Velocity.h"
 
 class PhysicsSystem : public System {
 public:
-    void update(ComponentManager &components, float dt) {
+    void update(const UpdateContext& ctxt) override{
+        ComponentManager& components = *ctxt.component;
+        float dt = ctxt.dt;
+
         float gravity = 1500.0f;
 
         for (Entity entity : entities) {

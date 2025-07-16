@@ -3,6 +3,7 @@
 #define PLAYERINPUTSYSTEM_H
 
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/Components/Velocity.h"
 #include "Engine/ComponentManager.h"
 #include <SFML/Window/Keyboard.hpp>
@@ -25,7 +26,10 @@
 class PlayerInputSystem : public System {
 public:
     bool wasXPressedLastFrame = false;
-    void update(ComponentManager &components, float dt) {
+    void update(const UpdateContext& ctxt) override{
+        ComponentManager& components = *ctxt.component;
+        float dt = ctxt.dt;
+
         // Determine the direction of input
         for (Entity entity : entities) {
             if (components.hasComponent<PlayerComponent>(entity)){

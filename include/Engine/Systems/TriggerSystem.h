@@ -2,6 +2,7 @@
 #define TRIGGERSYSTEM_H
 
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/Position.h"
 #include "Engine/Components/ColliderComponent.h"
@@ -13,7 +14,9 @@
  */
 class TriggerSystem : public System {
 public:
-    void update(ComponentManager &components, float dt) {
+    void update(const UpdateContext& ctxt) override{
+        ComponentManager& components = *ctxt.component;
+        float dt = ctxt.dt;
         for (Entity a: entities) {
             if (!components.hasComponent<ColliderComponent>(a)) continue;
             if (!components.hasComponent<Position>(a)) continue;

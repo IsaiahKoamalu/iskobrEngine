@@ -2,16 +2,16 @@
 #define RENDERSYSTEM_H
 
 #include "Engine/System.h"
+#include "Engine/Core/UpdateContext.h"
 #include "Engine/Components/Position.h"
 #include "Engine/ComponentManager.h"
 #include "Engine/Components/SpriteComponent.h"
-#include <SFML/Graphics.hpp>
 
-#include "ParticleSystem.h"
 #include "Engine/Components/AttackColliderComponent.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/HealthComponent.h"
 #include "Engine/Components/TileComponent.h"
+#include "ParticleSystem/HomingParticleSystem.h"
 
 /**
  * System that draws entities with a given Position and SpriteComponent
@@ -21,7 +21,13 @@
 
 class RenderSystem : public System {
 public:
-    void update(sf::RenderWindow &window, ComponentManager &components, ParticleSystem& particles, bool debugMode) {
+    void update(const UpdateContext& ctxt) override{
+        sf::RenderWindow& window = *ctxt.window;
+        ComponentManager& components = *ctxt.component;
+        std::vector<sf::Drawable*> drawables = ctxt.drawables;
+
+        bool debugMode = false;
+
         // First draw all tile components
         for (auto entity: entities) {
             if (components.hasComponent<TileComponent>(entity)) {
@@ -85,7 +91,9 @@ public:
                 window.draw(spriteComp.sprite);
             }
         }
-        window.draw(particles);
+        for (auto obj : drawables) {
+            window.draw(*obj);
+        }
     }
 
 };
