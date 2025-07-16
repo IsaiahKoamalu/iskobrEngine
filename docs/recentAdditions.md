@@ -4,7 +4,7 @@
 -
 All system update methods are now called with a single parameter, an object `const UpdateContext& ctxt`. UpdateContext is a struct which is defined in the new UpdateContext.h file located in the include/Engine/Core directory. This new change allows for a much needed increase of freedom in regards to the implementation of the update method of System subclasses. I have also changed the dynamic of the particle system(s), there is now a base particle system class from which other varying particle system subclasses are derived (only 2 as of right now). The improved flexablility introduced by the update context makes the creation and application of new systems, such as the derived particle systems, much smoother and cleaner.
 
-```C++
+```c++
 // ----New Update Context----
 struct UpdateContext {
     sf::Time tDt;
@@ -121,7 +121,7 @@ for (auto obj : drawables){
 -
 Created KnockBackSystem & KnockBackComponent in order to add a visual effect upon attack collision. The system applies a force to the struck object resulting in a 'knockback' type of reaction. The boolean `isKnockback` is set to true within the collision system when a valid attack is landed on an entity which possess a knock back component. The direction is calculated by taking the normalized difference of the struck entitiy and the attacking entity, *ex:* `direction = normalize(sf::Vector2f{otherPos.x, otherPos.y} - sf::Vector2f{pos.x, pos.y})`, where `normalize()` is a separate helper function I have written and added to the System class. The direction is then multiplied by the struck entities knock back force variable and plugged into the struck entities knock back velocity variable.
 
-```C++
+```c++
 //---------Two additional helper functions--------
 
 float length(const sf::Vector2f v) {
