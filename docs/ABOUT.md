@@ -1,7 +1,7 @@
 **[GO TO MAIN](index.md)**
 
 <img src="Images/aboutMeImage.jpg" alt="image" width="25%" height="25%"
-  style="border: 3px solid #333; padding: 4px; border-radius: 6px;">
+  style="border: 10px solid #333; padding: 4px; border-radius: 6px;">
 
 Hello!
 -
