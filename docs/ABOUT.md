@@ -1,11 +1,7 @@
 **[GO TO MAIN](index.md)**
 
-<div class="callout">
-  <h2>🚀 Feature Highlight</h2>
-  <p>This is just a normal `<div>`—you can add whatever you want in here.</p>
-</div>
-
-<img src="Images/aboutMeImage.jpg" alt="image" width="25%" height="25%">
+<img src="Images/aboutMeImage.jpg" alt="image" width="25%" height="25%"
+  style="border: 3px solid #333; padding: 4px; border-radius: 6px;">
 
 Hello!
 -
