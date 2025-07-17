@@ -120,6 +120,7 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/KnockBackSystem.h
         include/Engine/Components/KnockBackComponent.h
         include/Engine/Core/UpdateContext.h
+        include/Engine/Systems/ParticleSystem/GaseousParticleSystem.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)

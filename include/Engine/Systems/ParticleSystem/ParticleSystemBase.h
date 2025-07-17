@@ -18,6 +18,10 @@ public:
         m_particles.reserve(m_capacity);
         m_vertices.setPrimitiveType(sf::Quads);
         m_vertices.resize(maxParticles * 4);
+
+        if(!m_texture.loadFromFile("assets/circleQuadTexture.png")) {
+            throw std::runtime_error("Could not load 'circleQuadTexture.png'");
+        }
     }
 
     void setCollisionSystem(const CollisionSystem* cs) {m_collisionSystem = cs;}
@@ -53,10 +57,12 @@ protected:
         float size = 0.f;
     };
 
+    sf::Texture m_texture;
     std::size_t m_capacity;
+    sf::Texture tetxure;
     std::vector<Particle> m_particles;
     sf::VertexArray m_vertices{sf::Points};
-    sf::Time m_lifetime{sf::seconds(1.f)};
+    sf::Time m_lifetime{sf::seconds(2.f)};
     sf::Vector2f m_emitter{};
     const sf::Vector2f m_gravity{ 0.f, 980.f }; // pixels / s^2 (appr. 100 px per 0.1 s)
     // Can be tuned later but: 980 = appr. 9.8 m/s^2 if world unit is 100 px = 1m
@@ -65,32 +71,15 @@ protected:
 
     static std::random_device rd;
     static std::mt19937 rng;
-    static std::uniform_real_distribution<float> angleDeg;
-    static std::uniform_real_distribution<float> speedDist;
-    static std::uniform_real_distribution<float> sizeDist;
 
-    void resetParticle(Particle& p) {
-        float theta = angleDeg(rng) * 3.14159265f / 180.f;
-        float speed = speedDist(rng);
+    virtual void resetParticle(Particle& p) = 0;
 
-        p.velocity = {std::cos(theta) * speed, std::sin(theta) * speed };
-        p.lifeTime = m_lifetime;
+   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 
-        p.size = sizeDist(rng);
-        p.position = m_emitter;
-    }
-
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
-        states.transform *= getTransform();
-        target.draw(m_vertices, states);
-    }
 };
 
 // Static member definitions
 inline std::random_device ParticleSystem::rd;
 inline std::mt19937 ParticleSystem::rng;
-inline std::uniform_real_distribution<float> ParticleSystem::angleDeg(0.f, 360.f);
-inline std::uniform_real_distribution<float> ParticleSystem::speedDist(50.f, 150.f);
-inline std::uniform_real_distribution<float> ParticleSystem::sizeDist(3.f, 6.f);
 
 #endif

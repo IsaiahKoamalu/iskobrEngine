@@ -51,20 +51,24 @@ void Engine::run(bool debugMode) {
     knockBackSystem = systemManager->registerSystem<KnockBackSystem>();
     homingParticleSystem = systemManager->registerSystem<HomingParticleSystem>();
     fluidParticleSystem = systemManager->registerSystem<FluidParticleSystem>();
+    gaseousParticleSystem = systemManager->registerSystem<GaseousParticleSystem>();
     //Passing the collision system to the particle system so that it can handle
     //its own collision. Using .get() since the collision system is a shared_ptr.
     homingParticleSystem->setCollisionSystem(collisionSystem.get());
     fluidParticleSystem->setCollisionSystem(collisionSystem.get());
+    gaseousParticleSystem->setCollisionSystem(collisionSystem.get());
 
 
     // Vector of drawables(pretty much just the different particle systems) for the update context.
     //calling them with .get() so that the actual raw pointer is retrieved.
     drawables.push_back(homingParticleSystem.get());
     drawables.push_back(fluidParticleSystem.get());
+    drawables.push_back(gaseousParticleSystem.get());
 
     // Vector of the particle systems as objects of ParticleSystem.
     particleSystems.push_back(homingParticleSystem);
     particleSystems.push_back(fluidParticleSystem);
+    particleSystems.push_back(gaseousParticleSystem);
 
     auto entityFile = std::make_shared<std::string>("assets/entities.json");
     if (!loadEntities(*entityFile)) {
@@ -108,6 +112,7 @@ void Engine::update(UpdateContext& ctxt) {
     damageSystem->update(ctxt);
     homingParticleSystem->update(ctxt);
     fluidParticleSystem->update(ctxt);
+    gaseousParticleSystem->update(ctxt);
     actorSystem->update(ctxt);
     triggerSystem->update(ctxt);
     cameraSystem->update(ctxt);
@@ -124,7 +129,7 @@ void Engine::processEvents() {
 }
 
 void Engine::render(UpdateContext& ctxt, bool debugMode) {
-    window.clear(sf::Color(155, 212, 195));
+    window.clear(sf::Color::Black); // 155, 212, 195
     renderSystem->update(ctxt);
     window.display();
 }

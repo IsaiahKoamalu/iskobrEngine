@@ -26,6 +26,7 @@
 #include "Systems/ParticleSystem/FluidParticleSystem.h"
 #include "Systems/PhysicsSystem.h"
 #include "Systems/KnockBackSystem.h"
+#include "Systems/ParticleSystem/GaseousParticleSystem.h"
 
 using json = nlohmann::json;
 
@@ -72,6 +73,7 @@ private:
     std::shared_ptr<ParticleSystem> particleSystem;
     std::shared_ptr<HomingParticleSystem> homingParticleSystem;
     std::shared_ptr<FluidParticleSystem> fluidParticleSystem;
+    std::shared_ptr<GaseousParticleSystem> gaseousParticleSystem;
     std::shared_ptr<KnockBackSystem> knockBackSystem;
 };
 

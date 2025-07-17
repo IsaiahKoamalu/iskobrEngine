@@ -12,6 +12,7 @@
 #include "Engine/Components/Position.h"
 #include "Engine/Components/HealthComponent.h"
 #include "ParticleSystem/FluidParticleSystem.h"
+#include "ParticleSystem/GaseousParticleSystem.h"
 
 class DamageSystem : public System {
 public:
@@ -22,10 +23,17 @@ public:
         std::vector<sf::Drawable*> drawables = ctxt.drawables;
         auto& basePtrH = ctxt.particleSystems[0];
         auto& basePtrF = ctxt.particleSystems[1];
+        auto& basePtrG = ctxt.particleSystems[2];
         auto hps = std::dynamic_pointer_cast<HomingParticleSystem>(basePtrH);
         auto fps = std::dynamic_pointer_cast<FluidParticleSystem>(basePtrF);
+        auto gps = std::dynamic_pointer_cast<GaseousParticleSystem>(basePtrG);
         float dt = ctxt.dt;
 
+        gps->setEmitter(sf::Vector2f{300.f, 400.f});
+        if (static_cast<int>(dt) % 2 == 0 ) {
+            gps->spawnParticles(1);
+        }
+;
         for (Entity entity : entities) {
             if (components.hasComponent<PlayerComponent>(entity)) {
                 auto& health = components.getComponent<HealthComponent>(entity);
