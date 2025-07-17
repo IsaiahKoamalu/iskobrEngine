@@ -1,3 +1,8 @@
+---
+layout:: default
+title: Home
+---
+
 **[GO TO ABOUT](ABOUT.md)** || **[GO TO UPDATES](recentAdditions.md)** 
 
 # **DOCUMENTATION**
