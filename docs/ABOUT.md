@@ -1,5 +1,10 @@
 **[GO TO MAIN](index.md)**
 
+<div class="callout">
+  <h2>🚀 Feature Highlight</h2>
+  <p>This is just a normal `<div>`—you can add whatever you want in here.</p>
+</div>
+
 <img src="Images/aboutMeImage.jpg" alt="image" width="25%" height="25%">
 
 Hello!
