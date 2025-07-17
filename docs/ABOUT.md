@@ -1,7 +1,5 @@
 **[GO TO MAIN](index.md)**
 
-![image](Images/aboutMeImage.jpg)
-
 <img src="Images/aboutMeImage.jpg" alt="image" width="25%" height="25%">
 
 Hello!
