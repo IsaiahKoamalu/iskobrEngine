@@ -5,9 +5,12 @@
     background-color: #0066cc;
     color: blue;
     text-decoration: none;
+    text-color: black;
     border-radius: 4px;
   ">
-  Go to Main
+  <span style="color: black;">
+    Go to Main
+  </span>
 </a>
 
 <img src="Images/aboutMeImage.jpg" alt="image" width="25%" height="25%"
