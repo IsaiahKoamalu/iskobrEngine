@@ -3,14 +3,11 @@
     display: inline-block;
     padding: 0.5em 1em;
     background-color: #0066cc;
-    color: blue;
+    color: #000;
     text-decoration: none;
-    text-color: black;
     border-radius: 4px;
   ">
-  <span style="color: black;">
     Go to Main
-  </span>
 </a>
 
 <img src="Images/aboutMeImage.jpg" alt="image" width="25%" height="25%"
