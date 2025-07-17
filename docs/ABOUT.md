@@ -1,4 +1,14 @@
-**[GO TO MAIN](index.md)**
+<a href="index.md"
+  style="
+    display: inline-block;
+    padding: 0.5em 1em;
+    background-color: #0066cc;
+    color: blue;
+    text-decoration: none;
+    border-radius: 4px;
+  ">
+  Go to Main
+</a>
 
 <img src="Images/aboutMeImage.jpg" alt="image" width="25%" height="25%"
   style="border: 10px solid #333; padding: 4px; border-radius: 6px;">
