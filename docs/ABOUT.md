@@ -7,7 +7,7 @@
     text-decoration: none;
     border-radius: 4px;
   ">
-    Go to Main
+    MAIN
 </a>
 
 <img src="Images/aboutMeImage.jpg" alt="image" width="50%" height="50%"
