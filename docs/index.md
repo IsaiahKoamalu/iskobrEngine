@@ -1,5 +1,5 @@
 ---
-layout:: default
+layout: default
 title: Home
 ---
 <style>
@@ -11,11 +11,11 @@ title: Home
   }
   .button {
     padding: 10px 20px;
-    backgorund-color: #0066cc;
+    background-color: #0066cc;
     color: #000;
     text-decoration: none;
     border-radius: 5px;
-    font-fmily: sans-serif;
+    font-family: sans-serif;
   }
 
   .button:hover {
@@ -24,8 +24,7 @@ title: Home
     
 </style>
 <div class="button-container">
-  <a href="https://isaiahkoamalu.github.io/iskobrEngine/ABOUT.html"
-    ">
+  <a href="https://isaiahkoamalu.github.io/iskobrEngine/ABOUT.html" class="button">
     GO TO ABOUT
   </a>
 </div>
