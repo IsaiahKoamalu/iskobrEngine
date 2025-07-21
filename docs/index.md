@@ -20,16 +20,6 @@ title: Main
   }
   .button:hover {
     background-color: #0056b3;
-  }
-  .about-image {
-    display: block;
-    margin: 1.5em auto;
-    width: 50%;
-    height: auto;
-    border: 10px solid #333;
-    padding: 4px;
-    border-radius: 6px;
-  }
 </style>
 
 <div class="button-container">
