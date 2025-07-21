@@ -1,4 +1,31 @@
-[Main](index.md)
+---
+layout: default
+title: Recent Updates
+
+<style>
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .button {
+    display: inline-block;
+    padding: 0.5em 1em;
+    background-color: #0066cc;
+    color: #000;
+    text-decoration: none;
+    border-radius: 4px;
+    font-family: sans-serif;
+  }
+  .button:hover {
+    background-color: #0056b3;
+</style>
+
+<div class="button-container">
+  <a href="https://isaiahkoamalu.github.io/iskobrEngine" class="button">
+    Main
+  </a>
+</div>
 
 **7-16-25 UpdateContext.h and New Particle System(s) Structure**
 -
