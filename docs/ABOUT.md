@@ -3,17 +3,38 @@ layout: default
 title: About
 ---
 
-<a href="https://isaiahkoamalu.github.io/iskobrEngine/"
-  style="
+<style>
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .button {
     display: inline-block;
     padding: 0.5em 1em;
     background-color: #0066cc;
     color: #000;
     text-decoration: none;
     border-radius: 4px;
-  ">
-    MAIN
-</a>
+    font-family: sans-serif;
+  }
+  .button:hover {
+    background-color: #0056b3;
+  }
+  .about-image {
+    display: block;
+    margin: 1.5em auto;
+    width: 50%;
+    height: auto;
+    border: 10px solid #333;
+    padding: 4px;
+    border-radius: 6px;
+  }
+</style>
+
+<div class="button-container">
+  <a href="{{ "/" | relative_url }}" class="button">Main</a>
+</div>
 
 <img src="Images/aboutMeImage.jpg" alt="image" width="50%" height="50%"
   style="border: 10px solid #333; padding: 4px; border-radius: 6px;">
