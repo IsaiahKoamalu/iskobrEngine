@@ -1,3 +1,5 @@
 theme: jekyll-theme-Cayman
 title: Iskobr Engine
 description: A 2D Game Engine Written in C++ Leveraging an ECS Architecture and Utilizing the SFML Library
+url: "https://isaiahkoamalu.github.io"
+baseurl: "/iskobrEngine"
