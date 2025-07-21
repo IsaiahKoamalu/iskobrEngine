@@ -23,7 +23,7 @@ title: Main
 </style>
 
 <div class="button-container">
-  <a href="{{ '/about.html' | relative_url }}" class="button">
+  <a href="{{ '/about.html/' | relative_url }}" class="button">
     About
   </a>
 </div>
