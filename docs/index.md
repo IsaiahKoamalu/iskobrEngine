@@ -26,6 +26,9 @@ title: Main
   <a href="https://isaiahkoamalu.github.io/iskobrEngine/about.html" class="button">
     About
   </a>
+  <a href="https://isaiahkoamalu.github.io/iskobrEngine/recentAdditions.html" class="button">
+    Recent Updates
+  </a>
 </div>
 
 # **DOCUMENTATION**
