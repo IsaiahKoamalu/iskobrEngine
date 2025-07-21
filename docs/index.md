@@ -2,8 +2,19 @@
 layout:: default
 title: Home
 ---
-
-**[GO TO ABOUT](ABOUT.md)** || **[GO TO UPDATES](recentAdditions.md)** 
+<div class="button-container">
+  <a href="https://isaiahkoamalu.github.io/iskobrEngine/ABOUT.html"
+    style="
+      display: inline-block;
+      padding: 0.5em 1em;
+      background-color: #0066cc;
+      color: #000;
+      text-decoration: none;
+      border-radius: 4px;
+    ">
+    GO TO ABOUT
+  </a>
+</div>
 
 # **DOCUMENTATION**
 
