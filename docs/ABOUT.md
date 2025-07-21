@@ -2,7 +2,6 @@
 layout: default
 title: About
 ---
-<html>
 <style>
   .button-container {
     display: flex;
@@ -38,7 +37,6 @@ title: About
 
 <img src="Images/aboutMeImage.jpg" alt="image" width="50%" height="50%"
   style="border: 10px solid #333; padding: 4px; border-radius: 6px;">
-</html>
 
 Hello!
 -
