@@ -7,6 +7,7 @@ title: Main
   .button-container {
     display: flex;
     justify-content: center;
+    gap: 30px;
     margin-top: 20px;
   }
   .button {
