@@ -2,15 +2,29 @@
 layout:: default
 title: Home
 ---
+<style>
+  .button-container {
+    display: flex;
+    justify-content: center;
+    column-gap: 15px;
+    margin-top: 20px;
+  }
+  .button {
+    padding: 10px 20px;
+    backgorund-color: #0066cc;
+    color: #000;
+    text-decoration: none;
+    border-radius: 5px;
+    font-fmily: sans-serif;
+  }
+
+  .button:hover {
+    background-color: #0056b3;
+  }
+    
+</style>
 <div class="button-container">
   <a href="https://isaiahkoamalu.github.io/iskobrEngine/ABOUT.html"
-    style="
-      display: inline-block;
-      padding: 0.5em 1em;
-      background-color: #0066cc;
-      color: #000;
-      text-decoration: none;
-      border-radius: 4px;
     ">
     GO TO ABOUT
   </a>
