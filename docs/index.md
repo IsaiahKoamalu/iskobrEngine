@@ -24,11 +24,11 @@ title: Main
 </style>
 
 <div class="button-container">
-  <a href="https://isaiahkoamalu.github.io/iskobrEngine/about.html" class="button">
-    About
-  </a>
   <a href="https://isaiahkoamalu.github.io/iskobrEngine/recentAdditions.html" class="button">
     Recent Updates
+  </a>
+   <a href="https://isaiahkoamalu.github.io/iskobrEngine/about.html" class="button">
+    About
   </a>
 </div>
 
