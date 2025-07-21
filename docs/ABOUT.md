@@ -1,3 +1,8 @@
+---
+layout: default
+title: About
+---
+
 <a href="https://isaiahkoamalu.github.io/iskobrEngine/"
   style="
     display: inline-block;
