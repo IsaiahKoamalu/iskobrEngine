@@ -19,6 +19,7 @@ title: About
   }
   .button:hover {
     background-color: #0056b3;
+    text-decoration: none;
   }
   .about-image {
     display: block;
@@ -32,7 +33,7 @@ title: About
 </style>
 
 <div class="button-container">
-  <a href="{{ "/" | relative_url }}" class="button">Main</a>
+  <a href="{{ '/' | relative_url }}" class="button">Main</a>
 </div>
 
 <img src="Images/aboutMeImage.jpg" alt="image" width="50%" height="50%"

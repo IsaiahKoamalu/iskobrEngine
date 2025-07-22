@@ -9,6 +9,7 @@
 #include "Engine/System.h"
 #include "Engine/Core/UpdateContext.h"
 #include "Engine/SystemManager.h"
+#include "Engine/Components/EmitterComponent.h"
 #include "Engine/Components/Position.h"
 #include "Engine/Components/HealthComponent.h"
 #include "ParticleSystem/FluidParticleSystem.h"
@@ -29,11 +30,6 @@ public:
         auto gps = std::dynamic_pointer_cast<GaseousParticleSystem>(basePtrG);
         float dt = ctxt.dt;
 
-        gps->setEmitter(sf::Vector2f{300.f, 400.f});
-        if (static_cast<int>(dt) % 2 == 0 ) {
-            gps->spawnParticles(1);
-        }
-;
         for (Entity entity : entities) {
             if (components.hasComponent<PlayerComponent>(entity)) {
                 auto& health = components.getComponent<HealthComponent>(entity);

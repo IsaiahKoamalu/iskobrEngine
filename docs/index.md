@@ -21,6 +21,8 @@ title: Iskobr Engine
   }
   .button:hover {
     background-color: #0056b3;
+    text-decoration: none;
+  }
 </style>
 
 <div class="button-container">

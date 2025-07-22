@@ -8,6 +8,7 @@
 #include "Engine/SystemManager.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/AttackColliderComponent.h"
+#include "Engine/Components/EmitterComponent.h"
 #include "Engine/Components/HealthComponent.h"
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Systems/ActorSystem.h"
@@ -36,22 +37,23 @@ void Engine::run(bool debugMode) {
 
 
     // Register systems
-    renderSystem = systemManager->registerSystem<RenderSystem>();
-    movementSystem = systemManager->registerSystem<MovementSystem>();
-    inputSystem = systemManager->registerSystem<PlayerInputSystem>();
-    animationSystem = systemManager->registerSystem<AnimationSystem>();
-    collisionSystem = systemManager->registerSystem<CollisionSystem>();
-    triggerSystem = systemManager->registerSystem<TriggerSystem>();
-    cameraSystem = systemManager->registerSystem<CameraSystem>(WINDOW_WIDTH, WINDOW_HEIGHT);
-    tileMapSystem = systemManager->registerSystem<TileMapSystem>();
-    actorSystem = systemManager->registerSystem<ActorSystem>();
-    physicsSystem = systemManager->registerSystem<PhysicsSystem>();
-    groundResetSystem = systemManager->registerSystem<GroundResetSystem>();
-    damageSystem = systemManager->registerSystem<DamageSystem>();
-    knockBackSystem = systemManager->registerSystem<KnockBackSystem>();
-    homingParticleSystem = systemManager->registerSystem<HomingParticleSystem>();
-    fluidParticleSystem = systemManager->registerSystem<FluidParticleSystem>();
+    renderSystem =          systemManager->registerSystem<RenderSystem>();
+    movementSystem =        systemManager->registerSystem<MovementSystem>();
+    inputSystem =           systemManager->registerSystem<PlayerInputSystem>();
+    animationSystem =       systemManager->registerSystem<AnimationSystem>();
+    collisionSystem =       systemManager->registerSystem<CollisionSystem>();
+    triggerSystem =         systemManager->registerSystem<TriggerSystem>();
+    cameraSystem =          systemManager->registerSystem<CameraSystem>(WINDOW_WIDTH, WINDOW_HEIGHT);
+    tileMapSystem =         systemManager->registerSystem<TileMapSystem>();
+    actorSystem =           systemManager->registerSystem<ActorSystem>();
+    physicsSystem =         systemManager->registerSystem<PhysicsSystem>();
+    groundResetSystem =     systemManager->registerSystem<GroundResetSystem>();
+    damageSystem =          systemManager->registerSystem<DamageSystem>();
+    knockBackSystem =       systemManager->registerSystem<KnockBackSystem>();
+    homingParticleSystem =  systemManager->registerSystem<HomingParticleSystem>();
+    fluidParticleSystem =   systemManager->registerSystem<FluidParticleSystem>();
     gaseousParticleSystem = systemManager->registerSystem<GaseousParticleSystem>();
+    emitterSystem =         systemManager->registerSystem<EmitterSystem>();
     //Passing the collision system to the particle system so that it can handle
     //its own collision. Using .get() since the collision system is a shared_ptr.
     homingParticleSystem->setCollisionSystem(collisionSystem.get());
@@ -113,6 +115,7 @@ void Engine::update(UpdateContext& ctxt) {
     homingParticleSystem->update(ctxt);
     fluidParticleSystem->update(ctxt);
     gaseousParticleSystem->update(ctxt);
+    emitterSystem->update(ctxt);
     actorSystem->update(ctxt);
     triggerSystem->update(ctxt);
     cameraSystem->update(ctxt);
@@ -148,6 +151,21 @@ bool Engine::loadEntities(std::string &filepath) {
 
         std::cout << "|------WORKING ON ENTITY: " << j["name"] << "------|\n";
 
+        if (j["name"] == "emitter") {
+            auto type = j.at("type").get<std::string>();
+            auto amount = j.at("amount").get<int>();
+            auto active = j.at("active").get<bool>();
+
+            auto& posJ = j.at("EmitterPosition");
+            float x = posJ.at("x").get<float>();
+            float y = posJ.at("y").get<float>();
+
+            componentManager->addComponent<EmitterComponent>(entity, {type, amount, active});
+            componentManager->addComponent<Position>(entity, {x, y});
+
+            emitterSystem->entities.insert(entity);
+        }
+
         if (j.contains("player") && j["player"] == true) {
             cameraSystem->entities.insert(entity);
             inputSystem->entities.insert(entity);
@@ -159,36 +177,45 @@ bool Engine::loadEntities(std::string &filepath) {
             std::cout << "...Added Component: PlayerComponent\n";
         }
 
-        std::string startAnim = j["anim"]["start"];
         std::shared_ptr<sf::Texture> entityTexture;
         if (j.contains("anim")) {
+            // 1) pull out the anim object
+            auto& animJ = j.at("anim");
+
+            // 2) extract its fields
+            std::string startAnim = animJ.at("start").get<std::string>();
+            int frameW         = animJ.at("frameWidth").get<int>();
+            int frameH         = animJ.at("frameHeight").get<int>();
+
+            // 3) build your AnimationComponent
             AnimationComponent anim;
             anim.currentState = startAnim;
-            for (auto it = j["spritePath"].begin(); it != j["spritePath"].end(); ++it) {
+            for (auto it = j.at("spritePath").begin(); it != j.at("spritePath").end(); ++it) {
+                auto& stateJ = it.value();
+                std::string name     = stateJ.at("name").get<std::string>();
+                float frameTime      = stateJ.at("frameTime").get<float>();
+                int   frameCount     = stateJ.at("frameCount").get<int>();
+
                 auto tex = std::make_shared<sf::Texture>();
-                if (!tex->loadFromFile(it.value()["filePath"])) {
-                    std::cerr << "Failed to load: " << it.value()["filePath"] << std::endl;
+                if (!tex->loadFromFile(stateJ.at("filePath").get<std::string>())) {
+                    std::cerr << "Failed to load: " << stateJ.at("filePath") << "\n";
                     continue;
                 }
 
                 anim.animations[it.key()] = {
-                    .texture = tex,
-                    .frameCount = it.value()["frameCount"],
-                    .frameWidth = j["anim"]["frameWidth"],
-                    .frameHeight = j["anim"]["frameHeight"],
-                    .frameTime = it.value()["frameTime"]
+                    .texture    = tex,
+                    .frameCount = frameCount,
+                    .frameWidth = frameW,
+                    .frameHeight= frameH,
+                    .frameTime  = frameTime
                 };
 
-                if (it.key() == startAnim) {
+                if (it.key() == startAnim)
                     entityTexture = tex;
-                }
             }
+
             componentManager->addComponent<AnimationComponent>(entity, {anim});
-            std::cout << "...Added Component: AnimationComponent->with the following states:\n";
-            for (const auto &[k, _]: anim.animations)
-                std::cout << " - " << k << '\n';
             animationSystem->entities.insert(entity);
-            std::cout << "...Registered To System: animationSystem\n";
         }
         if (entityTexture) {
             sf::Sprite entitySprite;
@@ -283,8 +310,9 @@ bool Engine::loadEntities(std::string &filepath) {
             std::cout << "...Registered To System: damageSystem\n";
         }
 
-        renderSystem->entities.insert(entity);
-        std::cout << "...Registered To System: renderSystem\n";
+        if (j["name"] != "emitter")
+            renderSystem->entities.insert(entity);
+            std::cout << "...Registered To System: renderSystem\n";
     }
 
     return true;

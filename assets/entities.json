@@ -406,5 +406,25 @@
       "isStatic": false
     },
     "Movement": false
+  },
+  {
+    "name": "emitter",
+    "type": "gas",
+    "amount": 1,
+    "EmitterPosition": {
+      "x": 300,
+      "y": 550
+    },
+    "active": false
+  },
+  {
+    "name": "emitter",
+    "type": "gas",
+    "amount": 1,
+    "EmitterPosition": {
+      "x": 500,
+      "y": 550
+    },
+    "active": false
   }
 ]

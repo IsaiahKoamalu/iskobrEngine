@@ -20,6 +20,7 @@
 #include "Systems/ActorSystem.h"
 #include "external/json/json.hpp"
 #include "Systems/DamageSystem.h"
+#include "Systems/EmitterSystem.h"
 #include "Systems/GroundResetSystem.h"
 #include "Systems/ParticleSystem/ParticleSystemBase.h"
 #include "Systems/ParticleSystem/HomingParticleSystem.h"
@@ -71,6 +72,7 @@ private:
     std::shared_ptr<GroundResetSystem> groundResetSystem;
     std::shared_ptr<DamageSystem> damageSystem;
     std::shared_ptr<ParticleSystem> particleSystem;
+    std::shared_ptr<EmitterSystem> emitterSystem;
     std::shared_ptr<HomingParticleSystem> homingParticleSystem;
     std::shared_ptr<FluidParticleSystem> fluidParticleSystem;
     std::shared_ptr<GaseousParticleSystem> gaseousParticleSystem;
