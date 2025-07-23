@@ -39,7 +39,7 @@ public:
                 auto& pos = components.getComponent<Position>(entity);
                 auto& dir = components.getComponent<DirectionComponent>(entity);
 
-                std::cout << pos.x << ", " << pos.y << std::endl;
+                //std::cout << pos.x << ", " << pos.y << std::endl;
 
                 float moveX = 0.0f;
 

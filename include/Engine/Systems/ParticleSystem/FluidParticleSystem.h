@@ -55,7 +55,7 @@ public:
             float lifeRatio = p.lifeTime.asSeconds() / m_lifetime.asSeconds();
             auto alpha = static_cast<sf::Uint8>(lifeRatio * 255);
 
-            sf::Color color(255, 0, 0, alpha);
+            sf::Color color(0, 0, 255, alpha);
 
             // 4 vertices per quad (TL, TR, BR, BL)
             m_vertices[vertexIndex + 0].position = { newPos.x - half, newPos.y - half };
@@ -69,7 +69,7 @@ public:
             m_vertices[vertexIndex + 3].color = color;
 
             auto ts = m_texture.getSize();
-            float tw = float(ts.x), th = float(ts.y);
+            auto tw = float(ts.x), th = float(ts.y);
 
             m_vertices[vertexIndex + 0].texCoords = {0.f, 0.f};
             m_vertices[vertexIndex + 1].texCoords = {tw, 0.f};

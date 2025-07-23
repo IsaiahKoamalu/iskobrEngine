@@ -166,10 +166,13 @@ bool Engine::loadEntities(std::string &filepath) {
             emitterSystem->entities.insert(entity);
         }
 
+        if (j["name"] == "Emitter");
+
         if (j.contains("player") && j["player"] == true) {
             cameraSystem->entities.insert(entity);
             inputSystem->entities.insert(entity);
             groundResetSystem->entities.insert(entity);
+            gaseousParticleSystem->entities.insert(entity);
             homingParticleSystem->entities.insert(entity);
             componentManager->addComponent<PlayerComponent>(entity,{});
             componentManager->addComponent<WallClingComponent>(entity, {});
