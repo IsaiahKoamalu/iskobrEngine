@@ -1,19 +1,71 @@
 #ifndef FLUIDPARTICLESYSTEM_H
 #define FLUIDPARTICLESYSTEM_H
 
+#include <algorithm>
+#include <cmath>
+#include <cassert>
+#include <random>
+
 #include "Engine/Core/UpdateContext.h"
 #include "ParticleSystemBase.h"
+#include "Engine/Components/PlayerComponent.h"
+#include "Engine/Components/ColliderComponent.h"
+#include "Engine/Components/Position.h"
 
 class FluidParticleSystem : public ParticleSystem {
 public:
+    sf::Vector2f m_lastPlayerPos{0.f, 0.f};
+    bool m_firstFrame{true};
+
     void update(const UpdateContext& ctxt) override
     {
         ComponentManager& component = *ctxt.component;
-        const float dtSec = ctxt.tDt.asSeconds();
+        const float dt = ctxt.tDt.asSeconds();
         std::size_t vertexIndex = 0;
         m_vertices.resize(m_particles.size() * 4);
 
         assert(m_collisionSystem && "ParticleSystem: collision pointer null");
+
+        bool hasPlayer = false;
+        sf::FloatRect playerBounds;
+        sf::Vector2f playerCenter{0.f, 0.f};
+        sf::Vector2f playerVel{0.f, 0.f};
+        for (Entity entity : entities) {
+            if (component.hasComponent<PlayerComponent>(entity)) {
+                hasPlayer = true;
+                auto& pos  = component.getComponent<Position>(entity);
+                auto& col  = component.getComponent<ColliderComponent>(entity);
+                auto& vel = component.getComponent<Velocity>(entity);
+                playerBounds = sf::FloatRect(
+                    pos.x + col.bounds.left,
+                    pos.y + col.bounds.top,
+                    col.bounds.width,
+                    col.bounds.height
+                );
+
+                playerCenter = sf::Vector2f(
+                    playerBounds.left + playerBounds.width  * 0.5f,
+                    playerBounds.top  + playerBounds.height * 0.5f
+                );
+                playerVel = {vel.dx, vel.dy};
+                break;
+            }
+        }
+
+        // Compute player velocity for directional push
+        if (!m_firstFrame && hasPlayer) {
+            playerVel = (playerCenter - m_lastPlayerPos) / dt;
+        }
+        if (hasPlayer) {
+            m_lastPlayerPos = playerCenter;
+        }
+        m_firstFrame = false;
+
+        constexpr float influenceRadius = 60.f;
+        constexpr float dirStrength = 0.3f;
+        constexpr float radialStrength = 40.f;
+        constexpr float playerBounce = 0.2f;
+        static std::normal_distribution<float> noisDist(0.f, 1.f);
 
         for (std::size_t i = 0; i < m_particles.size();) {
             Particle& p = m_particles[i];
@@ -26,8 +78,8 @@ public:
                 continue;
             }
 
-            p.velocity += m_gravity * dtSec;
-            sf::Vector2f newPos = p.position + p.velocity * dtSec;
+            p.velocity += m_gravity * dt;
+            sf::Vector2f newPos = p.position + p.velocity * dt;
 
 
             constexpr float bounce = 0.4f; // 60% energy loss on bounce
@@ -48,6 +100,57 @@ public:
                 solid(newPos.x - p.size * 0.5f, newPos.y)) {
                 p.velocity.x *= -bounce; // damp and invert horizontal
                 }
+
+            if (hasPlayer) {
+                {
+                    sf::Vector2f diffCenter = newPos - playerCenter;
+                    float d2center = diffCenter.x*diffCenter.x + diffCenter.y*diffCenter.y;
+                    if (d2center < influenceRadius * influenceRadius) {
+                        float d = std::sqrt(d2center);
+                        if (d > 0.f) {
+                            sf::Vector2f pushDir = diffCenter / d;
+                            float factor = 1.f - (d / influenceRadius);
+                            // apply a gentle fling outward
+                            p.velocity += pushDir * (radialStrength * factor * dt);
+                        }
+                    }
+                }
+                float radius  = p.size * 0.5f;
+                float cx      = newPos.x;
+                float cy      = newPos.y;
+                float nearestX = std::clamp(cx, playerBounds.left,
+                                            playerBounds.left + playerBounds.width);
+                float nearestY = std::clamp(cy, playerBounds.top,
+                                            playerBounds.top  + playerBounds.height);
+
+                float dx   = cx - nearestX;
+                float dy   = cy - nearestY;
+                float dist2 = dx*dx + dy*dy;
+
+                if (dist2 < radius*radius) {
+                    float dist = std::sqrt(dist2);
+                    if (dist > 0.f) {
+                        sf::Vector2f normal{ dx/dist, dy/dist };
+
+                        // Stronger interpenetration resolution (3x)
+                        float penetration = radius - dist + 0.001f;
+                        newPos += normal * (penetration * 3.f);
+
+                        // Enhanced restitution: amplify bounce effect
+                        float vRelN = p.velocity.x*normal.x + p.velocity.y*normal.y;
+                        float e = playerBounce * 2.f; // stronger bounce
+                        p.velocity -= (1.f + e) * vRelN * normal;
+
+                        // Directional push: inherit a larger fraction of player velocity
+                        p.velocity += playerVel * (dirStrength * 2.f);
+
+                        // Tangential friction to simulate drag along surface
+                        sf::Vector2f tangent{ -normal.y, normal.x };
+                        float vRelT = p.velocity.x*tangent.x + p.velocity.y*tangent.y;
+                        p.velocity -= COLLISION_FRICTION * vRelT * tangent;
+                    }
+                }
+            }
 
             p.position = newPos;
 

@@ -9,6 +9,7 @@
 #include "Engine/Systems/CollisionSystem.h"
 #include "Engine/System.h"
 
+constexpr float COLLISION_FRICTION = 0.3f;
 
 class ParticleSystem : public System, public sf::Drawable, public sf::Transformable {
 public:

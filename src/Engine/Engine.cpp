@@ -173,6 +173,7 @@ bool Engine::loadEntities(std::string &filepath) {
             inputSystem->entities.insert(entity);
             groundResetSystem->entities.insert(entity);
             gaseousParticleSystem->entities.insert(entity);
+            fluidParticleSystem->entities.insert(entity);
             homingParticleSystem->entities.insert(entity);
             componentManager->addComponent<PlayerComponent>(entity,{});
             componentManager->addComponent<WallClingComponent>(entity, {});

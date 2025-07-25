@@ -12,8 +12,6 @@
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/PlayerComponent.h"
 
-// Friction coefficient applied at the collision tangent
-constexpr float COLLISION_FRICTION = 0.3f;
 
 class GaseousParticleSystem : public ParticleSystem {
 public:
@@ -67,11 +65,11 @@ public:
         m_firstFrame = false;
 
         // Gas motion parameters
-        constexpr float influenceRadius = 50.f;
-        constexpr float dirStrength     = 0.f;
-        constexpr float radialStrength  = 60.f;
+        constexpr float influenceRadius = 80.f;
+        constexpr float dirStrength     = 0.2f;
+        constexpr float radialStrength  = 80.f;
         constexpr float wallBounce      = 0.2f;
-        constexpr float playerBounce    = 0.1f;
+        constexpr float playerBounce    = 0.3f;
         constexpr float drag            = 0.5f;
         constexpr float jitterAmt       = 30.f;
         constexpr float swirlAmt        = 20.f;
