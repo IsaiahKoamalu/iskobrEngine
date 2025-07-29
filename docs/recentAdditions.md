@@ -28,6 +28,67 @@ title: Recent Updates
   </a>
 </div>
 
+**7-24-25 Gas and Fluid Particle Behavior Overhaul**
+-
+Made major changes to the ways in which the gas and fluid particle systems behave physically. They now both interact with entities and there surroundings in
+more realistic manner.
+
+**New Gas Motion Parameters**:
+```c++
+constexpr float influenceRadius; // radius of entity influence
+constexpr float dirStrength; // strength of entity propulsion upon particles
+constexpr float radialStrength; // strength of propulsion when not moving
+constexpr float wallBounce; // bounce factor upon wall collision
+constexpr float playerBounce; // bounce factor upon entity collision
+constexpr float drag; // drag variable 
+constexpr float jitterAmt; // variable to controll realism of gas motion jitter
+constexpr float swirlAmt; // amount of particle swirl effect upon emitter
+constexpr float tileSize; // size of the current tile set
+static std::normal_distribution<floay> noiseDist(0.f, 1.f); // distribution for jitter formula to sample form
+```
+
+**Implementing Drag effect on Gas Particles**:
+
+Using tangential friction in order to simulate drag effect along surfaces.
+
+```c++
+if (hasPlayer)
+{
+  sf::Vector2f tangent{ -normal.y, normal.x };
+  float vRelT = p.velocity.x * tangent.x + p.velocity.y * tangent.y;
+  p.velocity -= COLLISION_FRICTION * vRelt * tangent;
+}
+p.velocity *= std::max(0.f, 1.f - drag * dt);
+
+```
+
+Where ``float vRelT`` is the velocity relative to the calculated tanget.
+
+
+**Implementing Jitter Effect on Gas Particles**:
+
+Plugging a sample from the normal distribution variable `noisDist` into a quasi Brownian
+Motion calculation to approximate behavior for visual jitter effect.
+
+```c++
+p.velociy += sf::Vector2f(noiseDist(rng), noiseDist(rng)) * jitterAmt * dt;
+```
+
+**Implementing Emitter Swirl Effect**
+
+Basic computation of the unit tangent to the radial direction.
+
+```c++
+sf::Vector2f dir = newPos - m_emitter;
+float d2 = dir.x*dir.x + dir.y*dir.y;
+if (d2 > 0.f) {
+  float inv = 1.f / std::sqrt(d2);
+  sf::Vector2f perp{ -dir.y * inv, dir.x * inv };
+  p.velocity += perp * swirlAmt * dt;
+}
+```
+Where ``sf::Vector2f perp`` is the unit tangent.
+
 **7-16-25 UpdateContext.h and New Particle System(s) Structure**
 -
 All system update methods are now called with a single parameter, an object `const UpdateContext& ctxt`. UpdateContext is a struct which is defined in the new UpdateContext.h file located in the include/Engine/Core directory. This new change allows for a much needed increase of freedom in regards to the implementation of the update method of System subclasses. I have also changed the dynamic of the particle system(s), there is now a base particle system class from which other varying particle system subclasses are derived (only 2 as of right now). The improved flexablility introduced by the update context makes the creation and application of new systems, such as the derived particle systems, much smoother and cleaner.
