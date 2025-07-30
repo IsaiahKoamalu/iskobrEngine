@@ -18,9 +18,11 @@ title: Iskobr Engine
     text-decoration: none;
     border-radius: 4px;
     font-family: sans-serif;
+    transition: background-color 0.3s ease, transform 0.3s ease;
   }
   .button:hover {
     background-color: #0056b3;
+    transform: scale(1.05);
     text-decoration: none;
   }
 </style>
