@@ -204,10 +204,12 @@ protected:
 
     static std::uniform_real_distribution<float> angleDeg;
     static std::uniform_real_distribution<float> speedDist;
+
+
     static std::uniform_real_distribution<float> sizeDist;
 };
 
-inline std::uniform_real_distribution<float> FluidParticleSystem::angleDeg(0.f, 360.f);
+inline std::uniform_real_distribution<float> FluidParticleSystem::angleDeg(180.f, 360.f);
 inline std::uniform_real_distribution<float> FluidParticleSystem::speedDist(50.f, 150.f);
 inline std::uniform_real_distribution<float> FluidParticleSystem::sizeDist(3.f, 6.f);
 

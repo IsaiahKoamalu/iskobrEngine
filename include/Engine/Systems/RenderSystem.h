@@ -21,10 +21,10 @@
 
 class RenderSystem : public System {
 public:
-    void update(const UpdateContext& ctxt) override{
-        sf::RenderWindow& window = *ctxt.window;
-        ComponentManager& components = *ctxt.component;
-        std::vector<sf::Drawable*> drawables = ctxt.drawables;
+    void update(const UpdateContext &ctxt) override {
+        sf::RenderWindow &window = *ctxt.window;
+        ComponentManager &components = *ctxt.component;
+        std::vector<sf::Drawable *> drawables = ctxt.drawables;
 
         bool debugMode = false;
 
@@ -53,9 +53,9 @@ public:
                     window.draw(debugRect);
                 }
                 if (components.hasComponent<AttackColliderComponent>(entity)) {
-                    const auto& collider = components.getComponent<AttackColliderComponent>(entity);
+                    const auto &collider = components.getComponent<AttackColliderComponent>(entity);
                     if (collider.activeRight) {
-                        const auto& pos = components.getComponent<Position>(entity);
+                        const auto &pos = components.getComponent<Position>(entity);
 
                         sf::RectangleShape debugRect;
                         debugRect.setSize({collider.boundsRight.width, collider.boundsRight.height});
@@ -64,9 +64,8 @@ public:
                         debugRect.setOutlineColor(sf::Color::Green);
                         debugRect.setOutlineThickness(1.0f);
                         window.draw(debugRect);
-                    }
-                    else if (collider.activeLeft) {
-                        const auto& pos = components.getComponent<Position>(entity);
+                    } else if (collider.activeLeft) {
+                        const auto &pos = components.getComponent<Position>(entity);
 
                         sf::RectangleShape debugRect;
                         debugRect.setSize({collider.boundsLeft.width, collider.boundsLeft.height});
@@ -83,19 +82,17 @@ public:
         //  drawing all sprite components (like player)
         for (auto entity: entities) {
             if (components.hasComponent<SpriteComponent>(entity) &&
-                !components.hasComponent<TileComponent>(entity))
-            {
+                !components.hasComponent<TileComponent>(entity)) {
                 auto &spriteComp = components.getComponent<SpriteComponent>(entity);
                 auto &pos = components.getComponent<Position>(entity);
                 spriteComp.sprite.setPosition(pos.x, pos.y);
                 window.draw(spriteComp.sprite);
             }
         }
-        for (auto obj : drawables) {
+        for (auto obj: drawables) {
             window.draw(*obj);
         }
     }
-
 };
 
 #endif

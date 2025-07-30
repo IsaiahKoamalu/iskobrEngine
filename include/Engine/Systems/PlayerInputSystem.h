@@ -1,4 +1,3 @@
-
 #ifndef PLAYERINPUTSYSTEM_H
 #define PLAYERINPUTSYSTEM_H
 
@@ -26,27 +25,30 @@
 class PlayerInputSystem : public System {
 public:
     bool wasXPressedLastFrame = false;
-    void update(const UpdateContext& ctxt) override{
-        ComponentManager& components = *ctxt.component;
+
+    void update(const UpdateContext &ctxt) override {
+        ComponentManager &components = *ctxt.component;
         float dt = ctxt.dt;
 
         // Determine the direction of input
-        for (Entity entity : entities) {
-            if (components.hasComponent<PlayerComponent>(entity)){
-                auto& player = components.getComponent<PlayerComponent>(entity);
-                auto& cling = components.getComponent<WallClingComponent>(entity);
+        for (Entity entity: entities) {
+            if (components.hasComponent<PlayerComponent>(entity)) {
+                auto &player = components.getComponent<PlayerComponent>(entity);
+                auto &cling = components.getComponent<WallClingComponent>(entity);
                 auto &velocity = components.getComponent<Velocity>(entity);
-                auto& pos = components.getComponent<Position>(entity);
-                auto& dir = components.getComponent<DirectionComponent>(entity);
+                auto &pos = components.getComponent<Position>(entity);
+                auto &dir = components.getComponent<DirectionComponent>(entity);
 
                 //std::cout << pos.x << ", " << pos.y << std::endl;
 
                 float moveX = 0.0f;
 
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !cling.active ||
-                    sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) < -20 && !cling.active) moveX -= 1.0f;
+                    sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) < -20 && !cling.active)
+                    moveX -= 1.0f;
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && !cling.active ||
-                    sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) > 20 && !cling.active) moveX += 1.0f;
+                    sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) > 20 && !cling.active)
+                    moveX += 1.0f;
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
                     pos.x = 100;
                     pos.y = 200;
@@ -62,7 +64,7 @@ public:
                 bool rollPressed = (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
                                     sf::Joystick::isButtonPressed(0, 1));
                 bool slashPressed = (sf::Joystick::isButtonPressed(0, 5) ||
-                                    sf::Mouse::isButtonPressed(sf::Mouse::Left));
+                                     sf::Mouse::isButtonPressed(sf::Mouse::Left));
 
                 float speed = 300.0f;
 
@@ -88,9 +90,8 @@ public:
                         if (player.slashTimer <= player.slashDuration / 2 && dir.current == Direction::Left) {
                             attackCol.activeLeft = true;
                         }
-                    }
-                    else {
-                        auto& attackCol = components.getComponent<AttackColliderComponent>(entity);
+                    } else {
+                        auto &attackCol = components.getComponent<AttackColliderComponent>(entity);
                         attackCol.activeRight = false;
                         attackCol.activeLeft = false;
                     }
@@ -101,7 +102,7 @@ public:
                     }
                     if (player.isRolling) {
                         // Adjusting collision box to account for rolling. (NOTE: be sure to offset the height and top by equal values)
-                        auto& colCom = components.getComponent<ColliderComponent>(entity);
+                        auto &colCom = components.getComponent<ColliderComponent>(entity);
                         colCom.bounds.top = -5;
                         colCom.bounds.height = 54;
                         player.rollTimer -= dt;
@@ -113,16 +114,15 @@ public:
                         auto &dir = components.getComponent<DirectionComponent>(entity);
                         velocity.dx = (dir.current == Direction::Left ? -1.0f : 1.0f) * player.rollSpeed;
                         speed = player.rollSpeed;
-                    }
-                    else if (player.isCrouching) {
-                        auto& colCom = components.getComponent<ColliderComponent>(entity);
+                    } else if (player.isCrouching) {
+                        auto &colCom = components.getComponent<ColliderComponent>(entity);
                         colCom.bounds.top = -5;
                         colCom.bounds.height = 54;
                         auto &dir = components.getComponent<DirectionComponent>(entity);
                         velocity.dx = (dir.current == Direction::Left ? -1.0f : 1.0f) * player.crouchSpeed;
                         speed = player.crouchSpeed;
-                    }else {
-                        auto& colCom = components.getComponent<ColliderComponent>(entity);
+                    } else {
+                        auto &colCom = components.getComponent<ColliderComponent>(entity);
                         colCom.bounds.top = -36;
                         colCom.bounds.height = 85;
                     }
@@ -136,7 +136,7 @@ public:
 
                 // Handle horizontal running movement (if not rolling)
                 if (components.hasComponent<PlayerComponent>(entity)) {
-                    auto& player = components.getComponent<PlayerComponent>(entity);
+                    auto &player = components.getComponent<PlayerComponent>(entity);
                     if (!player.isRolling) {
                         velocity.dx = moveX * speed;
                     }
@@ -151,30 +151,24 @@ public:
                     if (player.isRolling) {
                         if (dir.current == Direction::Right) {
                             anim.currentState = "rollRight";
-                        }
-                        else if (dir.current == Direction::Left) {
+                        } else if (dir.current == Direction::Left) {
                             anim.currentState = "rollLeft";
                         }
-                    }
-                    else if (player.isCrouching) {
+                    } else if (player.isCrouching) {
                         if (dir.current == Direction::Right) {
-                            if (moveX > 0){anim.currentState = "crouchWalkRight";}
-                            else if (moveX < 0){anim.currentState = "crouchWalkLeft";}
-                            else{anim.currentState = "crouchIdleRight";}
-                        }
-                        else if (dir.current == Direction::Left) {
+                            if (moveX > 0) { anim.currentState = "crouchWalkRight"; } else if (moveX < 0) {
+                                anim.currentState = "crouchWalkLeft";
+                            } else { anim.currentState = "crouchIdleRight"; }
+                        } else if (dir.current == Direction::Left) {
                             anim.currentState = "crouchIdleLeft";
                         }
-                    }
-                    else if (player.isSlashing) {
+                    } else if (player.isSlashing) {
                         if (dir.current == Direction::Right) {
                             anim.currentState = "slashRight";
-                        }
-                        else if (dir.current == Direction::Left) {
+                        } else if (dir.current == Direction::Left) {
                             anim.currentState = "slashLeft";
                         }
-                    }
-                    else if (!player.isGrounded) {
+                    } else if (!player.isGrounded) {
                         if (moveX > 0 || dir.current == Direction::Right) {
                             dir.current = Direction::Right;
                             anim.currentState = "jumpRight";
@@ -183,13 +177,13 @@ public:
                             dir.current = Direction::Left;
                             anim.currentState = "jumpLeft";
                         }
-                    }else if (moveX > 0) {
+                    } else if (moveX > 0) {
                         dir.current = Direction::Right;
                         anim.currentState = "walkRight";
                     } else if (moveX < 0) {
                         dir.current = Direction::Left;
                         anim.currentState = "walkLeft";
-                    }else {
+                    } else {
                         anim.currentState = (dir.current == Direction::Left) ? "idleLeft" : "idleRight";
                     }
                     player.wasGrounded = player.isGrounded;

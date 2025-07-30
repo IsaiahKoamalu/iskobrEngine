@@ -17,8 +17,8 @@ public:
         view.setCenter(0.f, 0.f);
     }
 
-    void update(const UpdateContext& ctxt) override{
-        ComponentManager& components = *ctxt.component;
+    void update(const UpdateContext &ctxt) override {
+        ComponentManager &components = *ctxt.component;
         float dt = ctxt.dt;
         for (Entity entity: entities) {
             if (!components.hasComponent<Position>(entity)) continue;

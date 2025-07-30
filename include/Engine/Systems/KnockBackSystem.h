@@ -11,18 +11,17 @@
 
 class KnockBackSystem : public System {
 public:
-
-    void update(const UpdateContext& ctxt) override{
-        ComponentManager& components = *ctxt.component;
+    void update(const UpdateContext &ctxt) override {
+        ComponentManager &components = *ctxt.component;
         float dt = ctxt.dt;
 
-        for (Entity entity : entities) {
+        for (Entity entity: entities) {
             if (!components.hasComponent<KnockBackComponent>(entity)) continue;
 
-            auto& knock = components.getComponent<KnockBackComponent>(entity);
-            if(!knock.isKnockback) continue;
+            auto &knock = components.getComponent<KnockBackComponent>(entity);
+            if (!knock.isKnockback) continue;
 
-            auto& pos = components.getComponent<Position>(entity);
+            auto &pos = components.getComponent<Position>(entity);
 
             pos.x += knock.velocity.x * dt;
             pos.y += knock.velocity.y * dt;
@@ -33,12 +32,11 @@ public:
             if (length(knock.velocity) <= decayAmt) {
                 knock.velocity = {0.f, 0.f};
                 knock.isKnockback = false;
-            }else {
+            } else {
                 knock.velocity -= direction * decayAmt;
             }
         }
     }
-
 };
 
 #endif

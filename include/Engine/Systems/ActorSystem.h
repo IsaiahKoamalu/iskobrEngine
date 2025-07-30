@@ -9,8 +9,8 @@
 
 class ActorSystem : public System {
 public:
-    void update(const UpdateContext& ctxt) override{
-        ComponentManager& component = *ctxt.component;
+    void update(const UpdateContext &ctxt) override {
+        ComponentManager &component = *ctxt.component;
         float dt = ctxt.dt;
         for (Entity entity: entities) {
             auto &actorComp = component.getComponent<ActorComponent>(entity);

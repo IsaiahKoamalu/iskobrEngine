@@ -41,8 +41,7 @@ public:
                  TilesetManager &tilesetManager,
                  RenderSystem &renderSystem,
                  CollisionSystem &collisionSystem,
-                 float tileScale = 3.0f)
-    {
+                 float tileScale = 3.0f) {
         std::ifstream file(filename);
         if (!file.is_open()) {
             std::cerr << "Failed to open map file: " << filename << std::endl;
@@ -121,7 +120,9 @@ public:
         std::cout << "Map loaded from JSON: " << filename << std::endl;
         return true;
     }
-    void update(const UpdateContext &ctxt) override{};
+
+    void update(const UpdateContext &ctxt) override {
+    };
 };
 
 #endif

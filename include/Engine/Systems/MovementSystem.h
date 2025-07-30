@@ -19,8 +19,8 @@
  */
 class MovementSystem : public System {
 public:
-    void update(const UpdateContext& ctxt) override{
-        ComponentManager& components = *ctxt.component;
+    void update(const UpdateContext &ctxt) override {
+        ComponentManager &components = *ctxt.component;
         float dt = ctxt.dt;
 
         for (Entity entity: entities) {
@@ -31,10 +31,9 @@ public:
 
             // Wall cling behavior checked first
             if (components.hasComponent<WallClingComponent>(entity)) {
-                auto& cling = components.getComponent<WallClingComponent>(entity);
-                auto& player = components.getComponent<PlayerComponent>(entity);
+                auto &cling = components.getComponent<WallClingComponent>(entity);
+                auto &player = components.getComponent<PlayerComponent>(entity);
                 if (cling.active) {
-
                     //player.gravityToggle = false;
 
                     // Limiting downward speed
@@ -53,7 +52,7 @@ public:
                     if (cling.maxTime > 0 && cling.timer > cling.maxTime || player.isGrounded) {
                         cling.active = false; // Release timer after timeout
                     }
-                }else {
+                } else {
                     cling.timer = 0.f;
                     //player.gravityToggle = true;
                 }

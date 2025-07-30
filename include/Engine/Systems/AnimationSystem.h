@@ -10,31 +10,33 @@
 
 class AnimationSystem : public System {
 public:
-    void update(const UpdateContext& ctxt) override{
-        ComponentManager& components = *ctxt.component;
+    void update(const UpdateContext &ctxt) override {
+        ComponentManager &components = *ctxt.component;
         float dt = ctxt.dt;
         for (Entity entity: entities) {
-            if (components.hasComponent<AnimationComponent>(entity) && components.hasComponent<SpriteComponent>(entity)) {
+            if (components.hasComponent<AnimationComponent>(entity) && components.hasComponent<
+                    SpriteComponent>(entity)) {
                 auto &animComp = components.getComponent<AnimationComponent>(entity);
                 auto &sprite = components.getComponent<SpriteComponent>(entity).sprite;
 
-                if (components.hasComponent<KnockBackComponent>(entity) && !components.hasComponent<PlayerComponent>(entity)) {
-                    auto& knock = components.getComponent<KnockBackComponent>(entity);
-                    if(knock.isKnockback) {
+                if (components.hasComponent<KnockBackComponent>(entity) && !components.hasComponent<
+                        PlayerComponent>(entity)) {
+                    auto &knock = components.getComponent<KnockBackComponent>(entity);
+                    if (knock.isKnockback) {
                         animComp.currentState = "hurt";
-                    }else {
+                    } else {
                         animComp.currentState = "idleLeft";
                     }
                 }
 
                 // Grab wall cling anim first.
                 if (components.hasComponent<WallClingComponent>(entity)) {
-                    auto& cling = components.getComponent<WallClingComponent>(entity);
-                    auto& dir = components.getComponent<DirectionComponent>(entity);
+                    auto &cling = components.getComponent<WallClingComponent>(entity);
+                    auto &dir = components.getComponent<DirectionComponent>(entity);
                     if (cling.active) {
                         if (animComp.currentState == "jumpLeft") {
                             animComp.currentState = "wallLeft";
-                        }else if (animComp.currentState == "jumpRight") {
+                        } else if (animComp.currentState == "jumpRight") {
                             animComp.currentState = "wallRight";
                         }
                     }
