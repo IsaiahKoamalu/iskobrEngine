@@ -48,6 +48,11 @@ add_library(engine
         include/Engine/Components/TileComponent.h
         include/Engine/Components/HealthComponent.h
         include/Engine/Components/AttackColliderComponent.h
+        include/Engine/Components/WallClingComponent.h
+        include/Engine/Components/NavigationComponent.h
+        include/Engine/Components/PathComponent.h
+        include/Engine/Components/Transform.h
+        include/Engine/Components/PhysicsBody.h
         include/Engine/Systems/CameraSystem.h
         include/Engine/Systems/TileMapSystem.h
         include/Engine/Systems/TriggerSystem.h
@@ -61,8 +66,11 @@ add_library(engine
         include/Engine/Systems/ParticleSystem/FluidParticleSystem.h
         include/Engine/Systems/DamageSystem.h
         include/Engine/Systems/KnockBackSystem.h
+        include/Engine/Systems/PathfindingSystem.h
+        include/Engine/Systems/PathFollowingSystem.h
+        include/Engine/Systems/NavigationCommandSystem.h
         include/Engine/Core/TileType.h
-        include/Engine/Components/WallClingComponent.h
+        include/Engine/Core/TileCoord.h
 )
 
 target_include_directories(engine

@@ -28,6 +28,8 @@
 #include "Systems/PhysicsSystem.h"
 #include "Systems/KnockBackSystem.h"
 #include "Systems/ParticleSystem/GaseousParticleSystem.h"
+#include "Systems/PathfindingSystem.h"
+
 
 using json = nlohmann::json;
 
