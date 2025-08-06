@@ -19,6 +19,8 @@
 #include "Engine/TilesetManager.h"
 #include "Systems/ActorSystem.h"
 #include "external/json/json.hpp"
+#include "Systems/AIStateSystem.h"
+#include "Systems/AISystem.h"
 #include "Systems/DamageSystem.h"
 #include "Systems/EmitterSystem.h"
 #include "Systems/GroundResetSystem.h"
@@ -28,7 +30,7 @@
 #include "Systems/PhysicsSystem.h"
 #include "Systems/KnockBackSystem.h"
 #include "Systems/ParticleSystem/GaseousParticleSystem.h"
-#include "Systems/PathfindingSystem.h"
+#include "Systems/AISystem.h"
 
 
 using json = nlohmann::json;
@@ -49,6 +51,8 @@ private:
     bool loadEntities(std::string &filepath);
 
     InputManager input;
+
+    Entity playerEntity = InvalidEntity;
 
     std::vector<sf::Drawable*> drawables;
     // System or ParticleSystem ??
@@ -79,6 +83,8 @@ private:
     std::shared_ptr<FluidParticleSystem> fluidParticleSystem;
     std::shared_ptr<GaseousParticleSystem> gaseousParticleSystem;
     std::shared_ptr<KnockBackSystem> knockBackSystem;
+    std::shared_ptr<AIStateSystem> aiStateSystem;
+    std::shared_ptr<AISystem> aiSystem;
 };
 
 #endif

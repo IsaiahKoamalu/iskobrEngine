@@ -9,6 +9,8 @@
 #include "Engine/Components/Velocity.h"
 #include <iostream>
 
+#include "Engine/Components/AnimationComponent.h"
+#include "Engine/Components/DirectionComponent.h"
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Components/WallClingComponent.h"
 
@@ -24,6 +26,7 @@ public:
         float dt = ctxt.dt;
 
         for (Entity entity: entities) {
+            if (!components.hasComponent<Position>(entity) || !components.hasComponent<Velocity>(entity)) continue;
             auto &pos = components.getComponent<Position>(entity);
             auto &vel = components.getComponent<Velocity>(entity);
 
@@ -76,6 +79,24 @@ public:
             // Clamp Y
             if (pos.y < halfH) pos.y = halfH;
             if (pos.y > levelHeight - halfH) pos.y = levelHeight - halfH;
+        }
+
+        // Animation logic for non-player entities
+        for (Entity entity: entities)
+        {
+            if (!components.hasComponent<PlayerComponent>(entity) && components.hasComponent<AnimationComponent>(entity))
+            {
+                auto& anim = components.getComponent<AnimationComponent>(entity);
+                auto& dirCom = components.getComponent<DirectionComponent>(entity);
+                if (dirCom.current == Direction::Right)
+                {
+                    anim.currentState = "walkRight";
+                }
+                else if (dirCom.current == Direction::Left)
+                {
+                    anim.currentState = "walkLeft";
+                }
+            }
         }
     }
 };

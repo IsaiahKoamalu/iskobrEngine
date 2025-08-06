@@ -66,11 +66,9 @@ add_library(engine
         include/Engine/Systems/ParticleSystem/FluidParticleSystem.h
         include/Engine/Systems/DamageSystem.h
         include/Engine/Systems/KnockBackSystem.h
-        include/Engine/Systems/PathfindingSystem.h
-        include/Engine/Systems/PathFollowingSystem.h
-        include/Engine/Systems/NavigationCommandSystem.h
         include/Engine/Core/TileType.h
         include/Engine/Core/TileCoord.h
+        include/Engine/Systems/AISystem.h
 )
 
 target_include_directories(engine
@@ -131,6 +129,7 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/ParticleSystem/GaseousParticleSystem.h
         include/Engine/Components/EmitterComponent.h
         include/Engine/Systems/EmitterSystem.h
+        include/Engine/Systems/AISystem.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)

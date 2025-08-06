@@ -24,8 +24,6 @@ public:
                     auto &knock = components.getComponent<KnockBackComponent>(entity);
                     if (knock.isKnockback) {
                         animComp.currentState = "hurt";
-                    } else {
-                        animComp.currentState = "idleLeft";
                     }
                 }
 

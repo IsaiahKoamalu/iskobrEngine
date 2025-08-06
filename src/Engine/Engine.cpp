@@ -54,6 +54,8 @@ void Engine::run(bool debugMode) {
     fluidParticleSystem =   systemManager->registerSystem<FluidParticleSystem>();
     gaseousParticleSystem = systemManager->registerSystem<GaseousParticleSystem>();
     emitterSystem =         systemManager->registerSystem<EmitterSystem>();
+    aiStateSystem =         systemManager->registerSystem<AIStateSystem>();
+    aiSystem =              systemManager->registerSystem<AISystem>();
     //Passing the collision system to the particle system so that it can handle
     //its own collision. Using .get() since the collision system is a shared_ptr.
     homingParticleSystem->setCollisionSystem(collisionSystem.get());
@@ -62,7 +64,7 @@ void Engine::run(bool debugMode) {
 
 
     // Vector of drawables(pretty much just the different particle systems) for the update context.
-    //calling them with .get() so that the actual raw pointer is retrieved.
+    //Calling them with .get() so that the actual raw pointer is retrieved.
     drawables.push_back(homingParticleSystem.get());
     drawables.push_back(fluidParticleSystem.get());
     drawables.push_back(gaseousParticleSystem.get());
@@ -106,6 +108,8 @@ void Engine::run(bool debugMode) {
 
 void Engine::update(UpdateContext& ctxt) {
     inputSystem->update(ctxt);
+    aiSystem->update(ctxt);
+    aiStateSystem->update(ctxt);
     physicsSystem->update(ctxt);
     movementSystem->update(ctxt);
     knockBackSystem->update(ctxt);
@@ -123,7 +127,7 @@ void Engine::update(UpdateContext& ctxt) {
 }
 
 void Engine::processEvents() {
-    sf::Event event;
+    sf::Event event{};
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
             window.close();
@@ -175,6 +179,7 @@ bool Engine::loadEntities(std::string &filepath) {
             gaseousParticleSystem->entities.insert(entity);
             fluidParticleSystem->entities.insert(entity);
             homingParticleSystem->entities.insert(entity);
+            aiSystem->entities.insert(entity);
             componentManager->addComponent<PlayerComponent>(entity,{});
             componentManager->addComponent<WallClingComponent>(entity, {});
             std::cout << "...Registered To Systems: cameraSystem, inputSystem, groundResetSystem\n";
@@ -314,9 +319,18 @@ bool Engine::loadEntities(std::string &filepath) {
             std::cout << "...Registered To System: damageSystem\n";
         }
 
-        if (j["name"] != "emitter")
+        if (j["name"] != "emitter") {
             renderSystem->entities.insert(entity);
             std::cout << "...Registered To System: renderSystem\n";
+        }
+
+        if (j.contains("ai-sys") && j["ai-sys"] == true) {
+            componentManager->addComponent<SeekComponent>(entity, {});
+            //componentManager->addComponent<PatrolComponent>(entity, {});
+            componentManager->addComponent<AIComponent>(entity, {});
+            aiStateSystem->entities.insert(entity);
+            aiSystem->entities.insert(entity);
+        }
     }
 
     return true;

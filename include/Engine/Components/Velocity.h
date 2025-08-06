@@ -2,7 +2,8 @@
 #define VELOCITY_H
 
 struct Velocity {
-    float dx, dy;
+    float dx;
+    float dy;
 };
 
 #endif

@@ -4,9 +4,11 @@
 #include <queue>
 #include <bitset>
 #include <cstdint>
+#include <limits>
 
 // Entity ID type alias
 using Entity = std::uint32_t;
+constexpr Entity InvalidEntity = std::numeric_limits<Entity>::max();
 
 // Maximum entities alllowed in engine
 constexpr Entity MAX_ENTITIES = 5000;
