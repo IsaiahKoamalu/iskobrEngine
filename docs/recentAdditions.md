@@ -20,6 +20,7 @@ title: Recent Updates
   }
   .button:hover {
     background-color: #0056b3;
+}
 </style>
 
 <div class="button-container">
@@ -27,6 +28,50 @@ title: Recent Updates
     Main
   </a>
 </div>
+
+**8-4-25 AI System for Non-Player Entities**
+-
+Starting to work on an AI system for non-player entities. This new implementation involves three new files: 'AISystem', 'AIStateSystem', 'AIComponent'.
+Entities can be registered to the needed AI component and systems by setting `"ai-sys": true` in the entities json file.
+
+**AI Component**
+
+The AI component is just a simple struct that holds a value `AIState` which is pulled from the enum class `AIState`.
+```c++
+enum class AIState { Idle, Patrolling, Chasing };
+struct AIComponent {
+    AIState state = AIState::Idle;
+};
+```
+
+**AI System**
+
+The AI system is responsible for grabbing the current position of the player and setting that position as the target position of the entities that poses an AI component. The system then checks the state of the AI entity and acts accordingly.
+For Example:
+```c++
+if (aiComp.state == AIState::Idle)
+            {
+                vel.dx = 0.f;
+            }
+            else if (aiComp.state == AIState::Patrolling)
+            {
+                float dx = playerPos.x - pos.x;
+                float dir = (dx > 0.f) ? 1.f : (dx < 0.f ? -1.f : 0.f);
+                if (dir > 0.f)
+                {
+                    dirCom.current = Direction::Right;
+                }
+                else if (dir < 0.f)
+                {
+                    dirCom.current = Direction::Left;
+                }
+                vel.dx = dir * 50.f;
+            }
+```
+
+**AI State System**
+
+The AI state system does not currently perform or contain any logic. My plan is to implement path finding algorithms so that the AI system goes through a deeper thought process when switching states.
 
 **7-24-25 Gas and Fluid Particle Behavior Overhaul**
 -
