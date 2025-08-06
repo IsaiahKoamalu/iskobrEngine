@@ -5,6 +5,7 @@
 #include "Engine/System.h"
 #include "Engine/Core/UpdateContext.h"
 #include "Engine/ComponentManager.h"
+#include "Engine/Components/ActorComponent.h"
 #include "Engine/Components/ColliderComponent.h"
 #include "Engine/Components/AttackColliderComponent.h"
 #include "Engine/Components/HealthComponent.h"
@@ -13,6 +14,7 @@
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Components/TileComponent.h"
 #include "Engine/Components/WallClingComponent.h"
+#include "Engine/Components/AIComponent.h"
 
 
 // TESTING OUT COMMENTING AND DOCUMENTATION STYLE
@@ -52,8 +54,8 @@ public:
         return false;
     }
 
-    void handleWallContacts(Entity entity, ComponentManager &components, const Contact &contact) {
-        const float verticalThreshold = 0.4f;
+    static void handleWallContacts(Entity entity, ComponentManager &components, const Contact &contact) {
+        constexpr float verticalThreshold = 0.4f;
         glm::vec2 up{0.f, -1.f};
 
         float dotUp = glm::dot(contact.normal, up);
@@ -66,19 +68,27 @@ public:
         }
     }
 
-    void affectHealth(int amount, Entity entity, ComponentManager &components) {
+    static void affectHealth(int amount, Entity entity, ComponentManager &components) {
         if (components.hasComponent<HealthComponent>(entity)) {
             auto &health = components.getComponent<HealthComponent>(entity);
             health.health += amount;
             if (health.health <= 0) { health.isDead = true; }
+        }
+        if (components.hasComponent<AIComponent>(entity) && components.hasComponent<ActorComponent>(entity))
+        {
+            auto& aiComp = components.getComponent<AIComponent>(entity);
+            auto& actComp = components.getComponent<ActorComponent>(entity);
+            if (actComp.isHostile)
+                aiComp.state = AIState::Chasing;
+            std::cout << "Hit: " << actComp.name << std::endl;
         }
     }
 
     //void setDamageSystem(const DamageSystem* ds) {m_damageSystem = ds;}
 
     void update(const UpdateContext& ctxt) override{
-        // clear the *touched* flag ( not the active flag)
-        float dt =  ctxt.dt;
+        // clear the *touched* flag (not the active flag)
+        //float dt =  ctxt.dt;
         ComponentManager& components = *ctxt.component;
         for (Entity e: entities)
             if (components.hasComponent<WallClingComponent>(e))
@@ -247,8 +257,8 @@ public:
                         else aPos.x += overlapX;
                     } else if (components.hasComponent<TileComponent>(b)) // resolve along Y
                     {
-                        bool fromAbove = normal.y < 0; // a is above b
-                        if (fromAbove) {
+                        //bool fromAbove = normal.y < 0; // a is above b
+                        if (normal.y < 0) {
                             aPos.y -= overlapY;
 
                             if (components.hasComponent<Velocity>(a))

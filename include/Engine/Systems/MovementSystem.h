@@ -96,6 +96,10 @@ public:
                 {
                     anim.currentState = "walkLeft";
                 }
+                else
+                {
+                    anim.currentState = "idleRight";
+                }
             }
         }
     }

@@ -325,6 +325,7 @@ bool Engine::loadEntities(std::string &filepath) {
         }
 
         if (j.contains("ai-sys") && j["ai-sys"] == true) {
+            componentManager->addComponent<ActorComponent>(entity, {"NPC1"});
             componentManager->addComponent<SeekComponent>(entity, {});
             //componentManager->addComponent<PatrolComponent>(entity, {});
             componentManager->addComponent<AIComponent>(entity, {});

@@ -40,7 +40,7 @@ public:
             {
                 vel.dx = 0.f;
             }
-            else if (aiComp.state == AIState::Patrolling)
+            else if (aiComp.state == AIState::Chasing)
             {
                 float dx = playerPos.x - pos.x;
                 float dir = (dx > 0.f) ? 1.f : (dx < 0.f ? -1.f : 0.f);

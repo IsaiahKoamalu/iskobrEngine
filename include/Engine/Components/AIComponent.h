@@ -3,7 +3,7 @@
 
 enum class AIState { Idle, Patrolling, Chasing };
 struct AIComponent {
-    AIState state = AIState::Patrolling;
+    AIState state = AIState::Idle;
 };
 
 #endif

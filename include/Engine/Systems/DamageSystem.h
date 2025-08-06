@@ -67,8 +67,10 @@ public:
         }
     }
 
-    void affectHealth(int amount, Entity entity, ComponentManager &components) {
-        if (components.hasComponent<HealthComponent>(entity)) {
+    void affectHealth(int amount, Entity entity, ComponentManager &components)
+    {
+        if (components.hasComponent<HealthComponent>(entity))
+            {
             auto &health = components.getComponent<HealthComponent>(entity);
             health.health += amount;
             if (amount < 0) {
