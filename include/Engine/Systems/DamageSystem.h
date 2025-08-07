@@ -25,9 +25,11 @@ public:
         auto &basePtrH = ctxt.particleSystems[0];
         auto &basePtrF = ctxt.particleSystems[1];
         auto &basePtrG = ctxt.particleSystems[2];
+        auto &basePtrSF = ctxt.particleSystems[3];
         auto hps = std::dynamic_pointer_cast<HomingParticleSystem>(basePtrH);
         auto fps = std::dynamic_pointer_cast<FluidParticleSystem>(basePtrF);
         auto gps = std::dynamic_pointer_cast<GaseousParticleSystem>(basePtrG);
+        auto sfps = std::dynamic_pointer_cast<ParticleSystem>(basePtrSF);
         float dt = ctxt.dt;
 
         for (Entity entity: entities) {
@@ -55,9 +57,9 @@ public:
                     burstPos = {pos.x, pos.y};
 
                     hps->setEmitter(burstPos);
-                    fps->setEmitter(burstPos);
+                    sfps->setEmitter(burstPos);
                     hps->spawnParticles(5);
-                    fps->spawnParticles(20);
+                    sfps->spawnParticles(20);
 
                     std::cout << "Entity Destroyed\n";
                     entityManager.destroyEntity(entity);

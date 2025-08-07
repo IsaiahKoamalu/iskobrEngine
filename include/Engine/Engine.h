@@ -31,6 +31,7 @@
 #include "Systems/KnockBackSystem.h"
 #include "Systems/ParticleSystem/GaseousParticleSystem.h"
 #include "Systems/AISystem.h"
+#include "Systems/ParticleSystem/StaticFluidParticleSystem.h"
 
 
 using json = nlohmann::json;
@@ -44,7 +45,7 @@ private:
 
     void processEvents();
 
-    void update(UpdateContext& ctxt);
+    void update(const UpdateContext& ctxt);
 
     void render(UpdateContext& ctxt, bool debugMode);
 
@@ -81,6 +82,7 @@ private:
     std::shared_ptr<EmitterSystem> emitterSystem;
     std::shared_ptr<HomingParticleSystem> homingParticleSystem;
     std::shared_ptr<FluidParticleSystem> fluidParticleSystem;
+    std::shared_ptr<StaticFluidParticleSystem> staticFluidParticleSystem;
     std::shared_ptr<GaseousParticleSystem> gaseousParticleSystem;
     std::shared_ptr<KnockBackSystem> knockBackSystem;
     std::shared_ptr<AIStateSystem> aiStateSystem;

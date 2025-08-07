@@ -37,29 +37,31 @@ void Engine::run(bool debugMode) {
 
 
     // Register systems
-    renderSystem =          systemManager->registerSystem<RenderSystem>();
-    movementSystem =        systemManager->registerSystem<MovementSystem>();
-    inputSystem =           systemManager->registerSystem<PlayerInputSystem>();
-    animationSystem =       systemManager->registerSystem<AnimationSystem>();
-    collisionSystem =       systemManager->registerSystem<CollisionSystem>();
-    triggerSystem =         systemManager->registerSystem<TriggerSystem>();
-    cameraSystem =          systemManager->registerSystem<CameraSystem>(WINDOW_WIDTH, WINDOW_HEIGHT);
-    tileMapSystem =         systemManager->registerSystem<TileMapSystem>();
-    actorSystem =           systemManager->registerSystem<ActorSystem>();
-    physicsSystem =         systemManager->registerSystem<PhysicsSystem>();
-    groundResetSystem =     systemManager->registerSystem<GroundResetSystem>();
-    damageSystem =          systemManager->registerSystem<DamageSystem>();
-    knockBackSystem =       systemManager->registerSystem<KnockBackSystem>();
-    homingParticleSystem =  systemManager->registerSystem<HomingParticleSystem>();
-    fluidParticleSystem =   systemManager->registerSystem<FluidParticleSystem>();
-    gaseousParticleSystem = systemManager->registerSystem<GaseousParticleSystem>();
-    emitterSystem =         systemManager->registerSystem<EmitterSystem>();
-    aiStateSystem =         systemManager->registerSystem<AIStateSystem>();
-    aiSystem =              systemManager->registerSystem<AISystem>();
+    renderSystem =              systemManager->registerSystem<RenderSystem>();
+    movementSystem =            systemManager->registerSystem<MovementSystem>();
+    inputSystem =               systemManager->registerSystem<PlayerInputSystem>();
+    animationSystem =           systemManager->registerSystem<AnimationSystem>();
+    collisionSystem =           systemManager->registerSystem<CollisionSystem>();
+    triggerSystem =             systemManager->registerSystem<TriggerSystem>();
+    cameraSystem =              systemManager->registerSystem<CameraSystem>(WINDOW_WIDTH, WINDOW_HEIGHT);
+    tileMapSystem =             systemManager->registerSystem<TileMapSystem>();
+    actorSystem =               systemManager->registerSystem<ActorSystem>();
+    physicsSystem =             systemManager->registerSystem<PhysicsSystem>();
+    groundResetSystem =         systemManager->registerSystem<GroundResetSystem>();
+    damageSystem =              systemManager->registerSystem<DamageSystem>();
+    knockBackSystem =           systemManager->registerSystem<KnockBackSystem>();
+    homingParticleSystem =      systemManager->registerSystem<HomingParticleSystem>();
+    fluidParticleSystem =       systemManager->registerSystem<FluidParticleSystem>();
+    staticFluidParticleSystem = systemManager->registerSystem<StaticFluidParticleSystem>();
+    gaseousParticleSystem =     systemManager->registerSystem<GaseousParticleSystem>();
+    emitterSystem =             systemManager->registerSystem<EmitterSystem>();
+    aiStateSystem =             systemManager->registerSystem<AIStateSystem>();
+    aiSystem =                  systemManager->registerSystem<AISystem>();
     //Passing the collision system to the particle system so that it can handle
     //its own collision. Using .get() since the collision system is a shared_ptr.
     homingParticleSystem->setCollisionSystem(collisionSystem.get());
     fluidParticleSystem->setCollisionSystem(collisionSystem.get());
+    staticFluidParticleSystem->setCollisionSystem(collisionSystem.get());
     gaseousParticleSystem->setCollisionSystem(collisionSystem.get());
 
 
@@ -67,12 +69,14 @@ void Engine::run(bool debugMode) {
     //Calling them with .get() so that the actual raw pointer is retrieved.
     drawables.push_back(homingParticleSystem.get());
     drawables.push_back(fluidParticleSystem.get());
+    drawables.push_back(staticFluidParticleSystem.get());
     drawables.push_back(gaseousParticleSystem.get());
 
     // Vector of the particle systems as objects of ParticleSystem.
     particleSystems.push_back(homingParticleSystem);
     particleSystems.push_back(fluidParticleSystem);
     particleSystems.push_back(gaseousParticleSystem);
+    particleSystems.push_back(staticFluidParticleSystem);
 
     auto entityFile = std::make_shared<std::string>("assets/entities.json");
     if (!loadEntities(*entityFile)) {
@@ -106,7 +110,7 @@ void Engine::run(bool debugMode) {
     }
 }
 
-void Engine::update(UpdateContext& ctxt) {
+void Engine::update(const UpdateContext& ctxt) {
     inputSystem->update(ctxt);
     aiSystem->update(ctxt);
     aiStateSystem->update(ctxt);
@@ -118,6 +122,7 @@ void Engine::update(UpdateContext& ctxt) {
     damageSystem->update(ctxt);
     homingParticleSystem->update(ctxt);
     fluidParticleSystem->update(ctxt);
+    staticFluidParticleSystem->update(ctxt);
     gaseousParticleSystem->update(ctxt);
     emitterSystem->update(ctxt);
     actorSystem->update(ctxt);

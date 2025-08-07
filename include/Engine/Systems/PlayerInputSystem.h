@@ -79,9 +79,11 @@ public:
                         player.isSlashing = true;
                         player.slashTimer = player.slashDuration;
                     }
-                    if (player.isSlashing) {
+                    if (player.isSlashing)
+                    {
                         player.slashTimer -= dt;
-                        if (player.slashTimer <= 0.f || moveX > 0.f || moveX < 0.f) {
+                        if (player.slashTimer <= 0.f)
+                        {
                             player.isSlashing = false;
                         }
                         if (player.slashTimer <= player.slashDuration / 3.f && dir.current == Direction::Right) {
