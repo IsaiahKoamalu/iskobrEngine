@@ -13,6 +13,7 @@
 #include "Engine/Components/DirectionComponent.h"
 #include "Engine/Components/PlayerComponent.h"
 #include "Engine/Components/ColliderComponent.h"
+#include "Engine/Components/KnockBackComponent.h"
 #include "Engine/Components/SpriteComponent.h"
 #include "Engine/Components/WallClingComponent.h"
 
@@ -89,7 +90,7 @@ public:
                         if (player.slashTimer <= player.slashDuration / 3.f && dir.current == Direction::Right) {
                             attackCol.activeRight = true;
                         }
-                        if (player.slashTimer <= player.slashDuration / 2 && dir.current == Direction::Left) {
+                        if (player.slashTimer <= player.slashDuration / 3.f && dir.current == Direction::Left) {
                             attackCol.activeLeft = true;
                         }
                     } else {
@@ -149,8 +150,13 @@ public:
                     auto &dir = components.getComponent<DirectionComponent>(entity);
                     auto &anim = components.getComponent<AnimationComponent>(entity);
                     auto &player = components.getComponent<PlayerComponent>(entity);
+                    auto &knock = components.getComponent<KnockBackComponent>(entity);
 
-                    if (player.isRolling) {
+                    if (knock.isKnockback)
+                    {
+                        anim.currentState = "hurt";
+                    }
+                    else if (player.isRolling) {
                         if (dir.current == Direction::Right) {
                             anim.currentState = "rollRight";
                         } else if (dir.current == Direction::Left) {

@@ -106,6 +106,12 @@
         "filePath": "assets/sword/slash_left_sword.png",
         "frameCount": 6,
         "frameTime": 0.07
+      },
+      "hurt": {
+        "name": "hurt",
+        "filePath": "assets/hurt.png",
+        "frameCount": 4,
+        "frameTime": 0.07
       }
     },
     "anim": {
@@ -204,19 +210,19 @@
       },
       "idleRight": {
         "name": "idleRight",
-        "filePath": "assets/sword/idle_right_sword.png",
+        "filePath": "assets/idle_right.png",
         "frameCount": 10,
         "frameTime": 0.1
       },
       "walkLeft": {
         "name": "runLeft",
-        "filePath": "assets/sword/run_left_sword.png",
+        "filePath": "assets/walk_left.png",
         "frameCount": 8,
         "frameTime": 0.1
       },
       "walkRight": {
         "name": "runRight",
-        "filePath": "assets/sword/run_right_sword.png",
+        "filePath": "assets/walk_right.png",
         "frameCount": 8,
         "frameTime": 0.1
       },

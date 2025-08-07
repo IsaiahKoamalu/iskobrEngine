@@ -106,7 +106,7 @@ public:
         // Attack collision loop
         for (Entity entity: entities)
             {
-            if (components.hasComponent<AttackColliderComponent>(entity) && components.hasComponent<Position>(entity))
+            if (components.hasComponent<PlayerComponent>(entity) && components.hasComponent<AttackColliderComponent>(entity) && components.hasComponent<Position>(entity))
                 {
                 auto &attCol = components.getComponent<AttackColliderComponent>(entity);
                 auto &attPos = components.getComponent<Position>(entity);
@@ -167,30 +167,114 @@ public:
                     if (overlapX < overlapY && attCol.activeRight)
                     {
                         std::cout << "Hit Right" << std::endl;
-                        auto& player = components.getComponent<PlayerComponent>(entity);
-                        auto& pos = components.getComponent<Position>(entity);
-                        auto& otherPos = components.getComponent<Position>(other);
-                        affectHealth(-20, other, components);
-                        player.isSlashing = false;
+                        if (components.hasComponent<PlayerComponent>(entity))
+                        {
+                            auto& player = components.getComponent<PlayerComponent>(entity);
+                            auto& pos = components.getComponent<Position>(entity);
+                            auto& otherPos = components.getComponent<Position>(other);
+                            affectHealth(-20, other, components);
+                            player.isSlashing = false;
 
-                        auto& knockOther = components.getComponent<KnockBackComponent>(other);
-                        sf::Vector2f direction = normalize(sf::Vector2f{otherPos.x, otherPos.y} - sf::Vector2f{pos.x, pos.y});
-                        knockOther.velocity = direction * knockOther.force;
-                        knockOther.isKnockback = true;
+                            auto& knockOther = components.getComponent<KnockBackComponent>(other);
+                            sf::Vector2f direction = normalize(sf::Vector2f{otherPos.x, otherPos.y} - sf::Vector2f{pos.x, pos.y});
+                            knockOther.velocity = direction * knockOther.force;
+                            knockOther.isKnockback = true;
+                        }
                     }
                     else if (overlapX < overlapY && attCol.activeLeft)
                     {
-                        auto& player = components.getComponent<PlayerComponent>(entity);
-                        auto& pos = components.getComponent<Position>(entity);
-                        auto& otherPos = components.getComponent<Position>(other);
-                        affectHealth(-20, other, components);
-                        player.isSlashing = false;
+                        if (components.hasComponent<PlayerComponent>(entity))
+                        {
+                            auto& player = components.getComponent<PlayerComponent>(entity);
+                            auto& pos = components.getComponent<Position>(entity);
+                            auto& otherPos = components.getComponent<Position>(other);
+                            affectHealth(-20, other, components);
+                            player.isSlashing = false;
 
-                        auto& knockOther = components.getComponent<KnockBackComponent>(other);
-                        sf::Vector2f direction = normalize(sf::Vector2f{otherPos.x, otherPos.y} - sf::Vector2f{pos.x, pos.y}); //Make direction = (pos - otherPos) for a pull effect
-                        float force = 300.f;
-                        knockOther.velocity = direction * force;
-                        knockOther.isKnockback = true;
+                            auto& knockOther = components.getComponent<KnockBackComponent>(other);
+                            sf::Vector2f direction = normalize(sf::Vector2f{otherPos.x, otherPos.y} - sf::Vector2f{pos.x, pos.y}); //Make direction = (pos - otherPos) for a pull effect
+                            float force = 300.f;
+                            knockOther.velocity = direction * force;
+                            knockOther.isKnockback = true;
+                        }
+                    }
+                }
+            }
+            if (!components.hasComponent<PlayerComponent>(entity) && components.hasComponent<AttackColliderComponent>(entity) && components.hasComponent<Position>(entity))
+            {
+                auto &attCol = components.getComponent<AttackColliderComponent>(entity);
+                auto &attPos = components.getComponent<Position>(entity);
+
+                sf::FloatRect attBoundsRight
+                {
+                    attPos.x + attCol.boundsRight.left,
+                    attPos.y + attCol.boundsRight.top,
+                    attCol.boundsRight.width,
+                    attCol.boundsRight.height
+                };
+
+                sf::FloatRect attBoundsLeft
+                {
+                    attPos.x + attCol.boundsLeft.left,
+                    attPos.y + attCol.boundsLeft.top,
+                    attCol.boundsLeft.width,
+                    attCol.boundsRight.height
+                };
+                for (Entity other: entities)
+                {
+                    if (other == entity) continue;
+                    if (!components.hasComponent<ColliderComponent>(other) || !components.hasComponent<HealthComponent>(other))
+                    {
+                        continue;
+                    }
+
+                    auto &otherCol = components.getComponent<ColliderComponent>(other);
+                    auto &otherPos = components.getComponent<Position>(other);
+                    sf::FloatRect otherBounds
+                   {
+                       otherPos.x + otherCol.bounds.left,
+                       otherPos.y + otherCol.bounds.top,
+                       otherCol.bounds.width,
+                       otherCol.bounds.height
+                   };
+
+                    sf::FloatRect attackIntersection;
+                    bool hit = false;
+
+                    if (attCol.activeRight)
+                    {
+                        hit = attBoundsRight.intersects(otherBounds, attackIntersection);
+                        if (hit)
+                        {
+                            std::cout << components.getComponent<HealthComponent>(other).health << std::endl;
+                        }
+                    }
+                    if (!hit && attCol.activeLeft)
+                    {
+                        hit = attBoundsLeft.intersects(otherBounds, attackIntersection);
+                    }
+
+                    float overlapX = attackIntersection.width;
+                    float overlapY = attackIntersection.height;
+                    if (overlapX < overlapY && attCol.activeRight)
+                    {
+                        if (components.hasComponent<PlayerComponent>(other))
+                        {
+                            std::cout << "HIT ON PLAYER" << std::endl;
+                        }
+                    }
+                    else if (overlapX < overlapY && attCol.activeLeft)
+                    {
+                        if (components.hasComponent<PlayerComponent>(other))
+                        {
+                            std::cout << "HIT ON PLAYER" << std::endl;
+                            auto&pos = components.getComponent<Position>(entity);
+                            auto& knockOther = components.getComponent<KnockBackComponent>(other);
+                            sf::Vector2f direction = normalize(sf::Vector2f{otherPos.x, otherPos.y} - sf::Vector2f{pos.x, pos.y}); //Make direction = (pos - otherPos) for a pull effect
+                            float force = 300.f;
+                            knockOther.velocity = direction * force;
+                            knockOther.isKnockback = true;
+                        }
                     }
                 }
             }

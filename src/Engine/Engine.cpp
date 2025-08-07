@@ -34,8 +34,6 @@ void Engine::run(bool debugMode) {
 
     ctxt = std::make_shared<UpdateContext>();
 
-
-
     // Register systems
     renderSystem =              systemManager->registerSystem<RenderSystem>();
     movementSystem =            systemManager->registerSystem<MovementSystem>();

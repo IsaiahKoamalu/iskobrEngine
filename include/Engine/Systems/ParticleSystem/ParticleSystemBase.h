@@ -20,27 +20,33 @@ public:
         m_vertices.setPrimitiveType(sf::Quads);
         m_vertices.resize(maxParticles * 4);
 
-        if(!m_texture.loadFromFile("assets/circleQuadTexture.png")) {
+        if(!m_texture.loadFromFile("assets/circleQuadTexture.png"))
+        {
             throw std::runtime_error("Could not load 'circleQuadTexture.png'");
         }
     }
 
     void setCollisionSystem(const CollisionSystem* cs) {m_collisionSystem = cs;}
 
-    void setEmitter(const sf::Vector2f& position) {
+    void setEmitter(const sf::Vector2f& position)
+    {
         m_emitter = position;
     }
 
-    void setParticleLifetime(sf::Time lifeTime) {
+    void setParticleLifetime(sf::Time lifeTime)
+    {
         m_lifetime = lifeTime;
     }
 
-    void spawnParticles(std::size_t count) {
+    void spawnParticles(std::size_t count)
+    {
         // Clamping the pool size
-        if (m_particles.size() + count > m_capacity) {
+        if (m_particles.size() + count > m_capacity)
+        {
             count = m_capacity - m_particles.size();
         }
-        for (std::size_t n = 0; n < count; ++n) {
+        for (std::size_t n = 0; n < count; ++n)
+        {
            Particle p;
             resetParticle(p);
             m_particles.push_back(p);
@@ -51,7 +57,8 @@ public:
     virtual void update(const UpdateContext& ctxt) override = 0;
 
 protected:
-    struct Particle {
+    struct Particle
+    {
         sf::Vector2f velocity;
         sf::Vector2f position;
         sf::Time lifeTime;

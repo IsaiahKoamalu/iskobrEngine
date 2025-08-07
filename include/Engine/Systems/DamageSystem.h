@@ -56,9 +56,7 @@ public:
                     sf::Vector2f burstPos = {0.f, 0.f};
                     burstPos = {pos.x, pos.y};
 
-                    hps->setEmitter(burstPos);
                     sfps->setEmitter(burstPos);
-                    hps->spawnParticles(5);
                     sfps->spawnParticles(20);
 
                     std::cout << "Entity Destroyed\n";

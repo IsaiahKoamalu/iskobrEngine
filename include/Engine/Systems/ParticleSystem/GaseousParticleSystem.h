@@ -205,13 +205,16 @@ public:
     }
 
 protected:
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override
+    {
         states.transform *= getTransform();
         states.texture = &m_texture;
         target.draw(m_vertices, states);
     }
 
-    void resetParticle(Particle& p) override {
+    void resetParticle(Particle& p) override
+    {
+        setParticleLifetime(m_lifetime);
         float theta = angleDeg(rng) * 3.14159265f / 180.f;
         float speed = speedDist(rng);
         p.velocity = { std::cos(theta)*speed, std::sin(theta)*speed };
@@ -219,6 +222,7 @@ protected:
         p.size     = sizeDist(rng);
         p.position = m_emitter;
     }
+    sf::Time m_lifetime = sf::seconds(2);
 
 private:
     static std::uniform_real_distribution<float> angleDeg;

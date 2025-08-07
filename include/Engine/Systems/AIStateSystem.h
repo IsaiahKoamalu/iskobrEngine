@@ -17,6 +17,7 @@ public:
                 auto& anim = components.getComponent<AnimationComponent>(entity);
                 auto& dirCom = components.getComponent<DirectionComponent>(entity);
                 auto& aiComp = components.getComponent<AIComponent>(entity);
+                auto& attackCol = components.getComponent<AttackColliderComponent>(entity);
                 auto& actor = components.getComponent<ActorComponent>(entity);
 
                 if (actor.attacking)
@@ -27,8 +28,22 @@ public:
                     {
                         actor.attacking = false;
                     }
+                    if (actor.attackTimer <= 0.01f && dirCom.current == Direction::Right)
+                    {
+                        attackCol.activeRight = true;
+                    }
+                    if (actor.attackTimer <= 0.01 && dirCom.current == Direction::Left)
+                    {
+                        attackCol.activeLeft = true;
+                    }
                 }
-                else if (dirCom.current == Direction::Right && aiComp.state == AIState::Chasing)
+                else
+                {
+                    //auto& attackCol = components.getComponent<AttackColliderComponent>(entity);
+                    attackCol.activeRight = false;
+                    attackCol.activeLeft = false;
+                }
+                if (dirCom.current == Direction::Right && aiComp.state == AIState::Chasing)
                 {
                     anim.currentState = "walkRight";
                 }

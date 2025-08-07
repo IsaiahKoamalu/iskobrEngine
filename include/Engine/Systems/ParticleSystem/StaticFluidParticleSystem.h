@@ -93,6 +93,7 @@ protected:
 
     void resetParticle(Particle& p) override
     {
+        setParticleLifetime(m_lifetime);
         float theta = angleDeg(rng) * 3.14159265f / 180.f;
         float speed = speedDist(rng);
 
@@ -101,7 +102,7 @@ protected:
         p.size = sizeDist(rng);
         p.position = m_emitter;
     }
-
+    sf::Time m_lifetime{sf::seconds(1.f)};
     static std::uniform_real_distribution<float> angleDeg;
     static std::uniform_real_distribution<float> speedDist;
     static std::uniform_real_distribution<float> sizeDist;
