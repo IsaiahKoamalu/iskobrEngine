@@ -281,7 +281,7 @@
       "frameHeight": 48
     },
     "Position": {
-      "x": 600,
+      "x": 500,
       "y": 400
     },
     "Velocity": {
@@ -319,5 +319,15 @@
       "y": 600
     },
     "active": false
+  },
+  {
+    "name": "emitter",
+    "type": "fluid",
+    "amount": 1,
+    "EmitterPosition": {
+      "x": 500,
+      "y": 400
+    },
+    "active": true
   }
 ]

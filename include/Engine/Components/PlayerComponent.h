@@ -25,6 +25,11 @@ struct PlayerComponent {
     float slashTimer = 0.0f;
     float slashDuration = 0.4f;
 
+    // Ganja
+    bool isSmoking;
+    float smokingTimer = 0.0f;
+    float smokingDuration = 0.4f;
+
     bool gravityToggle = true;
 };
 

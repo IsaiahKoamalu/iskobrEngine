@@ -52,6 +52,7 @@ void Engine::run(bool debugMode) {
     fluidParticleSystem =       systemManager->registerSystem<FluidParticleSystem>();
     staticFluidParticleSystem = systemManager->registerSystem<StaticFluidParticleSystem>();
     gaseousParticleSystem =     systemManager->registerSystem<GaseousParticleSystem>();
+    particleGenSystem =          systemManager->registerSystem<ParticleGenSystem>();
     emitterSystem =             systemManager->registerSystem<EmitterSystem>();
     aiStateSystem =             systemManager->registerSystem<AIStateSystem>();
     aiSystem =                  systemManager->registerSystem<AISystem>();
@@ -118,6 +119,7 @@ void Engine::update(const UpdateContext& ctxt) {
     collisionSystem->update(ctxt);
     animationSystem->update(ctxt);
     damageSystem->update(ctxt);
+    particleGenSystem->update(ctxt);
     homingParticleSystem->update(ctxt);
     fluidParticleSystem->update(ctxt);
     staticFluidParticleSystem->update(ctxt);

@@ -43,11 +43,11 @@ public:
                     attackCol.activeRight = false;
                     attackCol.activeLeft = false;
                 }
-                if (dirCom.current == Direction::Right && aiComp.state == AIState::Chasing)
+                if (dirCom.current == Direction::Right && aiComp.state == AIState::Chasing && !actor.attacking)
                 {
                     anim.currentState = "walkRight";
                 }
-                else if (dirCom.current == Direction::Left && aiComp.state == AIState::Chasing)
+                else if (dirCom.current == Direction::Left && aiComp.state == AIState::Chasing && !actor.attacking)
                 {
                     anim.currentState = "walkLeft";
                 }

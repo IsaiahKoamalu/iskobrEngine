@@ -67,6 +67,8 @@ public:
                 bool slashPressed = (sf::Joystick::isButtonPressed(0, 5) ||
                                      sf::Mouse::isButtonPressed(sf::Mouse::Left));
 
+                bool takeHit = (sf::Mouse::isButtonPressed(sf::Mouse::Right));
+
                 float speed = 300.0f;
 
                 // Handle Jumping
@@ -75,7 +77,19 @@ public:
                     auto &cling = components.getComponent<WallClingComponent>(entity);
                     auto &attackCol = components.getComponent<AttackColliderComponent>(entity);
                     auto &dir = components.getComponent<DirectionComponent>(entity);
-
+                    if (!player.isSmoking && takeHit)
+                    {
+                        player.isSmoking = true;
+                        player.smokingTimer = player.smokingDuration;
+                    }
+                    if (player.isSmoking)
+                    {
+                        player.smokingTimer -= dt;
+                        if (player.smokingTimer <= 0)
+                        {
+                            player.isSmoking = false;
+                        }
+                    }
                     if (!player.isSlashing && slashPressed && player.isGrounded && !cling.active) {
                         player.isSlashing = true;
                         player.slashTimer = player.slashDuration;

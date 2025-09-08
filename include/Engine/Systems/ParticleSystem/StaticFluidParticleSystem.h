@@ -109,7 +109,7 @@ protected:
 };
 
 inline std::uniform_real_distribution<float> StaticFluidParticleSystem::angleDeg(180.f, 360.f);
-inline std::uniform_real_distribution<float> StaticFluidParticleSystem::speedDist(200.f, 400.f);
+inline std::uniform_real_distribution<float> StaticFluidParticleSystem::speedDist(150.f, 300.f);
 inline std::uniform_real_distribution<float> StaticFluidParticleSystem::sizeDist(4.f, 7.f);
 
 #endif
