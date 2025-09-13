@@ -29,6 +29,11 @@ title: Recent Updates
   </a>
 </div>
 
+**9-12-25 Particle Generation System**
+-
+Testing out the idea of using a dedicated system to handle the creation and logic of the spawning and placement of particle emitters. The update method of the class takes the vector of drawables from the update context. It also assigns refrences to the different particle systems that are stored in a vector of shared pointers of the type ParticleSystem which is  also passed via the update context as follows: `auto &basePtrSF = ctxt.particleSystems[3]`.\
+When the requirements are met, the appropriate position is grabbed and plugged into `setEmitter()` function of the desired particle system followed by a call to the `spawnParticles()` function of the particle system.
+
 **8-4-25 AI System for Non-Player Entities**
 -
 Starting to work on an AI system for non-player entities. This new implementation involves three new files: 'AISystem', 'AIStateSystem', 'AIComponent'.
