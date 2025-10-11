@@ -1,7 +1,7 @@
 #ifndef SPRITECOMPONENT_H
 #define SPRITECOMPONENT_H
 
-#include <SFMl/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 /**
  * Component for storing a drawable sprite.

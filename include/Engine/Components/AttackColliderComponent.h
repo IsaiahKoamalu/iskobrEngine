@@ -1,7 +1,6 @@
 #ifndef ATTACKCOLLIDERCOMPONENT_H
 #define ATTACKCOLLIDERCOMPONENT_H
 
-#include <sfml/Graphics.hpp>
 
 /**
  * A collision component for attacks.

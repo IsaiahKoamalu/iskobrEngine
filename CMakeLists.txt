@@ -35,6 +35,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SFML)
 FetchContent_MakeAvailable(glm)
 
+install(TARGETS
+        sfml-graphics sfml-window sfml-system sfml-audio
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
 
 add_library(engine
         # src dir
@@ -173,15 +179,7 @@ endif()
 install(TARGETS engine ${PROJECT_NAME} tilemap_editor
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE_DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME_DEPENDENCIES           # <-- copies needed .so into lib/
-            DIRECTORIES
-                ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}
-            PRE_EXCLUDE_REGEXES
-                ".*system32.*" ".*System32.*" ".*Windows.*" "api-ms-win-.*"  # harmless on Linux
-            POST_EXCLUDE_REGEXES
-                "^libc\\.so" "^libm\\.so" "^libdl\\.so" "^libpthread\\.so"
-                "^librt\\.so" "^libgcc_s\\.so" "^libstdc\\+\\+\\.so"
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
