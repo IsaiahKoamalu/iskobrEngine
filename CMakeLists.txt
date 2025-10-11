@@ -174,6 +174,14 @@ install(TARGETS engine ${PROJECT_NAME} tilemap_editor
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE_DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME_DEPENDENCIES           # <-- copies needed .so into lib/
+            DIRECTORIES
+                ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}
+            PRE_EXCLUDE_REGEXES
+                ".*system32.*" ".*System32.*" ".*Windows.*" "api-ms-win-.*"  # harmless on Linux
+            POST_EXCLUDE_REGEXES
+                "^libc\\.so" "^libm\\.so" "^libdl\\.so" "^libpthread\\.so"
+                "^librt\\.so" "^libgcc_s\\.so" "^libstdc\\+\\+\\.so"
 )
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
