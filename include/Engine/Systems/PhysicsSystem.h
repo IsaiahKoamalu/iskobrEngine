@@ -11,7 +11,7 @@ public:
         ComponentManager &components = *ctxt.component;
         float dt = ctxt.dt;
 
-        float gravity = 1500.0f;
+        float gravity = 700.0f;
 
         for (Entity entity: entities) {
             if (components.hasComponent<Velocity>(entity) && components.hasComponent<PlayerComponent>(entity)) {
