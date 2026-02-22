@@ -322,7 +322,7 @@
   },
   {
     "name": "emitter",
-    "type": "fluid",
+    "type": "gas",
     "amount": 1,
     "EmitterPosition": {
       "x": 500,

@@ -34,8 +34,8 @@ void loadTilesetData(const std::string &path) {
 const int TILE_SIZE = 16;
 const int SCALE = 3;
 const int SCALED_TILE_SIZE = TILE_SIZE * SCALE;
-const int MAP_WIDTH = 20;
-const int MAP_HEIGHT = 15;
+const int MAP_WIDTH = 30;
+const int MAP_HEIGHT = 25;
 
 struct Tile {
     int sheetID = -1;
@@ -76,7 +76,7 @@ void saveMapToFile(const std::vector<std::vector<Tile> > &map, const std::string
 
 int main() {
     loadTilesetData("assets/tilesets.json");
-    sf::RenderWindow window(sf::VideoMode(1600, 800), "Tilemap Editor");
+    sf::RenderWindow window(sf::VideoMode(2600, 1600), "Tilemap Editor");
     std::unordered_map<int, sf::Texture> tileSheets;
     sf::Texture grassSheet;
     sf::Texture waterSheet;

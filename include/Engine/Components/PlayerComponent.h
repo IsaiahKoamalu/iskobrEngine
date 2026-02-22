@@ -25,6 +25,8 @@ struct PlayerComponent {
     bool isShooting = false;
     float slashTimer = 0.0f;
     float slashDuration = 0.4f;
+    float shootTimer = 0.0f;
+    float shootDuration = 1.0f;
 
 
     bool isSmoking;

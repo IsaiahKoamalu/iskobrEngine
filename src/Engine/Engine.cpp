@@ -1,6 +1,7 @@
 #include "Engine/Engine.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <fstream>
 
 #include "Engine/Core/UpdateContext.h"
 #include "Engine/EntityManager.h"
@@ -19,12 +20,19 @@
 
 
 void Engine::run(bool debugMode) {
-    int WINDOW_WIDTH = 800;
-    int WINDOW_HEIGHT = 600;
+    int WINDOW_WIDTH = 1600;
+    int WINDOW_HEIGHT = 1200;
     window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "iskobr-Engine");
 
     sf::Clock clock;
 
+    // debug logs
+    std::ofstream registryFile("../logs/system_registry.txt");
+    if (!registryFile.is_open())
+    {
+        std::cerr << "ERROR: could not open registry file." << std::endl;
+        return;
+    }
 
     //======== ECS SETUP ============
     entityManager = std::make_unique<EntityManager>();
@@ -56,6 +64,7 @@ void Engine::run(bool debugMode) {
     emitterSystem =             systemManager->registerSystem<EmitterSystem>();
     aiStateSystem =             systemManager->registerSystem<AIStateSystem>();
     aiSystem =                  systemManager->registerSystem<AISystem>();
+    projectileSystem =          systemManager->registerSystem<ProjectileSystem>();
     //Passing the collision system to the particle system so that it can handle
     //its own collision. Using .get() since the collision system is a shared_ptr.
     homingParticleSystem->setCollisionSystem(collisionSystem.get());
@@ -63,6 +72,15 @@ void Engine::run(bool debugMode) {
     staticFluidParticleSystem->setCollisionSystem(collisionSystem.get());
     gaseousParticleSystem->setCollisionSystem(collisionSystem.get());
 
+    if (systemManager->getSystem<ProjectileSystem>())
+    {
+        registryFile << "PROJECTILE SYSTEM REGISTERED SUCCESSFULLY" << std::endl;
+    }else
+    {
+        registryFile << "PROBLEM REGISTERING PROJECTILE SYSTEM" << std::endl;
+    }
+
+    registryFile.close();
 
     // Vector of drawables(pretty much just the different particle systems) for the update context.
     //Calling them with .get() so that the actual raw pointer is retrieved.
@@ -125,6 +143,7 @@ void Engine::update(const UpdateContext& ctxt) {
     staticFluidParticleSystem->update(ctxt);
     gaseousParticleSystem->update(ctxt);
     emitterSystem->update(ctxt);
+    projectileSystem->update(ctxt);
     actorSystem->update(ctxt);
     triggerSystem->update(ctxt);
     cameraSystem->update(ctxt);

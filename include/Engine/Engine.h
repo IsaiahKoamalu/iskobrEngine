@@ -32,6 +32,7 @@
 #include "Systems/ParticleSystem/GaseousParticleSystem.h"
 #include "Systems/AISystem.h"
 #include "Systems/ParticleGenSystem.h"
+#include "Systems/ProjectileSystem.h"
 #include "Systems/ParticleSystem/StaticFluidParticleSystem.h"
 
 
@@ -89,6 +90,7 @@ private:
     std::shared_ptr<KnockBackSystem> knockBackSystem;
     std::shared_ptr<AIStateSystem> aiStateSystem;
     std::shared_ptr<AISystem> aiSystem;
+    std::shared_ptr<ProjectileSystem> projectileSystem;
 };
 
 #endif

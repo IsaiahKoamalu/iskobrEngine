@@ -150,6 +150,9 @@ add_executable(${PROJECT_NAME} main.cpp
         include/Engine/Systems/EmitterSystem.h
         include/Engine/Systems/AISystem.h
         include/Engine/Systems/ParticleGenSystem.h
+        include/Engine/Core/mapGenerator.cpp
+        include/Engine/Systems/ProjectileSystem.h
+        include/Engine/Core/EntityFactory.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE engine)

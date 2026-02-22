@@ -18,7 +18,7 @@ public:
         auto& basePtrF = ctxt.particleSystems[1];
         auto& basePtrG = ctxt.particleSystems[2];
 
-        auto hps = std::dynamic_pointer_cast<HomingParticleSystem>(basePtrH);
+        //auto hps = std::dynamic_pointer_cast<HomingParticleSystem>(basePtrH);
         auto fps = std::dynamic_pointer_cast<FluidParticleSystem>(basePtrF);
         auto gps = std::dynamic_pointer_cast<GaseousParticleSystem>(basePtrG);
 

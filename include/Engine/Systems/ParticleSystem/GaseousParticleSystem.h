@@ -182,6 +182,39 @@ public:
             float half      = p.size * 0.5f;
             float lifeRatio = p.lifeTime.asSeconds() / m_lifetime.asSeconds();
             sf::Uint8 alpha = static_cast<sf::Uint8>(lifeRatio * 255);
+
+            float ageRatio = 1.0f - lifeRatio;
+            sf::Color orange(255, 150, 0, 255);
+            sf::Color red(255, 0, 0, 255);
+            sf::Color smoke(80, 80, 80, 0);
+
+            sf::Color currentColor;
+
+            float transitionPoint = 0.6f;
+
+            if (ageRatio < transitionPoint)
+            {
+                float localRatio = ageRatio / transitionPoint;
+
+                sf::Uint8 r = static_cast<sf::Uint8>(orange.r + localRatio * (red.r - orange.r));
+                sf::Uint8 g = static_cast<sf::Uint8>(orange.g + localRatio * (red.g - orange.g));
+                sf::Uint8 b = static_cast<sf::Uint8>(orange.b + localRatio * (red.b - orange.b));
+                sf::Uint8 a = static_cast<sf::Uint8>(orange.a + localRatio * (red.a - orange.a));
+
+                currentColor = sf::Color(r, g, b, a);
+            }
+            else
+            {
+                float localRatio = (ageRatio - transitionPoint) / (1.0f - transitionPoint);
+
+                sf::Uint8 r = static_cast<sf::Uint8>(red.r + localRatio * (smoke.r - red.r));
+                sf::Uint8 g = static_cast<sf::Uint8>(red.g + localRatio * (smoke.g - red.g));
+                sf::Uint8 b = static_cast<sf::Uint8>(red.b + localRatio * (smoke.b - red.b));
+                sf::Uint8 a = static_cast<sf::Uint8>(red.a + localRatio * (smoke.a - red.a));
+
+                currentColor = sf::Color(r, g, b, a);
+            }
+
             auto ts        = m_texture.getSize();
             float tw       = static_cast<float>(ts.x);
             float th       = static_cast<float>(ts.y);
@@ -197,7 +230,7 @@ public:
             m_vertices[vIndex+3].texCoords = { 0.f,  th };
 
             for (int j = 0; j < 4; ++j)
-                m_vertices[vIndex+j].color = sf::Color(255,255,255, alpha);
+                m_vertices[vIndex+j].color = currentColor;
 
             vIndex += 4;
             ++i;

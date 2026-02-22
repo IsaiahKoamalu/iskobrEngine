@@ -16,6 +16,7 @@
 #include "Engine/Components/KnockBackComponent.h"
 #include "Engine/Components/SpriteComponent.h"
 #include "Engine/Components/WallClingComponent.h"
+#include "Engine/Core/EntityFactory.h"
 
 /**
  * System that updates velocity of player-controlled entities
@@ -117,6 +118,20 @@ public:
                     if (!player.isShooting && shootPressed)
                     {
                         player.isShooting = true;
+                        player.shootTimer = player.shootDuration;
+
+                        float dirX = (dir.current == Direction::Left) ? -1.0f : 1.0f;
+
+                        EntityFactory::spawnParticleProjectile(ctxt, pos.x, pos.y, dirX, 0.0f);
+                    }
+                    if (player.isShooting)
+                    {
+                        player.shootTimer -= dt;
+
+                        if (player.shootTimer <= 0)
+                        {
+                            player.isShooting = false;
+                        }
                     }
 
                     if (!player.isRolling && rollPressed && player.isGrounded) {
