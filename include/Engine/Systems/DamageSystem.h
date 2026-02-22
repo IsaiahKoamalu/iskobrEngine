@@ -37,16 +37,6 @@ public:
                 auto &health = components.getComponent<HealthComponent>(entity);
                 auto &player = components.getComponent<PlayerComponent>(entity);
 
-                if (player.isSmoking && player.smokingTimer < .02)
-                {
-                    auto &pos = components.getComponent<Position>(entity);
-                    sf::Vector2f burstPos = {0.f, 0.f};
-                    burstPos = {pos.x + 10.f, pos.y - 20.f};
-
-                    gps->setEmitter(burstPos);
-                    gps->spawnParticles(20);
-                }
-
                 if (health.isLow) {
                     std::cout << "LOW HEALTH\n";
                 }

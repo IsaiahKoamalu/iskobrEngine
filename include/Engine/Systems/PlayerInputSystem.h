@@ -66,6 +66,8 @@ public:
                                     sf::Joystick::isButtonPressed(0, 1));
                 bool slashPressed = (sf::Joystick::isButtonPressed(0, 5) ||
                                      sf::Mouse::isButtonPressed(sf::Mouse::Left));
+                bool shootPressed = (sf::Joystick::isButtonPressed(0, 3) ||
+                                     sf::Mouse::isButtonPressed(sf::Mouse::Right));
 
                 bool takeHit = (sf::Mouse::isButtonPressed(sf::Mouse::Right));
 
@@ -111,6 +113,10 @@ public:
                         auto &attackCol = components.getComponent<AttackColliderComponent>(entity);
                         attackCol.activeRight = false;
                         attackCol.activeLeft = false;
+                    }
+                    if (!player.isShooting && shootPressed)
+                    {
+                        player.isShooting = true;
                     }
 
                     if (!player.isRolling && rollPressed && player.isGrounded) {

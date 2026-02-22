@@ -3,7 +3,8 @@
 
 #include <iostream>
 
-struct EmitterComponent {
+struct EmitterComponent
+{
     std::string type;
     int amount;
     bool active = false;
